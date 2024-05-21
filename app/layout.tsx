@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`flex flex-col min-h-screen ${rubik.className}`}>
         <NavBar />
-        <main className="mx-4 flex-grow">
+        <main className="flex-grow">
           {children}
         </main>
         <Footer />
