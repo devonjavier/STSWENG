@@ -37,7 +37,7 @@ const page = () => {
         </Link>
     </div>
     <div>
-        <Link className = "text-cusBlue text-2xl font-medium w-64 h-16 p-2.5 bg-white rounded-3xl border border-cusBlue justify-center items-center gap-2.5 inline-flex " href="">
+        <Link className = "btn text-cusBlue text-2xl font-medium w-64 h-16 p-2.5 bg-white rounded-3xl border border-cusBlue justify-center items-center gap-2.5 inline-flex " href="">
             View All
         </Link>
     </div>
