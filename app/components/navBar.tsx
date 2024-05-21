@@ -14,7 +14,7 @@ const navBar = () => {
         /><div className='hover:text-gray-700'>Home</div></Link>
         <Link href="/" className="mr-4 hover:text-gray-700">Services</Link>
         <Link href="/" className="mr-4 hover:text-gray-700">About</Link>
-        <Link href="/" className="mr-4 hover:text-gray-700">Contact</Link>
+        <Link href="/contact" className="mr-4 hover:text-gray-700">Contact</Link>
       </div>
       <div className="flex items-center">
         <Link href="/" className="btn bg-cusBlue hover:bg-purple-900 py-0 px-4 rounded text-white p-2 text-xl font-medium border-0">Book a session</Link>
