@@ -6,10 +6,11 @@ const Footer = () => {
       <footer className="bg-cusBlue p-6">
         <div className="flex flex-row justify-around text-white text-xl font-medium">
           <div className="flex mb-4 flex-col">
-            <Link href="" className="mr-4 hover:text-gray-200">FACEBOOK</Link>
+            <Link href="" className="mr-4 hover:text-gray-200 ">FACEBOOK</Link>
             <Link href="" className="mr-4 hover:text-gray-200">TWITTER</Link>
             <Link href="" className="mr-4 hover:text-gray-200">SPOTIFY</Link>
-          </div>
+          </div> 
+          
           <div className="flex mb-4 flex-col">
             <Link href="" className="mr-4 hover:text-gray-200">ADDRESS</Link>
             <Link href="" className="mr-4 hover:text-gray-200">STREET CITY</Link>
