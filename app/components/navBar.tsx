@@ -13,7 +13,7 @@ const navBar = () => {
           height={24.66}
         /><div className='hover:text-gray-700'>Home</div></Link>
         <Link href="/Services" className="mr-4 hover:text-gray-700">Services</Link>
-        <Link href="/" className="mr-4 hover:text-gray-700">About</Link>
+        <Link href="/About" className="mr-4 hover:text-gray-700">About</Link>
         <Link href="/Contact" className="mr-4 hover:text-gray-700">Contact</Link>
       </div>
       <div className="flex items-center">
