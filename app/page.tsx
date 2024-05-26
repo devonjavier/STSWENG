@@ -6,6 +6,9 @@ import { IntroText } from './components/Home/IntroText'
 import { Team } from './components/Home/Team'
 import Testimonials from './components/Home/Testimonials'
 import HearTheDifferences from './components/Home/HearTheDifferences'
+
+
+
 export default function Home() {
   return (
     <>
