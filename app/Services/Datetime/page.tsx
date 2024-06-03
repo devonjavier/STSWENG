@@ -33,9 +33,7 @@ const page = () => {
         <div className='flex flex-row'>
 
             <div className='flex flex-col mr-96'>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateCalendar />
-                </LocalizationProvider>
+                <Calendar />
                 <Link href="/Services/Datetime/Details"> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
             </div>  
 
