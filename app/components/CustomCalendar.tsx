@@ -10,14 +10,15 @@ const CustomCalendar: React.FC = () => {
     const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.toDateString() === date.toDateString());
     
     if (dateIndex !== -1) {
-      // Remove date if already selected
+      // remove date if already selected
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
-      // Add date if not selected
+      // add date if not selected
       setSelectedDates([...selectedDates, date]);
     }
   };
 
+    
   return (
     <div className='app'>
       <span className="text-cusBlue text-3xl font-bold">Select Date</span>
@@ -26,14 +27,12 @@ const CustomCalendar: React.FC = () => {
           minDate={new Date()}
           onClickDay={handleDateChange}
           tileClassName={({ date, view }) => {
-            if (view === 'month' && selectedDates.find(selectedDate => selectedDate.toDateString() === date.toDateString())) {
-              return 'highlight';
-            }
-            return null;
+            const isSelected = selectedDates.some(selectedDate => selectedDate.toDateString() === date.toDateString());
+            return isSelected && view === 'month' ? 'highlight' : null;
           }}
         />
       </div>
-      {/* {selectedDates.length > 0 ? (
+      {selectedDates.length > 0 ? (
         <p className='text-center'>
           <span className='bold'>Selected Dates:</span>{' '}
           {selectedDates.map(date => date.toDateString()).join(', ')}
@@ -42,7 +41,7 @@ const CustomCalendar: React.FC = () => {
         <p className='text-center'>
           <span className='bold'>No dates selected.</span>
         </p>
-      )} */}
+      )}
     </div>
   );
 }
