@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
 interface DropdownProps {
   items: Array<string>; // Assuming items are strings
+  setTime: Dispatch<string>; // Define the correct type for setArrFunc
+  
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ items }) => {
+const Dropdown: React.FC<DropdownProps> = ({ items, setTime}) => {
   const [selectedItem, setSelectedItem] = useState<string>('Select Time');
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleMenu = () => {
@@ -18,7 +21,10 @@ const Dropdown: React.FC<DropdownProps> = ({ items }) => {
     setSelectedItem(item);
   };
 
-  
+  useEffect(() => {
+    // Call setArrFunc with selectedDates whenever it changes
+    setTime(selectedItem);
+  }, [selectedItem, setTime]); // Include setArrFunc in the dependency array
 
   return (
     <details className={`dropdown`} open={isOpen} onClick={toggleMenu}>

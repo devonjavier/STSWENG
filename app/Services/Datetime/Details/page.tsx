@@ -1,23 +1,25 @@
-
 'use client'
 import Link from 'next/link'
+import { createCustomer } from '@/app/lib/actions';
+import { useState } from 'react';
 
-import Calendar from '@/app/components/CustomCalendar'; 
-import Dropdown from '@/app/components/Dropdown/Dropdown';
+const page = ({searchParams}:
+    {
+        searchParams:{
+            dates:string
+            timeslot1:string
+            timeslot2:string
+        }
+    }
+) => {
 
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-const page = () => {
-    const time = [1,2,3,4,5];
   return (
     <>
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
         <div>
             <div className='text-cusBlue text-6xl font-bold'>
                 Book an Appointment
-                <div>
+            <div>
             </div>
             </div>
             <div>
@@ -25,43 +27,46 @@ const page = () => {
             </div>
         </div>
         <div className="flex flex-row">
+            <form action={createCustomer}>
             <div className='flex flex-row'>
                 <div className='flex flex-col'>
+                     
                     <span className='text-cusBlue font-bold mb-5  text-lg'> Main Customer</span>
-                    <input placeholder = "Name (Autofill)" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                    <input id='customername' name='customername'      placeholder = "Name (Autofill)" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
                     
-
                     <div className='flex flex-col'>
                         <div className="flex flex-row mt-5 mb-3 items-center">
                             <span className='text-cusBlue font-bold  text-lg mr-16'> Additional Persons Involved </span>
                             
                             <button className='rounded-full bg-cusBlue  w-[45px] h-[45px]'> - </button>
-                            <span className='mx-6'> 8 </span>
+                            <input placeholder = "#" className='text-cusBlue text-center text-2xl font-medium w-[100px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
                             <button className='rounded-full bg-cusBlue w-[45px] h-[45px]'> + </button>
                         </div>
-                        <input placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
-                        <input placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
-                        <input placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                        <input id='additionalname1' name='additionalname1' placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                        <input id='additionalname2' name='additionalname2' placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                        <input id='additionalname3' name='additionalname3' placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
 
                     </div>
 
-                    <Link href="/Services/Datetime/Details/Confirmation">  <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Confirmation </button> </Link>
+                    <Link href="/Services/Datetime/Details" type="submit">  <button  className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Confirmation </button> </Link>
 
                 </div>
                 
                 <div className='flex flex-col ml-28'>
                     <div className='flex flex-col'>
                         <span className='text-cusBlue font-bold mb-2 text-lg'> Additional Request/s</span>
-                        <input placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[250px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                        <input id='additionalreq' name='additionalreq' placeholder = "----" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[250px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
                     </div>
                     <div>
                         <span className='text-cusBlue font-bold mb-2 text-lg'> Do you need parking? </span>
-                        <span> Slider </span>
+                        <input id='parking' name='parking' placeholder = "Yes/No" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
                     </div>
 
                 </div>
 
             </div>
+            </form>
+            
             <div>
 
             </div>

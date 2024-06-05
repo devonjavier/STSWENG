@@ -1,7 +1,20 @@
+
+
+
 import Link from 'next/link'
 import React from 'react'
+import InputName from '@/app/components/inputName';
 
-const page = () => {
+export default async function Page({
+    searchParams,
+  }: {
+    searchParams?: {
+      query?: string;
+    };
+  }){
+
+  const query = searchParams?.query || '';
+
   return (
     <>
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -13,7 +26,7 @@ const page = () => {
             <span className='text-cusBlue'>Package </span>&gt; Date & Time &gt; Details &gt; Confirmation
         </div>
     </div>
-    <div><input placeholder = "Name*" className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" /></div>
+    
     <div className='grid grid-cols-2 gap-20 gap-y-10'>
         <Link href="/Services/Datetime">
             <div><img className = "w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
@@ -45,5 +58,3 @@ const page = () => {
     </>
   )
 }
-
-export default page

@@ -1,17 +1,18 @@
 
 'use client'
 import Link from 'next/link'
-
+import React, {useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import Dropdown from '@/app/components/Dropdown/Dropdown';
 
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-
-
 const page = () => {
+    const [selectedDates, setselectedDates] = useState<Date[]>([]);
+
+    const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
+    const [selectedTimeslot2, setselectedTimeslot2] = useState<string>();
+
     const time = [];
+
     const startTime = 9 * 60; // 0900am
     const endTime = 21 * 60 + 30; //0930pm
     
@@ -23,6 +24,7 @@ const page = () => {
       const formattedMins = mins === 0 ? '00' : mins;
       time.push(`${formattedHours}:${formattedMins}${period}`);
     }
+    const datesString = JSON.stringify(selectedDates);
   return (
     <>
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -44,8 +46,31 @@ const page = () => {
         <div className='flex flex-row'>
 
             <div className='flex flex-col mr-32'>
-                <Calendar />
-                <Link href="/Services/Datetime/Details"> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
+
+
+                <Calendar setArrFunc={setselectedDates}/>
+
+                {selectedDates.length > 0 ? (
+                    <p className='text-center'>
+                    <span className='bold'>Selected Dates:</span>{' '}
+                    {selectedDates.map(date => date.toDateString()).join(', ')}
+                    </p>
+                ) : (
+                    <p className='text-center'>
+                    <span className='bold'>No dates selected.</span>
+                    </p>
+                )}
+
+                <Link href={
+                {
+                    pathname:"/Services/Datetime/Details",
+                    query:{
+                        dates: datesString,
+                        timeslot1: selectedTimeslot1,
+                        timeslot2: selectedTimeslot2
+                    }
+                }
+                    }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
             </div>  
 
             
@@ -54,11 +79,17 @@ const page = () => {
                 <div className='flex flex-row'>
                     <div className='flex flex-col mr-20 '>
                         <span className='font-bold text-black'> Start </span>
-                        <Dropdown items={time} />
+                        <Dropdown items={time} setTime={setselectedTimeslot1}/>
+                        <p>
+                            Selected time slot 1:{selectedTimeslot1}
+                        </p>
                     </div>
                     <div className='flex flex-col mr-20 '>
                     <span className='font-bold text-black' > End </span>
-                        <Dropdown items={time} />
+                        <Dropdown items={time} setTime={setselectedTimeslot2}/>
+                        <p>
+                            Selected time slot 2:{selectedTimeslot2}
+                        </p>
                     </div>
 
                     </div>

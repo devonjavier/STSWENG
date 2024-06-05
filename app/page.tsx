@@ -6,10 +6,11 @@ import { IntroText } from './components/Home/IntroText'
 import { Team } from './components/Home/Team'
 import Testimonials from './components/Home/Testimonials'
 import HearTheDifferences from './components/Home/HearTheDifferences'
+// import { createClient } from '@/utils/supabase/server'
 
 
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
     <div className='bg-white p-2 h-96 flex flex-col justify-end relative pb-10 mb-5 w-8/12 mx-auto'>
