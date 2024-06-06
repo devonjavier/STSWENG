@@ -56,7 +56,6 @@ const Page = ({searchParams}:{
         <div>
             <div className='text-cusBlue text-6xl font-bold'>
                 Book an Appointment
-                <button onClick={() => checker(searchParams.dates)}>checker</button>
             <div>
             </div>
             </div>
@@ -88,10 +87,7 @@ const Page = ({searchParams}:{
                         </div>
 
                         <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomers={setadditionalCustomers} />
-                            
-                        {additionalCustomers.map((customer, i) => (
-                            <li key={i}> {customer}</li>
-                        ))}
+
                     </div>
 
                     <Link 
