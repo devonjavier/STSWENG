@@ -5,7 +5,7 @@ import React, {useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import Dropdown from '@/app/components/Dropdown/Dropdown';
 
-const page = () => {
+const Page = () => {
     const [selectedDates, setselectedDates] = useState<Date[]>([]);
 
     const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
@@ -98,4 +98,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
