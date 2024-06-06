@@ -4,7 +4,7 @@
 import DateFormatter from "@/app/components/DateFormatter";
 import Link from "next/link";
 
-const page = ({searchParams}:{
+const Page = ({searchParams}:{
     searchParams: {
         dates: string,
         timeslot1: string,
@@ -101,4 +101,4 @@ const page = ({searchParams}:{
   )
 }
 
-export default page
+export default Page
