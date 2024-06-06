@@ -4,7 +4,7 @@ import { Component, Dispatch, SetStateAction, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import GenerateDivs  from '@/app/components/GenerateDivs';
 
-const page = ({searchParams}:{
+const Page = ({searchParams}:{
     searchParams: {
         dates: string, // JSON
         timeslot1: string,
@@ -145,4 +145,4 @@ const page = ({searchParams}:{
   )
 }
 
-export default page
+export default Page
