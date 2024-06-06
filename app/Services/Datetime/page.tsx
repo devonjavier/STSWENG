@@ -55,8 +55,6 @@ const Page = () => {
 
                 <Calendar setArrFunc={setselectedDates}/>
 
-                <button onClick={() => checker(selectedDates)}>checker</button>
-
                 <Link href={
                 {
                     pathname:"/Services/Datetime/Details",
@@ -76,16 +74,10 @@ const Page = () => {
                     <div className='flex flex-col mr-20 '>
                         <span className='font-bold text-black'> Start </span>
                         <Dropdown items={time} setTime={setselectedTimeslot1}/>
-                        <p>
-                            Selected time slot 1:{selectedTimeslot1}
-                        </p>
                     </div>
                     <div className='flex flex-col mr-20 '>
                     <span className='font-bold text-black' > End </span>
                         <Dropdown items={time} setTime={setselectedTimeslot2}/>
-                        <p>
-                            Selected time slot 2:{selectedTimeslot2}
-                        </p>
                     </div>
 
                     </div>
