@@ -8,7 +8,8 @@ const Page = ({searchParams}:{
     searchParams: {
         dates: string, // JSON
         timeslot1: string,
-        timeslot2: string
+        timeslot2: string,
+        serviceid: string
     }
 }) => {
     
@@ -97,6 +98,7 @@ const Page = ({searchParams}:{
                             dates: searchParams.dates,
                             timeslot1: searchParams.timeslot1,
                             timeslot2: searchParams.timeslot2,
+                            serviceid: searchParams.serviceid,
                             maincustomername: maincustomername,
                             needsparking:isChecked,
                             additionalrequests:additionalRequests,

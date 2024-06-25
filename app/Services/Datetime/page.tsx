@@ -5,7 +5,11 @@ import React, {useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import Dropdown from '@/app/components/Dropdown/Dropdown';
 
-const Page = () => {
+const Page = ({searchParams}:{
+    searchParams: {
+        id: string
+    }
+}) => {
     const [selectedDates, setselectedDates] = useState<Date[]>([]);
 
     const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
@@ -61,7 +65,8 @@ const Page = () => {
                     query:{
                         dates: datesString,
                         timeslot1: selectedTimeslot1,
-                        timeslot2: selectedTimeslot2
+                        timeslot2: selectedTimeslot2,
+                        serviceid: searchParams.id
                     }
                 }
                     }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
