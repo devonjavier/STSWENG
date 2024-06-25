@@ -8,9 +8,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   // when user clicks submit 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     console.log('Username:', username);
     console.log('Password:', password);
   };

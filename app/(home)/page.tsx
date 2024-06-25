@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Images from './components/Home/Images'
-import Services from './components/Home/Services'
-import { IntroText } from './components/Home/IntroText'
-import { Team } from './components/Home/Team'
-import Testimonials from './components/Home/Testimonials'
-import HearTheDifferences from './components/Home/HearTheDifferences'
+import Images from '../components/Home/Images'
+import Services from '../components/Home/Services'
+import { IntroText } from '../components/Home/IntroText'
+import { Team } from '../components/Home/Team'
+import Testimonials from '../components/Home/Testimonials'
+import HearTheDifferences from '../components/Home/HearTheDifferences'
 // import { createClient } from '@/utils/supabase/server'
 
 
