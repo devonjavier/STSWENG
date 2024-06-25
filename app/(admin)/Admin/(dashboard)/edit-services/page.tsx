@@ -49,7 +49,7 @@ export default function EditServiceDetails() {
                 <div key={index} className="flex items-start space-x-12">
                 <div className="w-24 h-24 bg-gray-200 flex flex-col justify-center items-center">
                     <img src="/random.png" alt="Service" className="w-24 h-24 object-cover mb-2" />
-                    <button className="bg-purple-600 text-white px-2 py-1 rounded">Change Photo</button>
+                    <button className="bg-cusBlue text-white px-2 py-1 rounded">Change Photo</button>
                 </div>
 
                 <ServiceCard
