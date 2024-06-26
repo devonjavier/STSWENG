@@ -154,16 +154,16 @@ abbr[title] {
     background: #2f396e; 
 }
 
-
+/* !important gives priority */
 .highlight-pending {
     font-weight: bold;
-    background-color: #facc15;
+    background-color: #facc15 !important;
 }
   
 .highlight-reserved {
     font-weight: bold;
     color: white;
-    background-color: green;
+    background-color: green !important;
 }
   
 .date-link {
