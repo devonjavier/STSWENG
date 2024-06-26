@@ -33,8 +33,8 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <AdminSidebar />
       <div className="flex-grow bg-white">
         <div className="bg-gray-200 p-4 flex justify-between items-center h-20">
-          <div className="block text-2xl font-medium ml-20">Dashboard</div>
-          <div className="block text-xl font-medium mr-20 text-right">
+          <div className="block text-2xl font-bold ml-20 text-black">Dashboard</div>
+          <div className="block text-xl font-bold mr-20 text-right text-black">
             <span className="block">{formatDate(currentTime)}</span>
             <span>{formatTime(currentTime)}</span>
           </div>

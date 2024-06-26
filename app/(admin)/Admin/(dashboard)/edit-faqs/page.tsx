@@ -46,7 +46,7 @@ export default function EditFAQs() {
         <h1 className="text-4xl font-bold text-black">Edit FAQs</h1>
         <button
           type="button"
-          className="bg-cusBlue text-white px-4 py-2 rounded-3xl w-40 mr-20"
+          className="bg-cusBlue font-bold text-white px-4 py-2 rounded-3xl w-40 mr-20"
           onClick={handleAddQuestion}
         >
           Add a question
@@ -66,8 +66,8 @@ export default function EditFAQs() {
             ))}
           </div>
           <div className="flex justify-end mt-6">
-            <button type="button" className="bg-rose-700 text-white px-4 py-2 rounded-3xl mr-2 w-40">Cancel</button>
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
+            <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40">Cancel</button>
+            <button type="submit" className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
           </div>
         </form>
       </div>
@@ -104,7 +104,7 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
         />
       </div>
       <div className="p-4 flex justify-end">
-        <button type="button" className="bg-rose-700 text-white px-4 py-2 rounded-3xl w-40" onClick={onDelete}>Delete Question</button>
+        <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={onDelete}>Delete Question</button>
       </div>
     </div>
   );

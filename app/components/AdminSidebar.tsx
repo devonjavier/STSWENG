@@ -18,7 +18,7 @@ const Sidebar: React.FC = () => {
         <Link href="./all-reservations" className="mb-4 text-lg hover:text-purple-300 pb-8">Edit website details</Link>
       </nav>
 
-      <div className="pt-72 mb-6 ml-16">
+      <div className="pt-56 mb-6 ml-16">
         <Link href="./logout" className="text-lg hover:text-purple-300">
           Log out
         </Link>
