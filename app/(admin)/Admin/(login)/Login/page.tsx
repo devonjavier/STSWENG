@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import {login} from './actions'
 
 // for taking input
 export default function LoginPage() {
@@ -23,12 +24,13 @@ export default function LoginPage() {
             </div>
         </div>
         <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg w-full max-w-lg">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form className="space-y-4">
                 <div className="text-black ">
                     <label htmlFor="username" className="block text-xl font-medium">Username</label>
                     <input
                         type="text"
                         id="username"
+                        name="username"
                         className="w-full px-4 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -41,6 +43,7 @@ export default function LoginPage() {
                     <input
                         type={showPassword ? 'text' : 'password'}
                         id="password"
+                        name="password"
                         className="w-full px-4 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -61,10 +64,10 @@ export default function LoginPage() {
                 </div>
 
                 <button
-                    type="submit"
+                    formAction={login}
                     className="w-full py-3 md:py-5 bg-cusBlue text-white rounded-lg hover:bg-purple-700 transition duration-300"
                     style={{ borderRadius: '50px' }}
-                >
+                    >
                     Log In
                 </button>
             </form>
