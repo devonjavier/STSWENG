@@ -54,7 +54,7 @@ export default function EditFAQs() {
       </div>
       <div className="w-full flex flex-col items-center p-4">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
-          <div className="max-h-[73vh] overflow-y-auto w-full max-w-full space-y-6 custom-scrollbar">
+          <div className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full  max-w-full space-y-6 custom-scrollbar">
             {faqs.map((faq, index) => (
               <div key={index} className="flex items-start space-x-12 mr-10">
                 <FAQCard
@@ -65,7 +65,7 @@ export default function EditFAQs() {
               </div>
             ))}
           </div>
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-end mt-6 ">
             <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40">Cancel</button>
             <button type="submit" className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
           </div>

@@ -44,7 +44,7 @@ export default function EditServiceDetails() {
         <h1 className="text-4xl font-bold text-black mb-1.5 text-left ml-48 pt-8">Edit service details</h1>
         <div className="w-full flex flex-col items-center p-4">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
-            <div className="max-h-[73vh] overflow-y-auto max-w-full space-y-6 custom-scrollbar ">
+            <div className="max-h-[73vh] min-h-[73vh] overflow-y-auto max-w-full space-y-6 custom-scrollbar ">
             {services.map((service, index) => (
                 <div key={index} className="flex items-start space-x-12 mr-16">
                 <div className="w-24 h-24 bg-gray-200 flex flex-col justify-center items-center">
@@ -61,8 +61,8 @@ export default function EditServiceDetails() {
             </div>
 
             <div className="flex justify-end mt-6">
-            <button type="button" className="bg-rose-700 text-white px-4 py-2 rounded-3xl mr-2 w-40">Cancel</button>
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
+            <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40">Cancel</button>
+            <button type="submit" className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
             </div>
         </form>
         </div>
