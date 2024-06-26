@@ -1,0 +1,27 @@
+/* styling for scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 12px;
+}
+  
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.custom-scrollbar {
+    scrollbar-width: 14px;
+    scrollbar-color: #888 #f1f1f1;
+}
+  
+.custom-scrollbar {
+    scroll-behavior: smooth;
+}
