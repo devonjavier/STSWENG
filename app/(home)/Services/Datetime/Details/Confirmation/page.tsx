@@ -10,7 +10,9 @@ const Page = ({searchParams}:{
         timeslot1: string,
         timeslot2: string,
         serviceid: string,
-        maincustomername: string,
+        maincustomerfirstname: string,
+        maincustomermiddlename: string
+        maincustomerlastname: string,
         needsparking: string,
         additionalrequests: string,
         additionalCustomers: string
@@ -46,12 +48,14 @@ const Page = ({searchParams}:{
             <div className='flex flex-row'>
                 <div className='flex flex-col'>
                     <div className="flex flex-col">
-                        <span className='text-cusBlue font-bold mb-5  text-2xl'> Main Customer: {searchParams.maincustomername}</span>
-                        {/* <span className='text-cusBlue font-bold mb-5 ml-7  text-md'>  </span> */}
+                        <span className='text-cusBlue font-bold mb-5  text-3xl'> Main Customer: </span>
+                        <span className='text-cusBlue font-bold mb-5  text-xl'> First name: {searchParams.maincustomerfirstname}</span>
+                        <span className='text-cusBlue font-bold mb-5  text-xl'> Middle name: {searchParams.maincustomermiddlename}</span>
+                        <span className='text-cusBlue font-bold mb-5  text-xl'> Last name: {searchParams.maincustomerlastname}</span>
                     </div>
 
                     <div className='flex flex-col'>
-                        <span className='text-cusBlue font-bold  text-2xl mr-16 my-6'> Additional Persons Involved: </span>
+                        <span className='text-cusBlue font-bold  text-3xl mr-16 my-6'> Additional Persons Involved: </span>
                         {addCust.map((customer:string, i:number) => (
                                 <span className='text-cusBlue text-xl font-bold mb-5 ml-7  text-md' key={i}> {i+1}. {customer} </span>
                         ))}
@@ -64,13 +68,15 @@ const Page = ({searchParams}:{
                     </div>
                     <Link 
                     href={{
-                        pathname:"/Services/Datetime/Details/Confirmation/Booking Status",
+                        pathname:"/Services/Datetime/Details/Confirmation/Bookingstatus",
                         query: {
                             dates: searchParams.dates,
                             timeslot1: searchParams.timeslot1,
                             timeslot2: searchParams.timeslot2,
                             serviceid: searchParams.serviceid,
-                            maincustomername: searchParams.maincustomername,
+                            maincustomerfirstname: searchParams.maincustomerfirstname,
+                            maincustomermiddlename: searchParams.maincustomermiddlename,
+                            maincustomerlastname: searchParams.maincustomerlastname,
                             needsparking:parkingChecker(searchParams.needsparking),
                             additionalrequests:searchParams.additionalrequests,
                             additionalCustomers:JSON.stringify(searchParams.additionalCustomers)

@@ -25,8 +25,12 @@ const Page = ({searchParams}:{
     };
 
     const [isChecked, setIsChecked] = useState(false); // assume its false
-    const [maincustomername, setmaincustomername] = useState(" "); // assume no customer
-    const [additionalRequests, setadditionalRequests] = useState(" "); // assume no customer
+
+    const [maincustomerfirstname, setmaincustomerfirstname] = useState(" "); // assume no customer
+    const [maincustomermiddlename, setmaincustomermiddlename] = useState(" "); // assume no customer
+    const [maincustomerlastname, setmaincustomerlastname] = useState(" "); // assume no customer
+
+    const [additionalRequests, setadditionalRequests] = useState(" "); // assume no request
     const [additionalCustomers, setadditionalCustomers] = useState<string[]>([]);// assume no addtional customer
 
     const handleCheckboxChange = (e:any) => {
@@ -34,8 +38,16 @@ const Page = ({searchParams}:{
         console.log(isChecked)
     };
 
-    const mainCustomerNameChange = useDebouncedCallback((term) => {
-        setmaincustomername(term);
+    const mainCustomerFirstNameChange = useDebouncedCallback((term) => {
+        setmaincustomerfirstname(term);
+    },300);
+
+    const mainCustomerMiddleNameChange = useDebouncedCallback((term) => {
+        setmaincustomermiddlename(term);
+    },300);
+
+    const mainCustomerLastNameChange = useDebouncedCallback((term) => {
+        setmaincustomerlastname(term);
     },300);
 
     const addtionalRequestChange = useDebouncedCallback((additionalreq) => {
@@ -61,7 +73,7 @@ const Page = ({searchParams}:{
             </div>
             </div>
             <div>
-                Package &gt; Date & Time &gt; <span className='text-cusBlue'>Details  </span>&gt; Confirmation &gt; Booking Status
+                Package &gt; Date & Time &gt; Details  &gt; Confirmation &gt; <span className='text-cusBlue'> Booking Status </span>
             </div>
         </div>
         <div className="flex flex-row">
@@ -69,22 +81,32 @@ const Page = ({searchParams}:{
             <div className='flex flex-row'>
                 <div className='flex flex-col'>
                      
-                    <span className='text-cusBlue font-bold mb-5  text-lg'> Main Customer</span>
-                    <input id='customername' name='customername' placeholder = "Name" 
-                        onChange={(e)=>{
-                            mainCustomerNameChange(e.target.value);
+                    <span className='text-cusBlue font-bold mb-5  text-lg'> Main Customer </span>
+                    <div className='flex flex-col'>
+                        <input id='customerfirstname' name='customername' placeholder = "First Name" 
+                            onChange={(e)=>{
+                                mainCustomerFirstNameChange(e.target.value);
                         }}
-                    className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
-                    
+                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+
+                        <input id='customermiddlename' name='customername' placeholder = "Middle Name" 
+                            onChange={(e)=>{
+                                mainCustomerMiddleNameChange(e.target.value);
+                        }}
+                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+
+                        <input id='customerlastname' name='customername' placeholder = "Last Name" 
+                            onChange={(e)=>{
+                                mainCustomerLastNameChange(e.target.value);
+                        }}
+                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                    </div>
                     <div className='flex flex-col'>
                         <div className="flex flex-row mt-5 mb-3 items-center">
                             <span className='text-cusBlue font-bold  text-lg mr-16'> Additional Persons Involved </span>
-                            
                             <button className='rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers - 1)}> - </button>
                             <span className='text-cusBlue font-bold mb-5  text-lg mx-4'> {countAdditionalCustomers} </span>
                             <button className='rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
-                            
-                            
                         </div>
 
                         <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomers={setadditionalCustomers} />
@@ -99,7 +121,9 @@ const Page = ({searchParams}:{
                             timeslot1: searchParams.timeslot1,
                             timeslot2: searchParams.timeslot2,
                             serviceid: searchParams.serviceid,
-                            maincustomername: maincustomername,
+                            maincustomerfirstname: maincustomerfirstname,
+                            maincustomermiddlename: maincustomermiddlename,
+                            maincustomerlastname: maincustomerlastname,
                             needsparking:isChecked,
                             additionalrequests:additionalRequests,
                             additionalCustomers:JSON.stringify(additionalCustomers)
