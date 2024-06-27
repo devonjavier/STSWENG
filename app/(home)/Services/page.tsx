@@ -39,7 +39,7 @@ export default async function displayPage() {
                 Book an Appointment
             </div>
             <div>
-                <span className='text-cusBlue'>Package </span>&gt; Date & Time &gt; Details &gt; Confirmation
+                <span className='text-cusBlue'>Package </span>&gt; Date & Time &gt; Details &gt; Confirmation &gt; Booking Status
             </div>
         </div>
         
@@ -59,7 +59,7 @@ export default async function displayPage() {
                         }} key={service.service.serviceid}>
                         <div><img className="w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
                         <div className='text-black text-3xl font-bold'>{service.service.title}</div>
-                        <div className='w-full text-cusBlue text-2xl font-light'><span className="font-bold">₱3500/3hr</span> in-person session with basic mix and mastering inclusion, where an...</div>
+                        <div className='w-full text-cusBlue text-2xl font-light'>{service.service.description} </div>
                     </Link>
                 )
             }
@@ -72,7 +72,7 @@ export default async function displayPage() {
                         }} key={service.service.serviceid}>
                         <div><img className="w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
                         <div className='text-black text-3xl font-bold'>{service.service.title}</div>
-                        <div className='w-full text-cusBlue text-2xl font-light'><span className="font-bold">₱3500/3hr</span> in-person session with basic mix and mastering inclusion, where an...</div>
+                        <div className='w-full text-cusBlue text-2xl font-light'>{service.service.description}</div>
                     </Link>
                 )
             }

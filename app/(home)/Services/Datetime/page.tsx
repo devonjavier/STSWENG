@@ -44,7 +44,7 @@ const Page = ({searchParams}:{
         </div>
         </div>
         <div>
-            Package &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Details &gt; Confirmation &gt; Booking Status
+            Package &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Details &gt; Confirmation &gt; Booking Status 
         </div>
     </div>
 
