@@ -4,17 +4,38 @@ import {login} from './actions'
 
 // for taking input
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false)
 
-  // when user clicks submit 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
 
-    console.log('Username:', username);
-    console.log('Password:', password);
-  };
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+
+        try {
+            const result = await login(formData);
+            setLoading(false);
+      
+            if (result && result.success) {
+              // Handle successful login, e.g., redirect or update state
+              // Example:
+              // router.push('/dashboard');
+            } else {
+              setError(result ? result.message : 'An unexpected error occurred');
+            }
+          } catch (error) {
+            setLoading(false);
+            setError('An error occurred while logging in');
+            console.error('Login error:', error);
+          }
+    };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white pb-8">
@@ -24,7 +45,7 @@ export default function LoginPage() {
             </div>
         </div>
         <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg w-full max-w-lg">
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
                 <div className="text-black ">
                     <label htmlFor="username" className="block text-xl font-medium">Username</label>
                     <input
@@ -64,7 +85,7 @@ export default function LoginPage() {
                 </div>
 
                 <button
-                    formAction={login}
+                    type="submit"
                     className="w-full py-3 md:py-5 bg-cusBlue text-white rounded-lg hover:bg-purple-700 transition duration-300"
                     style={{ borderRadius: '50px' }}
                     >

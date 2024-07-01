@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import bcrypt from 'bcrypt'
+import { cookies } from 'next/headers';
 
 // Login function for admins
 export async function login(formData: FormData) {
@@ -12,11 +13,8 @@ export async function login(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  // check if data was received
-  console.log(formdata);
 
   // fetch data 
-
   const { data, error } = await supabase
   .from('Admin')
   .select('password, personid, username')
