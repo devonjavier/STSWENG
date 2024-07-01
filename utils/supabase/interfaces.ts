@@ -4,3 +4,11 @@ export interface Services{
     is_addon : boolean;
     addons? : Services[];
   }
+
+export interface accountData {
+    password : string;
+    personid : string;
+    username : string;
+    emailaddress :  string;
+  }
+  

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import {login} from './actions'
+import {authenticate} from './actions'
 
 // for taking input
 export default function LoginPage() {
@@ -20,21 +20,18 @@ export default function LoginPage() {
         formData.append('password', password);
 
         try {
-            const result = await login(formData);
+            const result = await authenticate(formData);
             setLoading(false);
-      
-            if (result && result.success) {
-              // Handle successful login, e.g., redirect or update state
-              // Example:
-              // router.push('/dashboard');
-            } else {
-              setError(result ? result.message : 'An unexpected error occurred');
-            }
-          } catch (error) {
+
+            if(result && result.success){
+                window.location.href = '/Admin/all-reservations';
+            } 
+            
+        } catch (error) {
             setLoading(false);
             setError('An error occurred while logging in');
             console.error('Login error:', error);
-          }
+        }
     };
 
   return (

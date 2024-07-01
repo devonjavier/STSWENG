@@ -1,11 +1,33 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
-import bcrypt from 'bcrypt'
+import { createClient } from '@/utils/supabase/server';
+import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
+import { accountData } from '@/utils/supabase/interfaces';
+import jwt from 'jsonwebtoken';
+import { NextResponse } from 'next/server';
 
-// Login function for admins
-export async function login(formData: FormData) {
+
+// create session token & store in cookie
+async function handleLogin(account : accountData, supabase : any){
+
+  const token = jwt.sign({ personid: account.personid, username: account.username }, 
+    'your-secret-key', 
+    { expiresIn: '7d' }
+  );
+
+  cookies().set('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7, 
+    path: '/'
+  });
+
+  return '/Admin/all-reservations'; // Return the redirect URL
+}
+
+// Login function for admins, could still be cleaned up with try catch instead
+export async function authenticate(formData: FormData) {
   const supabase = createClient()
 
   const formdata = {
@@ -37,26 +59,21 @@ export async function login(formData: FormData) {
 
   if (!passwordMatch) {
     return { success: false, message: 'Invalid password' };
+  } else {
+    try{
+      const url = await handleLogin(data as accountData, supabase);
+      return { success: true, url};
+    } catch(error) {
+      console.error('Login error:', error);
+      return { success: false, message: 'Login error' };
+    }
   }
-
-  // confirm if person is admin
-  
-
-  // need to create cookies for user next
-
-
-
-  
-
-
-
-
- 
 }
 
 
 
 
+// sign up and add to auth.users table
 
 // possible sign up for admins?
 // export async function signup(formData: FormData) {
