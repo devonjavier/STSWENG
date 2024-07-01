@@ -42,42 +42,38 @@ export default function displayPage() {
         </div>
         
         <div className='grid grid-cols-2 gap-20 gap-y-10'>
-        {completeServices ? (
-            completeServices.map((service : service) => {
+            {completeServices ? (
+                completeServices.map((object, i) => {
+                    
+                    //able to differentiate between onetime and hourly altho needs testing
 
-            //able to differentiate between onetime and hourly altho needs testing
+                    // not sure how to implement the rate within a description automatically though. 
 
-            // not sure how to implement the rate within a description automatically though. 
-            
-            if(service.serviceType === 'onetime'){
-                return(
-                    <Link href={{
-                        pathname: '/Services/Datetime',
-                        query: {id : service.serviceid}
-                        }} key={service.serviceid}>
-                        <div><img className="w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
-                        <div className='text-black text-3xl font-bold'>{service.title}</div>
-                        <div className='w-full text-cusBlue text-2xl font-light'>{service.description} </div>
-                    </Link>
-                )
-            }
+                    const { service, serviceType } = object; // one object = service and serviceType
 
-            if(service.serviceType === 'hourly'){
-                return(
-                    <Link href={{
-                        pathname: '/Services/Datetime',
-                        query: {id : service.serviceid}
-                        }} key={service.serviceid}>
-                        <div><img className="w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
-                        <div className='text-black text-3xl font-bold'>{service.title}</div>
-                        <div className='w-full text-cusBlue text-2xl font-light'>{service.description}</div>
-                    </Link>
-                )
-            }
-            
-        })) : (
-            <p>No services available. </p>
-        )}
+                    return (
+                        <Link
+                            href={{
+                                pathname: '/Services/Datetime',
+                                query: { id: service.serviceid }
+                            }}
+                            key={service.serviceid}
+                        >
+                            <div>
+                                <img
+                                    className="w-full h-64 rounded-3xl shadow mb-5"
+                                    src={service.imageURL}
+                                    alt={service.title}
+                                />
+                            </div>
+                            <div className='text-black text-3xl font-bold'>{service.title}</div>
+                            <div className='w-full text-cusBlue text-2xl font-light'>{service.description}</div>
+                        </Link>
+                    );
+                })
+            ) : (
+                <p>No services available.</p>
+            )}
   
           {/* <Link href="/Services/Datetime">
               <div><img className = "w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
@@ -110,7 +106,6 @@ export default function displayPage() {
         </>
     )
 }
-
 
 
 
