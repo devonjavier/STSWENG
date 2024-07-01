@@ -1,5 +1,7 @@
-'use client'
+
 import React from 'react';
+import { fetchReservations } from '@/utils/supabase/actions';
+import { useState, useEffect } from 'react';
 // import AdminLayout from '../../components/AdminLayout';
 
 //sample dataset
@@ -10,6 +12,18 @@ const data = [
 ];
 
 const Page: React.FC = () => {
+  
+  const [reservations, setReservations] = useState(data);
+
+  useEffect(() => {
+    async function getReservations() {
+      const data = await fetchReservations();
+      setReservations(data);
+    }
+
+    getReservations();
+  }, []);
+
   return (
     <>
       <div className="p-24 pt-20">

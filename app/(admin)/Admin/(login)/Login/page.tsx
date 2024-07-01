@@ -23,8 +23,8 @@ export default function LoginPage() {
             const result = await authenticate(formData);
             setLoading(false);
 
-            if(result && result.success){
-                window.location.href = '/Admin/all-reservations';
+            if(result && result.success && result.url){
+                window.location.href = result.url;
             } 
             
         } catch (error) {

@@ -62,7 +62,7 @@ export async function authenticate(formData: FormData) {
   } else {
     try{
       const url = await handleLogin(data as accountData, supabase);
-      return { success: true, url};
+      return { success: true, url : url};
     } catch(error) {
       console.error('Login error:', error);
       return { success: false, message: 'Login error' };
