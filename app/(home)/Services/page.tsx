@@ -2,7 +2,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchServices } from '@/utils/supabase/actions'
+import { fetchServices } from '@/utils/supabase/data'
 import { service } from '@/utils/supabase/interfaces'
 
 

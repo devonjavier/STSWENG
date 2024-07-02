@@ -2,9 +2,10 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { service } from '@/utils/supabase/interfaces'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 
-export async function fetchReservations() {
+export async function fetchAppointments() {
     const supabase = createClient();
     const { data, error } = await supabase.from('Reservations').select();
     if (error) {
@@ -42,3 +43,35 @@ export async function fetchServices(){
 
     return completeServices; 
 }
+
+
+export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
+    if (req.method === 'POST') {
+        const { dates, timeslot1, timeslot2, serviceid, 
+            maincustomerfirstname, maincustomermiddlename, 
+            maincustomerlastname, needsparking, additionalrequests, 
+            additionalCustomers } = req.body;
+
+        const supabase = createClient();
+        
+        // this adds the data, though im not sure how to add the data yet to the db
+        // const { data, error } = await supabase.from('')
+        //     .insert([
+        //         {
+        //             dates,
+        //             timeslot1,
+        //             timeslot2,
+        //             serviceid,
+        //             maincustomerfirstname,
+        //             maincustomermiddlename,
+        //             maincustomerlastname,
+        //             needsparking,
+        //             additionalrequests,
+        //             additionalCustomers
+        //         }
+        //     ]);
+
+    }
+}
+
+

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import {authenticate} from './actions'
+import {authenticate} from '@/app/lib/actions'
 
 // for taking input
 export default function LoginPage() {

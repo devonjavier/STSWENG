@@ -1,6 +1,6 @@
-
+'use client'
 import React from 'react';
-import { fetchReservations } from '@/utils/supabase/actions';
+import { fetchAppointments } from '@/utils/supabase/data';
 import { useState, useEffect } from 'react';
 // import AdminLayout from '../../components/AdminLayout';
 
@@ -14,15 +14,28 @@ const data = [
 const Page: React.FC = () => {
   
   const [reservations, setReservations] = useState(data);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getReservations() {
-      const data = await fetchReservations();
-      setReservations(data);
+
+      try{
+        const data = await fetchAppointments();
+        setReservations(data);
+      } catch(error) {
+        console.error('Error fetching services:', error);
+      } finally {
+        setLoading(false)
+      }
+      
     }
 
     getReservations();
   }, []);
+
+  if(loading){
+    return <p>Loading...</p>;
+  }
 
   return (
     <>
