@@ -54,7 +54,6 @@ const Page = ({searchParams}:{
         setadditionalRequests(additionalreq);
     },300);
 
-    const [countAdditionalCustomers, setcountAdditionalCustomers] = useState(0);
 
     function checker(dates:string){
         var format;
@@ -73,7 +72,7 @@ const Page = ({searchParams}:{
             </div>
             </div>
             <div>
-                Package &gt; Date & Time &gt; Details  &gt; Confirmation &gt; <span className='text-cusBlue'> Booking Status </span>
+                Package &gt; Date & Time &gt; <span className='text-cusBlue'>Details </span> &gt; Confirmation &gt;  Booking Status 
             </div>
         </div>
         <div className="flex flex-row">
@@ -101,21 +100,9 @@ const Page = ({searchParams}:{
                         }}
                         className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                     </div>
-                    <div className='flex flex-col'>
-                        <div className="flex flex-row mt-5 mb-3 items-center">
-                            <span className='text-cusBlue font-bold  text-lg mr-16'> Additional Persons Involved </span>
-                            <button className='rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers - 1)}> - </button>
-                            <span className='text-cusBlue font-bold mb-5  text-lg mx-4'> {countAdditionalCustomers} </span>
-                            <button className='rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
-                        </div>
-
-                        <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomers={setadditionalCustomers} />
-
-                    </div>
-
                     <Link 
                     href={{
-                        pathname:"/Services/Datetime/Details/Confirmation",
+                        pathname:"/Services/Datetime/Details/Extradetails",
                         query: {
                             dates: searchParams.dates,
                             timeslot1: searchParams.timeslot1,
@@ -126,11 +113,10 @@ const Page = ({searchParams}:{
                             maincustomerlastname: maincustomerlastname,
                             needsparking:isChecked,
                             additionalrequests:additionalRequests,
-                            additionalCustomers:JSON.stringify(additionalCustomers)
                         }
                     }}>  
                     
-                    <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Confirmation </button> </Link>
+                    <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Next </button> </Link>
 
                 </div>
                 

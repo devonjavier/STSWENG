@@ -68,7 +68,7 @@ const Page = ({searchParams}:{
                     </div>
                     <Link 
                     href={{
-                        pathname:"/Services/Datetime/Details/Confirmation/Bookingstatus",
+                        pathname:"/Services/Datetime/Details/Extradetails/Confirmation/Bookingstatus",
                         query: {
                             dates: searchParams.dates,
                             timeslot1: searchParams.timeslot1,
