@@ -1,6 +1,14 @@
-export interface Services{
+export interface service{
     serviceid : number;
     title : string;
-    is_addon : boolean;
-    addons? : Services[];
+    description : string;
+    serviceType : 'onetime' | 'hourly';
   }
+
+export interface accountData {
+    password : string;
+    personid : string;
+    username : string;
+    emailaddress :  string;
+  }
+  

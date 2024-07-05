@@ -1,35 +1,33 @@
 
+'use client'
 import Link from 'next/link'
-import React from 'react'
-import { createClient } from '@/utils/supabase/server'
-
-export default async function displayPage() {
-
-    const supabase = createClient();
-    const { data: services } = await supabase.from('Service').select();
-    const { data: onetimeServices } = await supabase.from('OnetimeService').select();
-    const { data: hourlyServices } = await supabase.from('HourlyService').select();
-    // console.log(await supabase.from('Service').select());
+import React, { useEffect, useState } from 'react';
+import { fetchServices } from '@/utils/supabase/data'
+import { service } from '@/utils/supabase/interfaces'
 
 
-    const completeServices = services?.map(service => {
-        const onetimeservice = onetimeServices?.find(ot => ot.serviceid === service.id);
-        const hourlyservice = hourlyServices?.find(h => h.serviceid === service.id);
+export default function displayPage() {
+    const [completeServices, setCompleteServices] = useState<service[] | null>(null);
+    const [loading, setLoading] = useState(true);
 
-        if(onetimeservice){
-            return({
-                service,
-                onetimeservice,
-                serviceType: 'onetime'
-            });
-        } else {
-            return({
-                service,
-                hourlyservice,
-                serviceType: 'hourly'
-            });
-        }
-    });
+    useEffect(() => {
+        const getServices = async () => {
+          try {
+            const services = await fetchServices();
+            setCompleteServices(services);
+          } catch (error) {
+            console.error('Error fetching services:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        getServices();
+    }, []);
+
+    if (loading) {
+    return <p>Loading...</p>;
+    }
 
     return (
         <>
@@ -44,42 +42,38 @@ export default async function displayPage() {
         </div>
         
         <div className='grid grid-cols-2 gap-20 gap-y-10'>
-        {completeServices ? (
-            completeServices.map(service => {
+            {completeServices ? (
+                completeServices.map((object, i) => {
+                    
+                    //able to differentiate between onetime and hourly altho needs testing
 
-            //able to differentiate between onetime and hourly altho needs testing
+                    // not sure how to implement the rate within a description automatically though. 
 
-            // not sure how to implement the rate within a description automatically though. 
-            
-            if(service.serviceType === 'onetime'){
-                return(
-                    <Link href={{
-                        pathname: '/Services/Datetime',
-                        query: {id : service.service.serviceid}
-                        }} key={service.service.serviceid}>
-                        <div><img className="w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
-                        <div className='text-black text-3xl font-bold'>{service.service.title}</div>
-                        <div className='w-full text-cusBlue text-2xl font-light'>{service.service.description} </div>
-                    </Link>
-                )
-            }
+                    const { service, serviceType } = object; // one object = service and serviceType
 
-            if(service.serviceType === 'hourly'){
-                return(
-                    <Link href={{
-                        pathname: '/Services/Datetime',
-                        query: {id : service.service.serviceid}
-                        }} key={service.service.serviceid}>
-                        <div><img className="w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
-                        <div className='text-black text-3xl font-bold'>{service.service.title}</div>
-                        <div className='w-full text-cusBlue text-2xl font-light'>{service.service.description}</div>
-                    </Link>
-                )
-            }
-            
-        })) : (
-            <p>No services available. </p>
-        )}
+                    return (
+                        <Link
+                            href={{
+                                pathname: '/Services/Datetime',
+                                query: { id: service.serviceid }
+                            }}
+                            key={service.serviceid}
+                        >
+                            <div>
+                                <img
+                                    className="w-full h-64 rounded-3xl shadow mb-5"
+                                    src={service.imageURL}
+                                    alt={service.title}
+                                />
+                            </div>
+                            <div className='text-black text-3xl font-bold'>{service.title}</div>
+                            <div className='w-full text-cusBlue text-2xl font-light'>{service.description}</div>
+                        </Link>
+                    );
+                })
+            ) : (
+                <p>No services available.</p>
+            )}
   
           {/* <Link href="/Services/Datetime">
               <div><img className = "w-full h-64 rounded-3xl shadow mb-5" src="" alt="" /></div>
@@ -112,7 +106,6 @@ export default async function displayPage() {
         </>
     )
 }
-
 
 
 

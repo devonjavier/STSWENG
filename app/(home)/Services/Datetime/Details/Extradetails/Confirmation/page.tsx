@@ -31,6 +31,34 @@ const Page = ({searchParams}:{
             return false;
     }
 
+    const handleConfirm = async ()  => {
+        const response = await fetch('/utils/supabase/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                dates: searchParams.dates,
+                timeslot1: searchParams.timeslot1,
+                timeslot2: searchParams.timeslot2,
+                serviceid: searchParams.serviceid,
+                maincustomerfirstname: searchParams.maincustomerfirstname,
+                maincustomermiddlename: searchParams.maincustomermiddlename,
+                maincustomerlastname: searchParams.maincustomerlastname,
+                needsparking: searchParams.needsparking,
+                additionalrequests: searchParams.additionalrequests,
+                additionalCustomers: searchParams.additionalCustomers
+            })
+        });
+
+        if(response.ok){
+            alert('Booking Confirmed!');
+        } else {
+            console.error('Error adding booking');
+            alert('Failed to confirm booking.');
+        }
+    }
+
   return (
     <>
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -82,7 +110,8 @@ const Page = ({searchParams}:{
                             additionalCustomers:JSON.stringify(searchParams.additionalCustomers)
                         }
                     }}>  
-                    <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Confirm Details </button> </Link>
+                    <button onClick={handleConfirm} 
+                    className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Confirm Details </button> </Link>
 
                 </div>
                 
