@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import React, {useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
-import Dropdown from '@/app/components/Dropdown/Dropdown';
+import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
 
 const Page = ({searchParams}:{
     searchParams: {
@@ -79,7 +79,13 @@ const Page = ({searchParams}:{
                     }
                 }
                     }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
-            </div>  
+                
+                
+            </div>  a
+            <div className='flex flex-row'>
+                <DropdownWrapper items= {time} setArrFunc={setselectedDates} selectedDates={selectedDates} setSelectedDates={setselectedDates}/>
+            </div>
+                
 
         </div>
     </div>

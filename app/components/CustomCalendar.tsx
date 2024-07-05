@@ -18,7 +18,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
       // Add date if not selected
-      setSelectedDates([...selectedDates, {date: date , selectedtime1: "", selectedtime2: "" } ]); // empty for now
+      setSelectedDates([...selectedDates, {date: date , selectedtime1: "9:00", selectedtime2: "9:00" } ]); // empty for now
     }
   };
 
