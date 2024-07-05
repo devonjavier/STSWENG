@@ -4,21 +4,21 @@ import Calendar from 'react-calendar';
 import './calendar.css';
 
 interface CustomCalendarProps {
-  setArrFunc: Dispatch<Date[]>; // Define the correct type for setArrFunc
+  setArrFunc: Dispatch<{date: Date, selectedtime1: string, selectedtime2: string}[]>; // Define the correct type for setArrFunc
 }
 
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
-  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [selectedDates, setSelectedDates] = useState<{date: Date, selectedtime1: string, selectedtime2: string}[]>([]);
 
   const handleDateChange = (date: Date) => {
-    const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.toDateString() === date.toDateString());
-    
+    const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.date.toDateString() === date.toDateString());
+
     if (dateIndex !== -1) {
       // Remove date if already selected
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
       // Add date if not selected
-      setSelectedDates([...selectedDates, date]);
+      setSelectedDates([...selectedDates, {date: date , selectedtime1: "9:00", selectedtime2: "9:00" } ]); // empty for now
     }
   };
 
@@ -35,7 +35,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
           minDate={new Date()}
           onClickDay={handleDateChange}
           tileClassName={({ date, view }) => {
-            const isSelected = selectedDates.some(selectedDate => selectedDate.toDateString() === date.toDateString());
+            const isSelected = selectedDates.some(selectedDate => selectedDate.date.toDateString() === date.toDateString());
             return isSelected && view === 'month' ? 'highlight' : null;
           }}
         />

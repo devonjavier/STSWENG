@@ -3,17 +3,18 @@
 import Link from 'next/link'
 import React, {useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
-import Dropdown from '@/app/components/Dropdown/Dropdown';
+import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
 
 const Page = ({searchParams}:{
     searchParams: {
         id: string
     }
 }) => {
-    const [selectedDates, setselectedDates] = useState<Date[]>([]);
+    
+    const [selectedDates, setselectedDates] = useState<{date: Date, selectedtime1: string, selectedtime2: string}[]>([]);
 
-    const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
-    const [selectedTimeslot2, setselectedTimeslot2] = useState<string>();
+    //const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
+    //const [selectedTimeslot2, setselectedTimeslot2] = useState<string>();
 
     const time = [];
 
@@ -30,8 +31,14 @@ const Page = ({searchParams}:{
     }
     const datesString = JSON.stringify(selectedDates);
 
-    function checker(dates: Date[]){
+    function checker(dates: Date){
         console.log(dates);
+    }
+
+    const handleClick = () =>{
+        selectedDates.forEach(obj => {
+            checker(obj.date); // Accessing the 'date' property of each object
+        });
     }
     
   return (
@@ -59,34 +66,27 @@ const Page = ({searchParams}:{
 
                 <Calendar setArrFunc={setselectedDates}/>
 
+                <button onClick={handleClick}> CLICK ME</button>
+
                 <Link href={
                 {
                     pathname:"/Services/Datetime/Details",
                     query:{
                         dates: datesString,
-                        timeslot1: selectedTimeslot1,
-                        timeslot2: selectedTimeslot2,
+                        //timeslot1: selectedTimeslot1,
+                        //timeslot2: selectedTimeslot2,
                         serviceid: searchParams.id
                     }
                 }
                     }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
-            </div>  
+                
+                
+            </div>  a
+            <div className='flex flex-row'>
+                <DropdownWrapper items= {time} setArrFunc={setselectedDates} selectedDates={selectedDates} setSelectedDates={setselectedDates}/>
+            </div>
+                
 
-            
-            <div className="flex flex-col">
-                <span className="text-cusBlue text-3xl font-bold"> Select a time </span>
-                <div className='flex flex-row'>
-                    <div className='flex flex-col mr-20 '>
-                        <span className='font-bold text-black'> Start </span>
-                        <Dropdown items={time} setTime={setselectedTimeslot1}/>
-                    </div>
-                    <div className='flex flex-col mr-20 '>
-                    <span className='font-bold text-black' > End </span>
-                        <Dropdown items={time} setTime={setselectedTimeslot2}/>
-                    </div>
-
-                    </div>
-                </div>
         </div>
     </div>
     
