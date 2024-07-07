@@ -16,6 +16,19 @@ export async function fetchAppointments() {
     return data;
 }
 
+export async function fetchSchedule() {
+    const supabase = createClient();
+    const { data, error} = await supabase.from('Schedule').select();
+
+    if(error){
+        return ["error", "error"]
+    }
+    if (data)
+    {
+        return data;
+    }
+}
+
 export async function fetchServices(){
     const supabase = createClient();
     const { data: services } = await supabase.from('Service').select();

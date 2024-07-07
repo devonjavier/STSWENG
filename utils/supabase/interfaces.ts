@@ -11,4 +11,11 @@ export interface accountData {
     username : string;
     emailaddress :  string;
   }
+
+export interface schedule{
+    scheduleid : number;
+    date : Date;
+    starttime:string;
+    endtime:string;
+  }
   

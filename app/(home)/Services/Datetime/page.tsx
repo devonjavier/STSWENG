@@ -4,6 +4,8 @@ import Link from 'next/link'
 import React, {useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
+import { fetchSchedule } from '@/utils/supabase/data'
+import { schedule } from '@/utils/supabase/interfaces'
 
 const Page = ({searchParams}:{
     searchParams: {
@@ -11,10 +13,37 @@ const Page = ({searchParams}:{
     }
 }) => {
     
-    const [selectedDates, setselectedDates] = useState<{date: Date, selectedtime1: string, selectedtime2: string}[]>([]);
+    const [selectedDates, setselectedDates] = useState<[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    //const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
-    //const [selectedTimeslot2, setselectedTimeslot2] = useState<string>();
+    useEffect(() => {
+        const getSchedule = async () => {
+          try {
+            const schedules = await fetchSchedule();
+
+            //const sched = JSON.stringify(schedules);
+            
+            const newSelectedDates = schedules.map((schedule) => ({
+                date: schedule.date,
+                selectedtime1: schedule.starttime,
+                selectedtime2: schedule.endtime
+            }));
+        
+            setselectedDates(newSelectedDates);
+
+            console.log(selectedDates);
+
+            
+
+          } catch (error) {
+            console.error('Error fetching services:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        getSchedule();
+    }, []);
 
     const time = [];
 
@@ -96,3 +125,7 @@ const Page = ({searchParams}:{
 }
 
 export default Page
+function useEffect(arg0: () => void, arg1: never[]) {
+    throw new Error('Function not implemented.');
+}
+
