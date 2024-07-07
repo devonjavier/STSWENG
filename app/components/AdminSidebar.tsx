@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { Rubik } from 'next/font/google';
+import { handleLogout } from '@/app/lib/actions'
+
+
 
 const rubik = Rubik({ subsets: ['latin'] });
 
@@ -10,6 +13,11 @@ const Sidebar: React.FC = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
+
+  const logout = useCallback(() => {
+    handleLogout();
+  }, []);
+
 
   return (
     <div className={`h-screen w-64 bg-cusBlue text-white p-5 font-medium relative ${rubik.className}`}>
@@ -39,7 +47,7 @@ const Sidebar: React.FC = () => {
       </nav>
 
       <div className="absolute bottom-12 mb-6 ml-16">
-        <Link href="./logout" className="text-lg hover:text-purple-300 transition duration-300 ease-in-out">
+        <Link href="/" onClick={logout} className="text-lg hover:text-purple-300 transition duration-300 ease-in-out">
           Log out
         </Link>
       </div>
