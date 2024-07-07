@@ -1,7 +1,7 @@
 
 'use client'
 import Link from 'next/link'
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
 import { fetchSchedule } from '@/utils/supabase/data'
@@ -13,15 +13,14 @@ const Page = ({searchParams}:{
     }
 }) => {
     
-    const [selectedDates, setselectedDates] = useState<[]>([]);
+    const [schedules, setSchedules] = useState<[]>([]);
+    const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const getSchedule = async () => {
           try {
             const schedules = await fetchSchedule();
-
-            //const sched = JSON.stringify(schedules);
             
             const newSelectedDates = schedules.map((schedule) => ({
                 date: schedule.date,
@@ -29,9 +28,9 @@ const Page = ({searchParams}:{
                 selectedtime2: schedule.endtime
             }));
         
-            setselectedDates(newSelectedDates);
+            setSchedules(newSelectedDates);
 
-            console.log(selectedDates);
+            console.log(schedules);
 
             
 
@@ -58,16 +57,9 @@ const Page = ({searchParams}:{
       const formattedMins = mins === 0 ? '00' : mins;
       time.push(`${formattedHours}:${formattedMins}${period}`);
     }
-    const datesString = JSON.stringify(selectedDates);
 
     function checker(dates: Date){
         console.log(dates);
-    }
-
-    const handleClick = () =>{
-        selectedDates.forEach(obj => {
-            checker(obj.date); // Accessing the 'date' property of each object
-        });
     }
     
   return (
@@ -93,15 +85,13 @@ const Page = ({searchParams}:{
             <div className='flex flex-col mr-32'>
 
 
-                <Calendar setArrFunc={setselectedDates}/>
-
-                <button onClick={handleClick}> CLICK ME</button>
+                <Calendar setArrFunc={setselectedSchedules}/>
 
                 <Link href={
                 {
                     pathname:"/Services/Datetime/Details",
                     query:{
-                        dates: datesString,
+                        //dates: datesString,
                         //timeslot1: selectedTimeslot1,
                         //timeslot2: selectedTimeslot2,
                         serviceid: searchParams.id
@@ -112,7 +102,7 @@ const Page = ({searchParams}:{
                 
             </div>  a
             <div className='flex flex-row'>
-                <DropdownWrapper items= {time} setArrFunc={setselectedDates} selectedDates={selectedDates} setSelectedDates={setselectedDates}/>
+                <DropdownWrapper items= {time} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={selectedSchedules}/>
             </div>
                 
 
@@ -125,7 +115,4 @@ const Page = ({searchParams}:{
 }
 
 export default Page
-function useEffect(arg0: () => void, arg1: never[]) {
-    throw new Error('Function not implemented.');
-}
 
