@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/server'
 import { service } from '@/utils/supabase/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { findPerson } from '@/app/lib/actions'
 
 
 export async function fetchAppointments() {
@@ -23,8 +24,8 @@ export async function fetchServices(){
 
 
     const completeServices = services?.map((service : service) => {
-        const onetimeservice = onetimeServices?.find((ot : service) => ot.serviceid === service.serviceid);
-        const hourlyservice = hourlyServices?.find((h : service) => h.serviceid === service.serviceid);
+    const onetimeservice = onetimeServices?.find((ot : service) => ot.serviceid === service.serviceid);
+    const hourlyservice = hourlyServices?.find((h : service) => h.serviceid === service.serviceid);
 
         if(onetimeservice){
             return({
@@ -53,6 +54,12 @@ export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
             additionalCustomers } = req.body;
 
         const supabase = createClient();
+
+        const person_stored = await findPerson(maincustomerfirstname, maincustomermiddlename, maincustomerlastname, supabase);
+
+        if(person_stored){
+            console.log('passed correctly : ', person_stored);
+        }
         
         // this adds the data, though im not sure how to add the data yet to the db
         // const { data, error } = await supabase.from('')
@@ -73,5 +80,7 @@ export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
 
     }
 }
+
+
 
 
