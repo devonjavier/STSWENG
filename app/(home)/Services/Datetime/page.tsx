@@ -1,20 +1,40 @@
 
 'use client'
 import Link from 'next/link'
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
+import { fetchSchedule } from '@/utils/supabase/data'
+import { schedule } from '@/utils/supabase/interfaces'
 
 const Page = ({searchParams}:{
     searchParams: {
         id: string
     }
 }) => {
-    
-    const [selectedDates, setselectedDates] = useState<{date: Date, selectedtime1: string, selectedtime2: string}[]>([]);
 
-    //const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
-    //const [selectedTimeslot2, setselectedTimeslot2] = useState<string>();
+    const [selectedDates, setselectedDates] = useState<schedule[] | null >(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const getSchedule = async () => {
+          try {
+            const schedules = await fetchSchedule();
+            selectedDates(schedules);
+            console.log(selectedDates);
+          } catch (error) {
+            console.error('Error fetching services:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        getSchedule();
+    }, []);
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     const time = [];
 
@@ -29,7 +49,7 @@ const Page = ({searchParams}:{
       const formattedMins = mins === 0 ? '00' : mins;
       time.push(`${formattedHours}:${formattedMins}${period}`);
     }
-    const datesString = JSON.stringify(selectedDates);
+    //const datesStrings = JSON.stringify(datesstring);
 
     function checker(dates: Date){
         console.log(dates);
@@ -72,7 +92,7 @@ const Page = ({searchParams}:{
                 {
                     pathname:"/Services/Datetime/Details",
                     query:{
-                        dates: datesString,
+                        //dates: datesStrings,
                         //timeslot1: selectedTimeslot1,
                         //timeslot2: selectedTimeslot2,
                         serviceid: searchParams.id
@@ -96,3 +116,7 @@ const Page = ({searchParams}:{
 }
 
 export default Page
+function setLoading(arg0: boolean) {
+    throw new Error('Function not implemented.');
+}
+
