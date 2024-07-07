@@ -12,3 +12,9 @@ export interface accountData {
     emailaddress :  string;
   }
   
+export interface schedule{
+    scheduleid : number;
+    date : Date;
+    starttime:string;
+    endtime:string;
+  }

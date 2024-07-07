@@ -15,6 +15,7 @@ export default function displayPage() {
           try {
             const services = await fetchServices();
             setCompleteServices(services);
+            
           } catch (error) {
             console.error('Error fetching services:', error);
           } finally {
