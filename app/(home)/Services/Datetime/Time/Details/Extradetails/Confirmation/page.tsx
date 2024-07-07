@@ -1,6 +1,7 @@
 
 'use client'
 
+import React, {useCallback} from 'react'
 import DateFormatter from "@/app/components/DateFormatter";
 import Link from "next/link";
 
@@ -31,33 +32,20 @@ const Page = ({searchParams}:{
             return false;
     }
 
-    const handleConfirm = async ()  => {
-        const response = await fetch('/utils/supabase/data', {
-            method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
-            body: JSON.stringify({
-                dates: searchParams.dates,
-                timeslot1: searchParams.timeslot1,
-                timeslot2: searchParams.timeslot2,
-                serviceid: searchParams.serviceid,
-                maincustomerfirstname: searchParams.maincustomerfirstname,
-                maincustomermiddlename: searchParams.maincustomermiddlename,
-                maincustomerlastname: searchParams.maincustomerlastname,
-                needsparking: searchParams.needsparking,
-                additionalrequests: searchParams.additionalrequests,
-                additionalCustomers: searchParams.additionalCustomers
-            })
-        });
+    const confirm = useCallback(() =>{
+        
+    }, []);
 
-        if(response.ok){
-            alert('Booking Confirmed!');
-        } else {
-            console.error('Error adding booking');
-            alert('Failed to confirm booking.');
-        }
-    }
+    // dates: searchParams.dates,
+    //             timeslot1: searchParams.timeslot1,
+    //             timeslot2: searchParams.timeslot2,
+    //             serviceid: searchParams.serviceid,
+    //             maincustomerfirstname: searchParams.maincustomerfirstname,
+    //             maincustomermiddlename: searchParams.maincustomermiddlename,
+    //             maincustomerlastname: searchParams.maincustomerlastname,
+    //             needsparking: searchParams.needsparking,
+    //             additionalrequests: searchParams.additionalrequests,
+    //             additionalCustomers: searchParams.additionalCustomers
 
   return (
     <>

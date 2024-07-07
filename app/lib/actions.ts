@@ -38,7 +38,6 @@ async function handleLogin(account : accountData, supabase : any){
 
   return '/Admin/all-reservations'; // Return the redirect URL
 }
-
 // Login function for admins, could still be cleaned up with try catch instead
 export async function authenticate(formData: FormData) {
   const supabase = createClient()
@@ -82,6 +81,29 @@ export async function authenticate(formData: FormData) {
     }
   }
 }
+
+export async function findPerson(firstname : string, middlename : string, lastname : string, supabase : any){
+
+  const found = await supabase
+  .from('Person')
+  .select('personid')
+  .eq('firstname', firstname)
+  .eq('middlename', middlename)
+  .eq('lastname', lastname)
+  .single();
+
+  if(found){
+    console.log(found.personid);
+
+    return found;
+  }
+  else return false;
+}
+
+export async function handleLogout(){
+  cookies().delete('token');
+}
+
 
 // sign up and add to auth.users table
 
