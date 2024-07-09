@@ -5,7 +5,9 @@ import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
 import { accountData } from '@/utils/supabase/interfaces';
 import jwt from 'jsonwebtoken';
+import { schedule } from '@/utils/supabase/interfaces';
 import { NextResponse } from 'next/server';
+import { fetchSchedules } from '@/utils/supabase/data'
 
  
 export async function createCustomer(formData: FormData) {
@@ -103,6 +105,52 @@ export async function findPerson(firstname : string, middlename : string, lastna
 export async function handleLogout(){
   cookies().delete('token');
 }
+
+export async function findDates(dates : any){
+  const supabase = createClient();
+
+  const modifiedDates = await dates.map((obj : any, i : number) => {
+    const splitDate = obj.date.split('T')[0]; 
+    return {
+      ...obj,
+      date: splitDate
+    };
+  });
+
+  const { data } = await supabase
+  .from('Schedule') 
+  .select('*')
+  .in('date', modifiedDates.map((modifiedDate : schedule) => modifiedDate.date));
+
+  
+  const groupedByDate = data.reduce((acc: any, entry: any) => {
+    const date = entry.date;
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(entry);
+    return acc;
+  }, {});
+
+  console.log(groupedByDate);
+  
+  return groupedByDate;
+
+}
+
+// export async function handleSignup(formData : FormData){
+//   const supabase = createClient();
+
+//   const rawFormData = {
+//     username : formData.get('username'),
+//     password : formData.get('password')
+//   }
+
+
+
+//   const { error } = await supabase
+//   .from('')
+// }
 
 
 // sign up and add to auth.users table

@@ -4,11 +4,11 @@ import Calendar from 'react-calendar';
 import './calendar.css';
 
 interface CustomCalendarProps {
-  setArrFunc: Dispatch<{date: Date, selectedtime1: string, selectedtime2: string}[]>; // Define the correct type for setArrFunc
+  setArrFunc: Dispatch<{date: Date}[]>; // Define the correct type for setArrFunc
 }
 
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
-  const [selectedDates, setSelectedDates] = useState<{date: Date, selectedtime1: string, selectedtime2: string}[]>([]);
+  const [selectedDates, setSelectedDates] = useState<{date: Date}[]>([]);
 
   const handleDateChange = (date: Date) => {
     const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.date.toDateString() === date.toDateString());
@@ -18,7 +18,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
       // Add date if not selected
-      setSelectedDates([...selectedDates, {date: date , selectedtime1: "9:00", selectedtime2: "9:00" } ]); // empty for now
+      setSelectedDates([...selectedDates, {date: date} ]); // empty for now
     }
   };
 

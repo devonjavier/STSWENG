@@ -1,6 +1,9 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { findDates } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
+import { time } from 'console';
 
 const generateTimeSlots = (startTime: number, endTime: number): string[] => {
   const timeSlots: string[] = [];
@@ -35,6 +38,12 @@ type SelectedSlots = {
 };
 
 const Page = () => {
+  const searchParams = useSearchParams();
+  const dates_selected = searchParams.get('dates') || '';
+  const id = searchParams.get('id') || '';
+
+  const parsed_dates = JSON.parse(dates_selected);
+
   const [selectedSlots, setSelectedSlots] = useState<SelectedSlots>({
     'May 13': new Array(timeSlotsData['May 13'].length).fill(false),
     'May 14': new Array(timeSlotsData['May 14'].length).fill(false),
@@ -42,6 +51,23 @@ const Page = () => {
     'May 16': new Array(timeSlotsData['May 16'].length).fill(false), // Corrected to 'May 16'
     'May 17': new Array(timeSlotsData['May 17'].length).fill(false), // Corrected to 'May 17'
   });
+
+  useEffect(() => {
+    const handleDates = async () => {
+      try {
+        const grouped_time_slots = await findDates(parsed_dates);
+        
+
+
+        
+      } catch(error) {
+        console.error('Error fetching services:', error);
+      }
+    }
+
+    handleDates();
+  })
+
 
   const handleSelectAll = (date: DateKeys) => {
     const allSelected = selectedSlots[date].every(Boolean);
@@ -59,7 +85,10 @@ const Page = () => {
   };
 
   return (
+
     <div className="p-4 max-h-[91.8vh] overflow-x-auto">
+        
+      
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

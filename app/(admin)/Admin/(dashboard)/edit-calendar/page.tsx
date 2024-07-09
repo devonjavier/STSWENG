@@ -1,17 +1,19 @@
 'use client'
 import Link from 'next/link'
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 
 const Page = ({searchParams}:{
     searchParams: {
         id: string
     }
-}) => {
+
+    }) => {
     
     const [selectedDates, setselectedDates] = useState<{date: Date}[]>([]);
 
     const datesString = JSON.stringify(selectedDates);
+
 
     function checker(dates: Date){
         console.log(dates);
@@ -22,9 +24,19 @@ const Page = ({searchParams}:{
             checker(obj.date); // Accessing the 'date' property of each object
         });
     }
+
     
     return (
+        
         <>
+        <ul>
+            {selectedDates.map((obj, index) => (
+                <li key={index}>
+                    {obj.date.toDateString()}
+                </li>
+            ))
+        }
+        </ul>
         <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
             <div>
                 <div className='text-4xl font-bold text-black'>
