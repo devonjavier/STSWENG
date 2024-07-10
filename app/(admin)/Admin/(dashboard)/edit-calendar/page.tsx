@@ -19,7 +19,7 @@ const Page = ({searchParams}:{
 
     const handleClick = () =>{
         selectedDates.forEach(obj => {
-            checker(obj.date); // Accessing the 'date' property of each object
+            checker(obj.date); // accessing the 'date' property of each object
         });
     }
     
