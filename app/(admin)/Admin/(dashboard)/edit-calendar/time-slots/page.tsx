@@ -27,6 +27,8 @@ const Page = () => {
         newSelectedSlots[date] = new Array(timeSlots.length).fill(false);
       });
 
+      console.log('Grouped Time Slots:', grouped_time_slots)
+
       setTimeSlotsData((prevTimeSlotsData) => {
         // Only update state if data has changed
         if (JSON.stringify(prevTimeSlotsData) !== JSON.stringify(newTimeSlotsData)) {
@@ -46,11 +48,13 @@ const Page = () => {
     } catch (error) {
       console.error('Error fetching services:', error);
     }
-  }, [parsed_dates]);
+  },  [parsed_dates, dates_selected]);
+  // added dependency array dates_selected
 
   useEffect(() => {
     handleDates();
-  }, [handleDates]);
+  }, []);
+  // empty dependency
 
   const handleSelectAll = (date: string) => {
     const allSelected = selectedSlots[date].every(Boolean);
@@ -67,12 +71,15 @@ const Page = () => {
     }));
   };
 
+  // sorts the dates
+  const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
   return (
     <div className="p-4 max-h-[91.8vh] overflow-x-auto">
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {Object.keys(timeSlotsData).map((date) => (
+        {sortedDates.map((date) => (
           <div key={date} className="p-2 border rounded shadow max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
             <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
             {timeSlotsData[date].map((slot, index) => (
@@ -92,7 +99,7 @@ const Page = () => {
                   onChange={() => handleSelectAll(date)} />
                 Set all unavailable
               </label>
-            </div>
+            </div>  
           </div>
         ))}
       </div>
