@@ -106,8 +106,11 @@ export async function handleLogout(){
   cookies().delete('token');
 }
 
-export async function findDates(dates : any){
+export async function findDates(dates : any, dates_selected : any){
   const supabase = createClient();
+
+  console.log(dates);
+  console.log(dates_selected);
 
   const modifiedDates = await dates.map((obj : any, i : number) => {
     const splitDate = obj.date.split('T')[0]; 
