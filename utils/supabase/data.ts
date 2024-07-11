@@ -10,14 +10,65 @@ import { permission } from 'process'
 export async function fetchAppointments() {
     // for all-reservations page
     const supabase = createClient();
-    const { data, error } = await supabase.from('Appointment')
-    .select('appointmentid, status, serviceid');
-    if (error) {
-      console.error('Error fetching reservations:', error);
-      return [];
-    }
+    const { data : appointments, error } = await supabase
+    .from('Appointment')
+    .select('appointmentid, serviceid, status');
 
-    const appointmentDetails = await Promise.all(data.map(async (appointment) => {
+    // if (error) {
+    //   console.error('Error fetching reservations:', error);
+    //   return [];
+    // }
+
+    // const data = appointments.forEach((appointment, index : number) => {
+    //     console.log(appointment['appointmentid']);
+
+    //     const { data : schedule, error : schedule_error} = supabase
+    //     .from('Schedule')
+    //     .select('date, starttime')
+    //     .eq('appointmentid', appointment['appointmentid'])
+    //     .single();
+
+    //     const { data : service, error : service_error} = supabase
+    //     .from('Service')
+    //     .select('title')
+    //     .eq('serviceid', appointment['serviceid'])
+    //     .single();
+
+    //     const { data : customer, error : customer_error} = supabase
+    //     .from('Customers')
+    //     .select('personid')
+    //     .eq('appointmentid', appointment['appointmentid'])
+    //     .single();
+
+    //     const { data : persons, error : persons_error } = supabase
+    //     .from('Person')
+    //     .select('firstname, middlename, lastname')
+    //     .eq('personid', customer['personid'])
+    //     .single();
+
+    //     console.log(
+    //         appointment['appointmentid'],
+    //     );
+
+
+
+    //     return(
+    //         {
+    //             appointmentid : appointment.appointmentid,
+    //             date : schedule.date,
+    //             starttime : schedule.starttime,
+    //             reservee : persons.firstname + ' ' + persons.middlename + ' ' + persons.lastname,
+    //             service : service.title,
+    //             status : appointment.status
+    //         }
+    //     );
+
+
+    // });
+
+    // console.log()
+
+    const appointmentDetails = await Promise.all(appointments.map(async (appointment) => {
         const { data: schedule, error: scheduleError } = await supabase
           .from('Schedule')
           .select('date, starttime')
@@ -30,7 +81,7 @@ export async function fetchAppointments() {
 
         if (!schedule || schedule.length === 0 || !appointment.appointmentid) {
             return null;
-          }
+        }
     
         // If schedule is found, merge the details
         if (schedule && schedule.length > 0) {
@@ -52,7 +103,6 @@ export async function fetchAppointments() {
                 ...appointment,
                 date: schedule[0].date,
                 starttime: schedule[0].starttime,
-                serviceid: serviceid,
                 title: service[0].title
               };
             }
@@ -62,10 +112,11 @@ export async function fetchAppointments() {
     
       }));
     
-      // Filter out any null results (in case of errors)
-      const filteredAppointmentDetails = appointmentDetails.filter(detail => detail !== null);
-    
-      console.log(filteredAppointmentDetails);
+
+
+     const filteredAppointmentDetails = appointmentDetails.filter(detail => detail !== null);
+
+    console.log(filteredAppointmentDetails);
     
       return filteredAppointmentDetails;
 }

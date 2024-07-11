@@ -19,3 +19,12 @@ export interface schedule{
   endtime : string;
 }
   
+
+export interface reservation {
+  appointmentid: number;
+  date: string;
+  starttime: string;
+  reservee: string;
+  service: string;
+  status: string;
+}

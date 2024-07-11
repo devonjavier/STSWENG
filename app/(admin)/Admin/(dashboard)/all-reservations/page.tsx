@@ -2,6 +2,7 @@
 import React from 'react';
 import { fetchAppointments } from '@/utils/supabase/data';
 import { useState, useEffect } from 'react';
+import { reservation } from '@/utils/supabase/interfaces'
 // import AdminLayout from '../../components/AdminLayout';
 
 //sample dataset
@@ -21,6 +22,9 @@ const Page: React.FC = () => {
 
       try{
         const data = await fetchAppointments();
+
+        console.log(typeof data);
+
         setReservations(data);
       } catch(error) {
         console.error('Error fetching services:', error);
@@ -64,19 +68,24 @@ const Page: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-cusBlue font-medium">
-            {reservations.map((row, index) => (
+          {reservations.map((row, index) => {
+            
+            const reservation = {row};
+            console.dir('fuck you 111' + reservation);
+            return(
               <tr
-                key={row.id}
-                className={`${row.status === 'Pending' ? 'bg-purple-100' : ''}`}
+              key={index}
+              className={`${reservation.status === 'Pending' ? 'bg-purple-100' : ''}`}
               >
-                <td className="border border-transparent px-4 py-2">{row.id}</td>
-                <td className="border border-transparent px-4 py-2">{row.date}</td>
-                <td className="border border-transparent px-4 py-2">{row.time}</td>
-                <td className="border border-transparent px-4 py-2">{row.reservee}</td>
-                <td className="border border-transparent px-4 py-2">{row.service}</td>
-                <td className="border border-transparent px-4 py-2">{row.status}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.appointmentid}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.date}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.starttime}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.service}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.status}</td>
               </tr>
-            ))}
+            )
+          })}
           </tbody>
         </table>
       </div>
