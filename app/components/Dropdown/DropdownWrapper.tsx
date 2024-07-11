@@ -1,44 +1,65 @@
-import React, { Dispatch, useEffect, useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
+interface Schedule {
+  date: string;
+  starttime: string;
+  endtime: string;
+  status: string | null;
+}
+
 interface DropdownProps {
-  items: Array<string>;
+  items: {
+    startTimes: string[];
+    endTimes: string[];
+  };
   dateIndex: number;
-  selectedDates: {date: Date, selectedtime1: string, selectedtime2: string}[];
-  setSelectedDates: Dispatch<{date: Date, selectedtime1: string, selectedtime2: string}[]>;
+  selectedDates: { date: string; selectedtime1?: string; selectedtime2?: string }[];
+  setSelectedDates: React.Dispatch<React.SetStateAction<{ date: string; selectedtime1?: string; selectedtime2?: string }[]>>;
+  openDropdown: string | null;
+  setOpenDropdown: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-interface DropdownWrapperProps {
-  items: string[]
-  setArrFunc: Dispatch<{date: Date, selectedtime1: string, selectedtime2: string}[]>;
-  selectedDates: {date: Date, selectedtime1: string, selectedtime2: string}[];
-  setSelectedDates: Dispatch<{date: Date, selectedtime1: string, selectedtime2: string}[]>;
-}
+const Dropdown: React.FC<DropdownProps> = ({
+  items,
+  dateIndex,
+  selectedDates,
+  setSelectedDates,
+  openDropdown,
+  setOpenDropdown
+}) => {
+  const isStartOpen = openDropdown === `start-${dateIndex}`;
+  const isEndOpen = openDropdown === `end-${dateIndex}`;
 
-const Dropdown: React.FC<DropdownProps> = ({ items, dateIndex, selectedDates, setSelectedDates }) => {
-  const [isStartOpen, setIsStartOpen] = useState<boolean>(false);
-  const [isEndOpen, setIsEndOpen] = useState<boolean>(false);
-
-  const toggleStartMenu = () => {
-    setIsStartOpen(!isStartOpen);
+  const toggleStartMenu = (e: MouseEvent) => {
+    e.preventDefault();
+    setOpenDropdown(isStartOpen ? null : `start-${dateIndex}`);
   };
 
-  const toggleEndMenu = () => {
-    setIsEndOpen(!isEndOpen);
+  const toggleEndMenu = (e: MouseEvent) => {
+    e.preventDefault();
+    setOpenDropdown(isEndOpen ? null : `end-${dateIndex}`);
   };
 
   const handleSelectStartTime = (item: string) => {
     const updatedDates = [...selectedDates];
     updatedDates[dateIndex].selectedtime1 = item;
     setSelectedDates(updatedDates);
-    setIsStartOpen(false);
+    setOpenDropdown(null);
   };
 
   const handleSelectEndTime = (item: string) => {
     const updatedDates = [...selectedDates];
     updatedDates[dateIndex].selectedtime2 = item;
     setSelectedDates(updatedDates);
-    setIsEndOpen(false);
+    setOpenDropdown(null);
+  };
+
+  // Function to format date as "Month Day"
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options = { month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
   };
 
   return (
@@ -46,43 +67,46 @@ const Dropdown: React.FC<DropdownProps> = ({ items, dateIndex, selectedDates, se
       <span className="text-cusBlue text-3xl font-bold">Select a time</span>
       <div className='flex flex-row'>
         <div className='flex flex-col mr-20'>
-          <span className='font-bold text-black'>Start</span>
-          <details className={`dropdown`} open={isStartOpen} onClick={toggleStartMenu}>
-            <summary className="dropdown-summary m-1 btn bg-white w-64 flex items-center justify-between cursor-pointer">
+          <span className='font-bold text-black'>{formatDate(selectedDates[dateIndex].date)}</span>
+          <details className={`dropdown`} open={isStartOpen}>
+            <summary className="dropdown-summary m-1 btn bg-white w-64 flex items-center justify-between cursor-pointer" onClick={toggleStartMenu}>
               <span className="text-left">{selectedDates[dateIndex].selectedtime1 || 'Select Start Time'}</span>
               <span><FaChevronDown /></span>
             </summary>
-            <ul className="dropdown-menu p-2 shadow menu z-[1] bg-white rounded-box w-64">
-              {items.map((item, index) => (
-                <li 
-                  key={index} 
-                  className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleSelectStartTime(item)}
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
+            {isStartOpen && (
+              <ul className="dropdown-menu p-2 shadow menu z-[1] bg-white rounded-box w-64">
+                {items.startTimes.map((item, index) => (
+                  <li
+                    key={index}
+                    className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSelectStartTime(item)} >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
           </details>
         </div>
         <div className='flex flex-col mr-20'>
           <span className='font-bold text-black'>End</span>
-          <details className={`dropdown`} open={isEndOpen} onClick={toggleEndMenu}>
-            <summary className="dropdown-summary m-1 btn bg-white w-64 flex items-center justify-between cursor-pointer">
+          <details className={`dropdown`} open={isEndOpen}>
+            <summary className="dropdown-summary m-1 btn bg-white w-64 flex items-center justify-between cursor-pointer" onClick={toggleEndMenu}>
               <span className="text-left">{selectedDates[dateIndex].selectedtime2 || 'Select End Time'}</span>
               <span><FaChevronDown /></span>
             </summary>
-            <ul className="dropdown-menu p-2 shadow menu z-[1] bg-white rounded-box w-64">
-              {items.map((item, index) => (
-                <li 
-                  key={index} 
-                  className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleSelectEndTime(item)}
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
+            {isEndOpen && (
+              <ul className="dropdown-menu p-2 shadow menu z-[1] bg-white rounded-box w-64">
+                {items.endTimes.map((item, index) => (
+                  <li
+                    key={index}
+                    className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleSelectEndTime(item)}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
           </details>
         </div>
       </div>
@@ -90,37 +114,59 @@ const Dropdown: React.FC<DropdownProps> = ({ items, dateIndex, selectedDates, se
   );
 };
 
-const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ items, setArrFunc, selectedDates, setSelectedDates }) => {
+interface DropdownWrapperProps {
+  selectedDates: { date: string; selectedtime1?: string; selectedtime2?: string }[];
+  setSelectedDates: React.Dispatch<React.SetStateAction<{ date: string; selectedtime1?: string; selectedtime2?: string }[]>>;
+  schedules: Schedule[];
+}
 
-  
-  function checker(dates: Date){
-    console.log(dates);
-  }
+const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSelectedDates, schedules }) => {
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const handleClick = () =>{
-    selectedDates.forEach(obj => {
-        checker(obj.date); // Accessing the 'date' property of each object
+  const normalizeDate = (date: string): Date => {
+    const dateObj = new Date(date);
+    dateObj.setHours(0, 0, 0, 0);
+    return dateObj;
+  };
+
+  const parseTimeString = (timeString: string): Date => {
+    const [hours, minutes, seconds] = timeString.split(":").map(Number);
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(seconds || 0);
+    return date;
+  };
+
+  const getScheduleTimes = (selectedDate: string) => {
+    const normalizedSelectedDate = normalizeDate(selectedDate);
+    const filteredSchedules = schedules.filter(schedule => {
+      const scheduleDate = normalizeDate(schedule.date);
+      return scheduleDate.getTime() === normalizedSelectedDate.getTime() && (schedule.status === "Available" || schedule.status === null);
     });
-  }
+    const startTimes = filteredSchedules.map(schedule => schedule.starttime).sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
+    const endTimes = filteredSchedules.map(schedule => schedule.endtime).sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
+    return {
+      startTimes,
+      endTimes
+    };
+  };
 
-  useEffect(() => {
-    // Call setArrFunc with selectedDates whenever it changes
-    setArrFunc(selectedDates);
-  }, [selectedDates, setArrFunc]); // Include setArrFunc in the dependency array
+  const itemsPerDate = selectedDates.map(selectedDateObj => getScheduleTimes(selectedDateObj.date));
 
   return (
     <div>
       {selectedDates.map((dateObj, index) => (
         <Dropdown
           key={index}
-          items={items}
+          items={itemsPerDate[index]}
           dateIndex={index}
           selectedDates={selectedDates}
           setSelectedDates={setSelectedDates}
+          openDropdown={openDropdown}
+          setOpenDropdown={setOpenDropdown}
         />
       ))}
-
-    <button onClick={handleClick}> CLICK ME</button>
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { permission } from 'process'
 
 export async function fetchSchedule() {
     const supabase = createClient();
-    const { data, error} = await supabase.from('Schedule').select().lte('scheduleid', 1010);
+    const { data, error } = await supabase.from('Schedule').select('*'); 
 
     if(error){
         return ["error", "error"]
