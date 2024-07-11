@@ -123,7 +123,10 @@ export async function fetchAppointments() {
 
 export async function fetchCalendarData(selectedDate : any){
 
-    console.log('THis is the selectedDate!' + selectedDate);
+    const supabase = createClient();
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+
+    console.log(formattedDate);
 
 }
 
