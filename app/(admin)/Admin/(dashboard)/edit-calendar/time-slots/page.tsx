@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { findDates } from '@/app/lib/actions';
+import { findDates, getCurrentStatus } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
 import { changeCalendarStatus } from '@/app/lib/actions';
 
@@ -29,6 +29,11 @@ const Page = () => {
       });
 
       console.log('Grouped Time Slots:', grouped_time_slots)
+
+      const currentStatus = await getCurrentStatus(parsed_dates, id);
+      for (const date of Object.keys(currentStatus)) {
+        newSelectedSlots[date] = currentStatus[date];
+      }
 
       setTimeSlotsData((prevTimeSlotsData) => {
         // Only update state if data has changed
@@ -73,8 +78,11 @@ const Page = () => {
   };
 
   const confirm = useCallback(() => {
+    console.log('Selected Slots:', selectedSlots);
+    console.log('Time Slots Data:', timeSlotsData);
     changeCalendarStatus(selectedSlots, timeSlotsData);
-  }, []);
+  }, [selectedSlots, timeSlotsData]);
+  
 
   // sorts the dates
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
