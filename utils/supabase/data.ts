@@ -121,6 +121,12 @@ export async function fetchAppointments() {
       return filteredAppointmentDetails;
 }
 
+export async function fetchCalendarData(selectedDate : any){
+
+    console.log('THis is the selectedDate!' + selectedDate);
+
+}
+
 
 export async function fetchSchedule() {
     const supabase = createClient();

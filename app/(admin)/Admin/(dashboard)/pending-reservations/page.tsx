@@ -2,6 +2,8 @@
 'use client'
 import React, { useState } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
+import { useEffect } from 'react';
+import { fetchCalendarData } from '@/utils/supabase/data';
 
 const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
@@ -10,6 +12,18 @@ const Page = () => {
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const data = fetchCalendarData(selectedDate);
+      } catch (error) { 
+
+      }
+    }
+
+    getData();
+  }, [selectedDate])
 
   return (
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>

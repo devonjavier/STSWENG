@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import Link from 'next/link';
 import './pendingcalendar.css';
+import { findPendingReservations, findAppointedReservations } from '../lib/actions';
 
 // sample data
 const pendingDates = [
@@ -25,6 +26,24 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
   useEffect(() => {
     setArrFunc(selectedDates);
   }, [selectedDates, setArrFunc]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // replace pendingDates and reservedDates
+        const pendingData = await findPendingReservations();
+        const appointedData = await findAppointedReservations();
+  
+        console.log('Pending Reservations:', pendingData);
+        console.log('Appointed Reservations:', appointedData);
+  
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
