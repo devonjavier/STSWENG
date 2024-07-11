@@ -55,12 +55,19 @@ const Dropdown: React.FC<DropdownProps> = ({
     setOpenDropdown(null);
   };
 
+  // Function to format date as "Month Day"
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options = { month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="flex flex-col">
       <span className="text-cusBlue text-3xl font-bold">Select a time</span>
       <div className='flex flex-row'>
         <div className='flex flex-col mr-20'>
-          <span className='font-bold text-black'>Start</span>
+          <span className='font-bold text-black'>{formatDate(selectedDates[dateIndex].date)}</span>
           <details className={`dropdown`} open={isStartOpen}>
             <summary className="dropdown-summary m-1 btn bg-white w-64 flex items-center justify-between cursor-pointer" onClick={toggleStartMenu}>
               <span className="text-left">{selectedDates[dateIndex].selectedtime1 || 'Select Start Time'}</span>
