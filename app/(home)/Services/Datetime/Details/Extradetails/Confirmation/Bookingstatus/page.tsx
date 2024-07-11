@@ -2,25 +2,104 @@
 'use client'
 
 import Image from "next/image"
+import { useEffect } from "react"
+import { fetchSchedule, addPeople, addOneAppointment, addCustomer} from '@/utils/supabase/data'
 
 const Page = ({searchParams}:{
     searchParams: {
-        dates: string,
-        timeslot1: string,
-        timeslot2: string,
+        schedules: string,
         serviceid: string,
-        maincustomername: string,
+
+        maincustomerfirstname: string,
+        maincustomermiddlename: string
+        maincustomerlastname: string,
+
+        phonenumber: string,
+        emailaddress: string,
+
+        countAdditionalCustomers:number,
         needsparking: string,
         additionalrequests: string,
-        additionalCustomers: string
+        additionalCustomersfirstnames: string // JOSN
+        additionalCustomersmiddlenames: string //JSON
+        additionalCustomerslastnames: string //JSON
     }
 }) => {
-    const time = [1,2,3,4,5];
-    const addCust = JSON.parse(searchParams.additionalCustomers);
+    useEffect(()=>{
 
-    var newdates = JSON.parse(searchParams.dates) // this gets the array of strings
+        const addAppointment = async() =>{
+            try {
+                let dotheyneedparking: boolean;
+                
+                if(searchParams.needsparking == 'true') 
+                    dotheyneedparking = true
+                else
+                    dotheyneedparking = false
 
+                const addtheAppointment = await addOneAppointment(
+                    searchParams.serviceid,
+                    dotheyneedparking
+                );
 
+              } catch (error) {
+                console.error('Error fetching services:', error);
+        }
+        }
+
+        const addPerson = async() =>{
+            try {
+                // insert all customers to people
+                // add customers
+                const addMainCustomer = await addCustomer(
+                    searchParams.maincustomerfirstname,
+                    searchParams.maincustomermiddlename,
+                    searchParams.maincustomerlastname,
+                    searchParams.phonenumber,
+                    searchParams.emailaddress,
+                    true
+                );
+
+                console.log(addMainCustomer);
+
+                let fnames: string[] = []
+                let mnames: string[] = []
+                let lnames: string[] = []
+                let addAdditionalCustomer: any[] = []
+
+                JSON.parse(searchParams.additionalCustomersfirstnames).map((name:string,index:number)=>{
+                    fnames[index] = name;
+                })
+
+                JSON.parse(searchParams.additionalCustomersmiddlenames).map((name:string,index:number)=>{
+                    mnames[index] = name;
+                })
+
+                JSON.parse(searchParams.additionalCustomerslastnames).map((name:string,index:number)=>{
+                    lnames[index] = name;
+                })
+
+                let i;
+                
+                for(i=0;i<searchParams.countAdditionalCustomers;i++){
+                    addAdditionalCustomer[i] = await addCustomer(
+                        fnames[i],
+                        mnames[i],
+                        lnames[i],
+                        searchParams.phonenumber,
+                        searchParams.emailaddress,
+                        false
+                    );
+                }
+              } catch (error) {
+                console.error('Error fetching services:', error);
+              } 
+        }
+        // add the appointment to Appointment
+        addAppointment();
+        // add all customers to People
+        addPerson();
+
+    },[]);
     function parkingChecker(needsparking:string){
         if(needsparking == "true")
             return true;

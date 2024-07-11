@@ -55,9 +55,9 @@ export default function displayPage() {
                         <Link
                             href={{
                                 pathname: '/Services/Datetime',
-                                query: { id: service.serviceid }
+                                query: { serviceid: service.serviceid }
                             }}
-                            key={service.serviceid}
+                           key={service.serviceid} 
                         >
                             <div>
                                 <img
