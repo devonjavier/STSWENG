@@ -107,6 +107,32 @@ export async function handleLogout(){
   cookies().delete('token');
 }
 
+export async function findPendingReservations(){
+  const supabase = createClient();
+
+  const pendingReservations = await supabase
+  .from('Schedule')
+  .select('*')
+  .eq('status', 'Pending')
+
+  console.log(pendingReservations);
+
+  return pendingReservations;
+}
+
+export async function findAppointedReservations(){
+  const supabase = createClient();
+
+  const appointedReservations = await supabase
+  .from('Schedule')
+  .select('*')
+  .eq('status', 'Appointed')
+
+  console.log(appointedReservations);
+
+  return appointedReservations;
+}
+
 export async function findDates(dates : any, dates_selected : any){
   const supabase = createClient();
 

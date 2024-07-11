@@ -121,6 +121,15 @@ export async function fetchAppointments() {
       return filteredAppointmentDetails;
 }
 
+export async function fetchCalendarData(selectedDate : any){
+
+    const supabase = createClient();
+    const formattedDate = selectedDate.toISOString().split('T')[0];
+
+    console.log(formattedDate);
+
+}
+
 
 export async function fetchSchedule() {
     const supabase = createClient();
