@@ -21,7 +21,7 @@ export default function displayPage() {
             setLoading(false);
           }
         };
-    
+
         getServices();
     }, []);
 

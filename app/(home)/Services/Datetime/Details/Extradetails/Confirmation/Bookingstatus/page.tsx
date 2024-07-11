@@ -2,8 +2,10 @@
 'use client'
 
 import Image from "next/image"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { fetchSchedule, addPeople, addOneAppointment, addCustomer} from '@/utils/supabase/data'
+import Link from "next/link"
+import { tracingChannel } from "diagnostics_channel"
 
 const Page = ({searchParams}:{
     searchParams: {
@@ -25,8 +27,14 @@ const Page = ({searchParams}:{
         additionalCustomerslastnames: string //JSON
     }
 }) => {
-    useEffect(()=>{
 
+    const randomNumber = Math.random() * 9999;
+
+    const [trackingNumber, setTrackingNumber] = useState(Math.round(randomNumber));
+
+    const [isProcessed, setIsProcessed] = useState(false);
+
+    if(!isProcessed){
         const addAppointment = async() =>{
             try {
                 let dotheyneedparking: boolean;
@@ -38,10 +46,13 @@ const Page = ({searchParams}:{
 
                 const addtheAppointment = await addOneAppointment(
                     searchParams.serviceid,
-                    dotheyneedparking
+                    dotheyneedparking,
+                    trackingNumber
                 );
 
-              } catch (error) {
+                console.log("hello: " + addtheAppointment)
+
+                } catch (error) {
                 console.error('Error fetching services:', error);
         }
         }
@@ -90,16 +101,20 @@ const Page = ({searchParams}:{
                         false
                     );
                 }
-              } catch (error) {
+                } catch (error) {
                 console.error('Error fetching services:', error);
-              } 
+                } 
         }
+        console.log(trackingNumber);
         // add the appointment to Appointment
         addAppointment();
         // add all customers to People
         addPerson();
+        setIsProcessed(true);
 
-    },[]);
+    }
+
+    
     function parkingChecker(needsparking:string){
         if(needsparking == "true")
             return true;
@@ -126,13 +141,17 @@ const Page = ({searchParams}:{
 
             <div className="flex flex-col border-2 border-black rounded-xl radius-md py-5 px-7 text-center mb-3">
                 <span className="text-2xl text-black"> Your Booking Reference Number is </span>
-                <span className="font-bold text-4xl text-black"> 5ZX3CAF </span>
+                <span className="font-bold text-4xl text-black"> {trackingNumber} </span>
             </div>
 
             <div>
                 <span className="font-bold text-black"> Please <span className="text-cusBlue"> check status </span> after a few hours for any updates </span>
             </div>
-            <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Back to Home </button>
+            <Link 
+                    href={{
+                        pathname:"/",
+                    }}>  
+            <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Back to Home </button> </Link>
         </div>
         
     </div>

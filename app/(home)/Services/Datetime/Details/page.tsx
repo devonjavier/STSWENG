@@ -13,13 +13,6 @@ const Page = ({searchParams}:{
 }) => {
 
     useEffect(()=>{
-
-        const testing = async () =>{
-            const testing = await testingCustomer();
-            console.log(testing);
-        }
-
-        testing();
         
     });
     
@@ -44,7 +37,6 @@ const Page = ({searchParams}:{
     const [emailaddress, setEmailaddress] = useState(" "); // assume no customer
 
     const [additionalRequests, setadditionalRequests] = useState(" "); // assume no request
-    const [additionalCustomers, setadditionalCustomers] = useState<string[]>([]);// assume no addtional customer
     
 
     const handleCheckboxChange = (e:any) => {
@@ -76,13 +68,6 @@ const Page = ({searchParams}:{
         setEmailaddress(emailadd);
     },300);
 
-
-    function checker(dates:string){
-        var format;
-        format = JSON.parse(dates)
-        // console.log(format);
-        console.log(typeof format[0])
-    }
 
     return (
     <>
@@ -125,6 +110,7 @@ const Page = ({searchParams}:{
 
                 
                     <span className='text-cusBlue font-bold mb-2 mt-6  text-lg'> Phone Number </span>
+
                     <div className='flex flex-col'>
                         <input placeholder = "09XXXXXXXXX" 
                             onChange={(e)=>{

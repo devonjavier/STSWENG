@@ -31,12 +31,6 @@ const Page = ({searchParams}:{
         
             setSchedules(newSelectedDates);
 
-            //let schedulesArr = Object.keys(schedules);
-
-            //schedulesArr.forEach((key,index)=>{
-               // console.log(`${index}: ${schedules[key].scheduleid}`);
-            //})
-
           } catch (error) {
             console.error('Error fetching services:', error);
           } finally {

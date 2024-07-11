@@ -7,19 +7,22 @@ import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
 
 
-export async function fetchAppointments() {
-    const supabase = createClient();
-    const { data, error } = await supabase.from('Reservations').select();
-    if (error) {
-      console.error('Error fetching reservations:', error);
-      return [];
-    }
-    return data;
-}
-
 export async function fetchSchedule() {
     const supabase = createClient();
     const { data, error} = await supabase.from('Schedule').select().lte('scheduleid', 1010);
+
+    if(error){
+        return ["error", "error"]
+    }
+    if (data)
+    {
+        return data;
+    }
+}
+
+export async function fetchOneAppointment( id:number ) {
+    const supabase = createClient();
+    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);;
 
     if(error){
         return ["error", "error"]
@@ -186,7 +189,7 @@ export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
     //status
-    //tracking number
+    trackingnumber:number
     //discount
 ){
     const supabase = createClient();
@@ -210,15 +213,14 @@ export async function addOneAppointment(
         serviceid:parseInt(serviceid),
         isparkingspotneeded:isparkingspotneeded,
         status:"Pending",
-        trackingnumber: "123456",
+        trackingnumber: trackingnumber,
         discount:15.0
     })
 
     if(error)
         return error
 
-    return 2;
-    // get the last number in the schedule
+    return trackingnumber;
 }
 
 export async function fetchSchedules(){
@@ -231,45 +233,6 @@ export async function fetchSchedules(){
     }
     return data;
 }
-
-
-/*
-export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
-    if (req.method === 'POST') {
-        const { dates, timeslot1, timeslot2, serviceid, 
-            maincustomerfirstname, maincustomermiddlename, 
-            maincustomerlastname, needsparking, additionalrequests, 
-            additionalCustomers } = req.body;
-
-        const supabase = createClient();
-
-        const person_stored = await findPerson(maincustomerfirstname, maincustomermiddlename, maincustomerlastname, supabase);
-
-        if(person_stored){
-            console.log('passed correctly : ', person_stored);
-        }
-        
-        // this adds the data, though im not sure how to add the data yet to the db
-        // const { data, error } = await supabase.from('')
-        //     .insert([
-        //         {
-        //             dates,
-        //             timeslot1,
-        //             timeslot2,
-        //             serviceid,
-        //             maincustomerfirstname,
-        //             maincustomermiddlename,
-        //             maincustomerlastname,
-        //             needsparking,
-        //             additionalrequests,
-        //             additionalCustomers
-        //         }
-        //     ]);
-
-    }
-}
-    */
-
 
 
 
