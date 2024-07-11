@@ -1,19 +1,9 @@
+// PendingCalendar.tsx
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import Link from 'next/link';
 import './pendingcalendar.css';
 import { findPendingReservations, findAppointedReservations } from '../lib/actions';
-
-// sample data
-const pendingDates = [
-  new Date(2024, 6, 12), // july 12, 2024
-];
-
-const reservedDates = [
-  new Date(2024, 5, 23), // june 23, 2024
-  new Date(2024, 6, 15), // july 15, 2024
-  new Date(2024, 6, 16), // july 16, 2024
-];
 
 interface PendingCalendarProps {
   setArrFunc: React.Dispatch<React.SetStateAction<Date[]>>;
@@ -22,6 +12,8 @@ interface PendingCalendarProps {
 
 const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelectedDate }) => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [pendingData, setPendingData] = useState<{ scheduleid: number, date: string, starttime: string, endtime: string, status: string }[]>([]);
+  const [appointedData, setAppointedData] = useState<{ scheduleid: number, date: string, starttime: string, endtime: string, status: string }[]>([]);
 
   useEffect(() => {
     setArrFunc(selectedDates);
@@ -30,18 +22,19 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // replace pendingDates and reservedDates
-        const pendingData = await findPendingReservations();
-        const appointedData = await findAppointedReservations();
-  
-        console.log('Pending Reservations:', pendingData);
-        console.log('Appointed Reservations:', appointedData);
-  
+        const pendingReservations = await findPendingReservations();
+        const appointedReservations = await findAppointedReservations();
+
+        setPendingData(pendingReservations.data);
+        setAppointedData(appointedReservations.data);
+
+        console.log('Pending Reservations:', pendingReservations.data);
+        console.log('Appointed Reservations:', appointedReservations.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -50,13 +43,18 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
     const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.toDateString() === date.toDateString());
     
     if (dateIndex !== -1) {
-      // remove if alr selected
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
-      // add if not selected
       setSelectedDates([...selectedDates, date]);
     }
   };
+
+  const convertToDateObjects = (data: { scheduleid: number, date: string, starttime: string, endtime: string, status: string }[]) => {
+    return data.map(item => new Date(item.date));
+  };
+
+  const pendingDates = convertToDateObjects(pendingData);
+  const reservedDates = convertToDateObjects(appointedData);
 
   return (
     <div className='app'>
@@ -78,7 +76,7 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
           tileDisabled={({ date, view }) => {
             if (view === 'month') {
               return !(pendingDates.some(d => d.toDateString() === date.toDateString()) ||
-                     reservedDates.some(d => d.toDateString() === date.toDateString()));
+                      reservedDates.some(d => d.toDateString() === date.toDateString()));
             }
             return false;
           }}
