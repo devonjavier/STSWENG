@@ -26,20 +26,19 @@ const Sidebar: React.FC = () => {
       </div>
       
       <nav className="flex flex-col ml-16">
-        <Link href="./pending-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Pending Reservations</Link>
-        <Link href="./upcoming-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Upcoming Reservations</Link>
-        <Link href="./all-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">View all Reservations</Link>
-        
+        <Link href="/Admin/pending-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Pending Reservations</Link>
+        <Link href="/Admin/upcoming-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Upcoming Reservations</Link>
+        <Link href="/Admin/all-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">View all Reservations</Link>
+        <Link href="/Admin/edit-calendar" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Edit Calendar</Link>
+
         <div className="relative">
           <button 
             onClick={toggleDropdown} 
-            className="text-lg text-left hover:text-purple-300 transition duration-300 ease-in-out pb-2 focus:outline-none"
-          >
+            className="text-lg text-left hover:text-purple-300 transition duration-300 ease-in-out pb-2 focus:outline-none">
             Edit website details
           </button>
           <div 
-            className={`transition-all duration-300 ease-in-out overflow-hidden ${isDropdownOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
-          >
+            className={`transition-all duration-300 ease-in-out overflow-hidden ${isDropdownOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
             <Link href="./edit-services" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">Services</Link>
             <Link href="./edit-faqs" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">FAQs</Link>
           </div>

@@ -16,9 +16,10 @@ const reservedDates = [
 
 interface PendingCalendarProps {
   setArrFunc: React.Dispatch<React.SetStateAction<Date[]>>;
+  setSelectedDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
-const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc }) => {
+const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelectedDate }) => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc }) => {
   }, [selectedDates, setArrFunc]);
 
   const handleDateChange = (date: Date) => {
+    setSelectedDate(date);
     const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.toDateString() === date.toDateString());
     
     if (dateIndex !== -1) {

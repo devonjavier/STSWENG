@@ -51,6 +51,7 @@ export async function fetchServices(){
 
 
     const completeServices = services?.map((service : service) => {
+        
     const onetimeservice = onetimeServices?.find((ot : service) => ot.serviceid === service.serviceid);
     const hourlyservice = hourlyServices?.find((h : service) => h.serviceid === service.serviceid);
 
@@ -220,6 +221,17 @@ export async function addOneAppointment(
     // get the last number in the schedule
 }
 
+export async function fetchSchedules(){
+    const supabase = createClient();
+
+    const {data, error } = await supabase.from('Schedule').select();
+    if (error) {
+        console.error('Error fetching reservations:', error);
+        return [];
+    }
+    return data;
+}
+
 
 /*
 export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
@@ -257,6 +269,7 @@ export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
     }
 }
     */
+
 
 
 

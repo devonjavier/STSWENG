@@ -1,5 +1,5 @@
 export interface service{
-    serviceid : number;
+    serviceid : string;
     title : string;
     description : string;
     serviceType : 'onetime' | 'hourly';
@@ -13,9 +13,9 @@ export interface accountData {
   }
 
 export interface schedule{
-    scheduleid : number;
-    date : Date;
-    starttime:string;
-    endtime:string;
-  }
+  scheduleid : string;
+  date : string;
+  starttime : string;
+  endtime : string;
+}
   
