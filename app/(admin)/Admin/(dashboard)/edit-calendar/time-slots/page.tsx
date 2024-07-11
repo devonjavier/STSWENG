@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { findDates } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
+import { changeCalendarStatus } from '@/app/lib/actions';
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -71,6 +72,10 @@ const Page = () => {
     }));
   };
 
+  const confirm = useCallback(() => {
+    changeCalendarStatus(selectedSlots, timeSlotsData);
+  }, []);
+
   // sorts the dates
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -103,7 +108,7 @@ const Page = () => {
           </div>
         ))}
       </div>
-      <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
+      <button onClick={confirm} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
     </div>
   );
 };

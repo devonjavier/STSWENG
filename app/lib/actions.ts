@@ -136,6 +136,10 @@ export async function findDates(dates : any, dates_selected : any){
     return acc;
   }, {});
 
+  for (const date in groupedByDate) {
+    groupedByDate[date].sort((a: any, b: any) => a.starttime.localeCompare(b.starttime));
+  }
+
   console.log(groupedByDate);
   
   return groupedByDate;
@@ -157,6 +161,7 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
 
       const split_time = timeSlot.split(' -')[0];
 
+
       const status = selectedSlots[date][index] === true ? 'Unavailable' : 'Available';
 
       // Update the status in the database
@@ -173,6 +178,7 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
     });
   }
 }
+
 
 // export async function handleSignup(formData : FormData){
 //   const supabase = createClient();
