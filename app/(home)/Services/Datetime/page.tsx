@@ -4,12 +4,12 @@ import Link from 'next/link'
 import React, {useState, useEffect} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
-import { fetchSchedule } from '@/utils/supabase/data'
+import { fetchSchedule, addPeople} from '@/utils/supabase/data'
 import { schedule } from '@/utils/supabase/interfaces'
 
 const Page = ({searchParams}:{
     searchParams: {
-        id: string
+        serviceid: string
     }
 }) => {
     
@@ -21,8 +21,9 @@ const Page = ({searchParams}:{
         const getSchedule = async () => {
           try {
             const schedules = await fetchSchedule();
-            
+        
             const newSelectedDates = schedules.map((schedule) => ({
+                scheduleid: schedule.scheduleid,
                 date: schedule.date,
                 selectedtime1: schedule.starttime,
                 selectedtime2: schedule.endtime
@@ -30,9 +31,11 @@ const Page = ({searchParams}:{
         
             setSchedules(newSelectedDates);
 
-            console.log(schedules);
+            //let schedulesArr = Object.keys(schedules);
 
-            
+            //schedulesArr.forEach((key,index)=>{
+               // console.log(`${index}: ${schedules[key].scheduleid}`);
+            //})
 
           } catch (error) {
             console.error('Error fetching services:', error);
@@ -91,10 +94,8 @@ const Page = ({searchParams}:{
                 {
                     pathname:"/Services/Datetime/Details",
                     query:{
-                        //dates: datesString,
-                        //timeslot1: selectedTimeslot1,
-                        //timeslot2: selectedTimeslot2,
-                        serviceid: searchParams.id
+                        schedules: JSON.stringify(schedules),
+                        serviceid: searchParams.serviceid
                     }
                 }
                     }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>

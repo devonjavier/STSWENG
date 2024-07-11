@@ -1,22 +1,30 @@
 'use client'
 import Link from 'next/link'
-import { Component, Dispatch, SetStateAction, useState } from 'react';
+import { Component, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import GenerateDivs  from '@/app/components/GenerateDivs';
 
 const Page = ({searchParams}:{
     searchParams: {
-        dates: string,
-        timeslot1: string,
-        timeslot2: string,
+        schedules: string,
         serviceid: string,
+
         maincustomerfirstname: string,
         maincustomermiddlename: string
         maincustomerlastname: string,
+
+        phonenumber: string,
+        emailaddress: string,
+
         needsparking: string,
         additionalrequests: string
     }
 }) => {
+
+    useEffect(() => {
+        console.log(searchParams.phonenumber);
+        console.log(searchParams.emailaddress);
+    });
     
     function getadditionalCustomers(count: number){
         const additionalCustomers = []
@@ -29,7 +37,9 @@ const Page = ({searchParams}:{
         return additionalCustomers;
     };
 
-    const [additionalCustomers, setadditionalCustomers] = useState<string[]>([]);// assume no addtional customer
+    const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
+    const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);// assume no addtional customer
+    const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);// assume no addtional customer
 
     const [countAdditionalCustomers, setcountAdditionalCustomers] = useState(0);
 
@@ -67,7 +77,10 @@ const Page = ({searchParams}:{
                             <button className='rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
                         </div>
 
-                        <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomers={setadditionalCustomers} />
+                        <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomersFirst={setadditionalCustomersFirstname} 
+                        setadditionalCustomersMiddle={setadditionalCustomersMiddlename}
+                        setadditionalCustomersLast={setadditionalCustomersLastname}
+                        />
 
                     </div>
 
@@ -75,16 +88,24 @@ const Page = ({searchParams}:{
                     href={{
                         pathname:"/Services/Datetime/Details/Extradetails/Confirmation",
                         query: {
-                            dates: searchParams.dates,
-                            timeslot1: searchParams.timeslot1,
-                            timeslot2: searchParams.timeslot2,
+                            schedules: searchParams.schedules,
                             serviceid: searchParams.serviceid,
                             maincustomerfirstname:  searchParams.maincustomerfirstname,
                             maincustomermiddlename:  searchParams.maincustomermiddlename,
                             maincustomerlastname:  searchParams.maincustomerlastname,
+                            
+                            phonenumber: searchParams.phonenumber,
+                            emailaddress: searchParams.emailaddress,
+
                             needsparking: searchParams.needsparking,
                             additionalrequests: searchParams.additionalrequests,
-                            additionalCustomers:JSON.stringify(additionalCustomers)
+
+                            countAdditionalCustomers: countAdditionalCustomers,
+
+                            additionalCustomersfirstnames: JSON.stringify(additionalCustomersFirstname),
+                            additionalCustomersmiddlenames: JSON.stringify(additionalCustomersMiddlename),
+                            additionalCustomerslastnames: JSON.stringify(additionalCustomersLastname)
+                            
                         }
                     }}>  
                     
