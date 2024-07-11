@@ -8,14 +8,68 @@ import { permission } from 'process'
 
 
 export async function fetchAppointments() {
+    // for all-reservations page
     const supabase = createClient();
-    const { data, error } = await supabase.from('Reservations').select();
+    const { data, error } = await supabase.from('Appointment')
+    .select('appointmentid, status, serviceid');
     if (error) {
       console.error('Error fetching reservations:', error);
       return [];
     }
-    return data;
+
+    const appointmentDetails = await Promise.all(data.map(async (appointment) => {
+        const { data: schedule, error: scheduleError } = await supabase
+          .from('Schedule')
+          .select('date, starttime')
+          .eq('appointmentid', appointment.appointmentid);
+    
+        if (scheduleError) {
+          console.error(`Error fetching schedule for appointment ${appointment.appointmentid}:`, scheduleError);
+          return null;
+        }
+
+        if (!schedule || schedule.length === 0 || !appointment.appointmentid) {
+            return null;
+          }
+    
+        // If schedule is found, merge the details
+        if (schedule && schedule.length > 0) {
+            const serviceid = schedule[0].serviceid;
+      
+            const { data: service, error: serviceError } = await supabase
+              .from('Service')
+              .select('title')
+              .eq('serviceid', appointment.serviceid);
+      
+            if (serviceError) {
+              console.error(`Error fetching service title for service ${serviceid}:`, serviceError);
+              return null;
+            }
+      
+            // Merge the details
+            if (service && service.length > 0) {
+              return {
+                ...appointment,
+                date: schedule[0].date,
+                starttime: schedule[0].starttime,
+                serviceid: serviceid,
+                title: service[0].title
+              };
+            }
+        }
+        
+        return appointment;
+    
+      }));
+    
+      // Filter out any null results (in case of errors)
+      const filteredAppointmentDetails = appointmentDetails.filter(detail => detail !== null);
+    
+      console.log(filteredAppointmentDetails);
+    
+      return filteredAppointmentDetails;
 }
+
 
 export async function fetchSchedule() {
     const supabase = createClient();

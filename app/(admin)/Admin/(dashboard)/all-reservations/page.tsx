@@ -5,15 +5,15 @@ import { useState, useEffect } from 'react';
 // import AdminLayout from '../../components/AdminLayout';
 
 //sample dataset
-const data = [
-  { id: 1001, date: '05-26-2024', time: '9:00 AM', reservee: 'Juan Cruz', service: 'Recording', status: 'Done' },
-  { id: 1002, date: '05-26-2024', time: '9:00 AM', reservee: 'Juan Cruz', service: 'Mixing', status: 'Pending' },
-  { id: 1003, date: '05-27-2024', time: '9:00 PM', reservee: 'Juan Cruz', service: 'Production', status: 'Cancelled' },
-];
+// const data = [
+//   { id: 1001, date: '05-26-2024', time: '9:00 AM', reservee: 'Juan Cruz', service: 'Recording', status: 'Done' },
+//   { id: 1002, date: '05-26-2024', time: '9:00 AM', reservee: 'Juan Cruz', service: 'Mixing', status: 'Pending' },
+//   { id: 1003, date: '05-27-2024', time: '9:00 PM', reservee: 'Juan Cruz', service: 'Production', status: 'Cancelled' },
+// ];
 
 const Page: React.FC = () => {
   
-  const [reservations, setReservations] = useState(data);
+  const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const Page: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-cusBlue font-medium">
-            {data.map((row, index) => (
+            {reservations.map((row, index) => (
               <tr
                 key={row.id}
                 className={`${row.status === 'Pending' ? 'bg-purple-100' : ''}`}
