@@ -1,17 +1,27 @@
 'use client'
 import Link from 'next/link'
-import { Component, Dispatch, SetStateAction, useState } from 'react';
+import { Component, Dispatch, SetStateAction, useState, useEffect} from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import GenerateDivs  from '@/app/components/GenerateDivs';
+import { testingCustomer } from '@/utils/supabase/data';
 
 const Page = ({searchParams}:{
     searchParams: {
-        dates: string, // JSON
-        timeslot1: string,
-        timeslot2: string,
+        schedules: string, // JSON
         serviceid: string
     }
 }) => {
+
+    useEffect(()=>{
+
+        const testing = async () =>{
+            const testing = await testingCustomer();
+            console.log(testing);
+        }
+
+        testing();
+        
+    });
     
     function getadditionalCustomers(count: number){
         const additionalCustomers = []
@@ -30,8 +40,12 @@ const Page = ({searchParams}:{
     const [maincustomermiddlename, setmaincustomermiddlename] = useState(" "); // assume no customer
     const [maincustomerlastname, setmaincustomerlastname] = useState(" "); // assume no customer
 
+    const [phonenumber, setPhonenumber] = useState(" "); // assume no customer
+    const [emailaddress, setEmailaddress] = useState(" "); // assume no customer
+
     const [additionalRequests, setadditionalRequests] = useState(" "); // assume no request
     const [additionalCustomers, setadditionalCustomers] = useState<string[]>([]);// assume no addtional customer
+    
 
     const handleCheckboxChange = (e:any) => {
         setIsChecked(e.target.checked);
@@ -52,6 +66,14 @@ const Page = ({searchParams}:{
 
     const addtionalRequestChange = useDebouncedCallback((additionalreq) => {
         setadditionalRequests(additionalreq);
+    },300);
+
+    const phoneNumberChange = useDebouncedCallback((phone) => {
+        setPhonenumber(phone);
+    },300);
+
+    const emailAddressChange = useDebouncedCallback((emailadd) => {
+        setEmailaddress(emailadd);
     },300);
 
 
@@ -100,19 +122,42 @@ const Page = ({searchParams}:{
                         }}
                         className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                     </div>
+
+                
+                    <span className='text-cusBlue font-bold mb-2 mt-6  text-lg'> Phone Number </span>
+                    <div className='flex flex-col'>
+                        <input placeholder = "09XXXXXXXXX" 
+                            onChange={(e)=>{
+                                phoneNumberChange(e.target.value);
+                        }}
+                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                    </div>
+
+                    <span className='text-cusBlue font-bold mb-2 mt-6  text-lg'> Email Address </span>
+                    <div className='flex flex-col'>
+                        <input placeholder = "@gmail.com" 
+                            onChange={(e)=>{
+                                emailAddressChange(e.target.value);
+                        }}
+                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                    </div>
+                   
                     <Link 
                     href={{
                         pathname:"/Services/Datetime/Details/Extradetails",
                         query: {
-                            dates: searchParams.dates,
-                            timeslot1: searchParams.timeslot1,
-                            timeslot2: searchParams.timeslot2,
+                            schedules: searchParams.schedules,
                             serviceid: searchParams.serviceid,
+
                             maincustomerfirstname: maincustomerfirstname,
                             maincustomermiddlename: maincustomermiddlename,
                             maincustomerlastname: maincustomerlastname,
-                            needsparking:isChecked,
-                            additionalrequests:additionalRequests,
+
+                            phonenumber: phonenumber,
+                            emailaddress: emailaddress,
+
+                            needsparking: isChecked,
+                            additionalrequests: additionalRequests,
                         }
                     }}>  
                     
@@ -135,6 +180,7 @@ const Page = ({searchParams}:{
                             type="checkbox"
                             checked={isChecked}
                             onChange={handleCheckboxChange}
+                            className='w-5'
                         />
                     </div>
 

@@ -157,6 +157,38 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
 
       const split_time = timeSlot.split(' -')[0];
 
+      const status = selectedSlots[date][index] === true ? 'Unavailable' : 'Available';
+
+      // Update the status in the database
+      const { data, error } = await supabase
+        .from('Schedule')
+        .update({ 'status' : status })
+        .match({ date: date, starttime: split_time});
+
+      if (error) {
+        console.error('Error updating status:', error);
+      } else {
+        console.log('Updated status:', data);
+      }
+    });
+  }
+}
+
+export async function changeCalendarStatus(selectedSlots : any, timeSlots : any) {
+  console.log('BEFORE SUPABASE AWAIT');
+  const supabase = await createClient();
+
+  console.log('Selected Slots:', selectedSlots, 'Time Slots:', timeSlots);
+
+  for (const date in timeSlots) {
+    console.log("Current Date:", date);
+
+    timeSlots[date].forEach(async (timeSlot, index) => {
+      console.log("Time Slot:", timeSlot);
+      console.log("Selected Status:", selectedSlots[date][index]);
+
+      const split_time = timeSlot.split(' -')[0];
+
 
       const status = selectedSlots[date][index] === true ? 'Unavailable' : 'Available';
 

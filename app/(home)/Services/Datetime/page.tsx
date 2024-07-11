@@ -1,20 +1,51 @@
 
 'use client'
 import Link from 'next/link'
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Calendar from '@/app/components/CustomCalendar'; 
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
+import { fetchSchedule, addPeople} from '@/utils/supabase/data'
+import { schedule } from '@/utils/supabase/interfaces'
 
 const Page = ({searchParams}:{
     searchParams: {
-        id: string
+        serviceid: string
     }
 }) => {
     
-    const [selectedDates, setselectedDates] = useState<{date: Date, selectedtime1: string, selectedtime2: string}[]>([]);
+    const [schedules, setSchedules] = useState<[]>([]);
+    const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    //const [selectedTimeslot1, setselectedTimeslot1] = useState<string>();
-    //const [selectedTimeslot2, setselectedTimeslot2] = useState<string>();
+    useEffect(() => {
+        const getSchedule = async () => {
+          try {
+            const schedules = await fetchSchedule();
+        
+            const newSelectedDates = schedules.map((schedule) => ({
+                scheduleid: schedule.scheduleid,
+                date: schedule.date,
+                selectedtime1: schedule.starttime,
+                selectedtime2: schedule.endtime
+            }));
+        
+            setSchedules(newSelectedDates);
+
+            //let schedulesArr = Object.keys(schedules);
+
+            //schedulesArr.forEach((key,index)=>{
+               // console.log(`${index}: ${schedules[key].scheduleid}`);
+            //})
+
+          } catch (error) {
+            console.error('Error fetching services:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+
+        getSchedule();
+    }, []);
 
     const time = [];
 
@@ -29,16 +60,9 @@ const Page = ({searchParams}:{
       const formattedMins = mins === 0 ? '00' : mins;
       time.push(`${formattedHours}:${formattedMins}${period}`);
     }
-    const datesString = JSON.stringify(selectedDates);
 
     function checker(dates: Date){
         console.log(dates);
-    }
-
-    const handleClick = () =>{
-        selectedDates.forEach(obj => {
-            checker(obj.date); // Accessing the 'date' property of each object
-        });
     }
     
   return (
@@ -64,18 +88,14 @@ const Page = ({searchParams}:{
             <div className='flex flex-col mr-32'>
 
 
-                <Calendar setArrFunc={setselectedDates}/>
-
-                <button onClick={handleClick}> CLICK ME</button>
+                <Calendar setArrFunc={setselectedSchedules}/>
 
                 <Link href={
                 {
                     pathname:"/Services/Datetime/Details",
                     query:{
-                        dates: datesString,
-                        //timeslot1: selectedTimeslot1,
-                        //timeslot2: selectedTimeslot2,
-                        serviceid: searchParams.id
+                        schedules: JSON.stringify(schedules),
+                        serviceid: searchParams.serviceid
                     }
                 }
                     }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
@@ -83,7 +103,7 @@ const Page = ({searchParams}:{
                 
             </div>  a
             <div className='flex flex-row'>
-                <DropdownWrapper items= {time} setArrFunc={setselectedDates} selectedDates={selectedDates} setSelectedDates={setselectedDates}/>
+                <DropdownWrapper items= {time} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={selectedSchedules}/>
             </div>
                 
 
@@ -96,3 +116,4 @@ const Page = ({searchParams}:{
 }
 
 export default Page
+
