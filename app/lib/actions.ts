@@ -208,10 +208,10 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
     console.log("Current Date:", date);
 
     timeSlots[date].forEach(async (timeSlot, index) => {
-      console.log("Time Slot:", timeSlot);
+      console.log("Time Slot:", timeSlot.time);
       console.log("Selected Status:", selectedSlots[date][index]);
 
-      const split_time = timeSlot.split(' -')[0];
+      const split_time = timeSlot.time.split(' -')[0];
 
 
       const status = selectedSlots[date][index] === true ? 'Unavailable' : 'Available';
