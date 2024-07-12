@@ -10,7 +10,7 @@ import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
 const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [appointmentData, setAppointmentData] = useState<pending_appointment[] | null>(null);
+  const [appointmentData, setAppointmentData] = useState<pending_appointment | null>(null);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -31,11 +31,11 @@ const Page = () => {
 
 
   const handleAccept = useCallback(() => {
-    acceptAppointment(appointmentData[0] as pending_appointment);
+    acceptAppointment(appointmentData as pending_appointment);
   }, [appointmentData]);
 
   const handleReject =useCallback(() => {
-    rejectAppointment(appointmentData[0] as pending_appointment)
+    rejectAppointment(appointmentData as pending_appointment)
   }, [appointmentData]);
 
   return (
