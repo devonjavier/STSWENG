@@ -171,6 +171,33 @@ export async function findDates(dates : any, dates_selected : any){
 
 }
 
+export const getCurrentStatus = async (dates: any, id: any) => {
+  const supabase = await createClient();
+
+  const dateArray = dates.flat().map(obj => obj.date);
+  let statusData = {};
+
+  for (const date of dateArray) {
+    const { data, error } = await supabase
+      .from('Schedule')
+      .select('starttime, status')
+      .eq('date', date);
+
+    if (error) {
+      console.error(error);
+      return {};
+    }
+
+    if (data.length > 0) {
+      statusData[date] = data.map(entry => entry.status === 'Unavailable');
+    }
+  }
+
+  return statusData;
+};
+
+
+
 export async function changeCalendarStatus(selectedSlots : any, timeSlots : any) {
   console.log('BEFORE SUPABASE AWAIT');
   const supabase = await createClient();
