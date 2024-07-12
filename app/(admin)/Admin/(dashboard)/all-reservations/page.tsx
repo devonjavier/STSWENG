@@ -68,10 +68,8 @@ const Page: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-cusBlue font-medium">
-          {reservations.map((row, index) => {
+          {reservations.map((reservation, index) => {
             
-            const reservation = {row};
-            console.dir('fuck you 111' + reservation);
             return(
               <tr
               key={index}
