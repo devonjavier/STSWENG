@@ -31,6 +31,7 @@ const Page: React.FC = () => {
       } finally {
         setLoading(false)
       }
+      
     }
 
     getReservations();
@@ -67,7 +68,7 @@ const Page: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-cusBlue font-medium">
-          {reservations.map((reservation, index) => {
+          {reservations.map((row, index) => {
             
             return(
               <tr
@@ -78,7 +79,7 @@ const Page: React.FC = () => {
               <td className="border border-transparent px-4 py-2">{reservation.date}</td>
               <td className="border border-transparent px-4 py-2">{reservation.starttime}</td>
               <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
-              <td className="border border-transparent px-4 py-2">{reservation.title}</td>
+              <td className="border border-transparent px-4 py-2">{reservation.service}</td>
               <td className="border border-transparent px-4 py-2">{reservation.status}</td>
               </tr>
             )
