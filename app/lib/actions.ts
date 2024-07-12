@@ -3,9 +3,8 @@
 import { createClient } from '@/utils/supabase/server';
 import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
-import { accountData } from '@/utils/supabase/interfaces';
+import { accountData, pending_appointment, schedule} from '@/utils/supabase/interfaces';
 import jwt from 'jsonwebtoken';
-import { schedule } from '@/utils/supabase/interfaces';
 import { NextResponse } from 'next/server';
 import { fetchSchedules } from '@/utils/supabase/data'
 import { create } from 'domain';
@@ -107,6 +106,32 @@ export async function handleLogout(){
   cookies().delete('token');
 }
 
+export async function findPendingReservations(){
+  const supabase = createClient();
+
+  const pendingReservations = await supabase
+  .from('Schedule')
+  .select('*')
+  .eq('status', 'Pending')
+
+  console.log(pendingReservations);
+
+  return pendingReservations;
+}
+
+export async function findAppointedReservations(){
+  const supabase = createClient();
+
+  const appointedReservations = await supabase
+  .from('Schedule')
+  .select('*')
+  .eq('status', 'Appointed')
+
+  console.log(appointedReservations);
+
+  return appointedReservations;
+}
+
 export async function findDates(dates : any, dates_selected : any){
   const supabase = createClient();
 
@@ -146,6 +171,31 @@ export async function findDates(dates : any, dates_selected : any){
 
 }
 
+export const getCurrentStatus = async (dates: any, id: any) => {
+  const supabase = await createClient();
+
+  const dateArray = dates.flat().map(obj => obj.date);
+  let statusData = {};
+
+  for (const date of dateArray) {
+    const { data, error } = await supabase
+      .from('Schedule')
+      .select('starttime, status')
+      .eq('date', date);
+
+    if (error) {
+      console.error(error);
+      return {};
+    }
+
+    if (data.length > 0) {
+      statusData[date] = data.map(entry => entry.status === 'Unavailable');
+    }
+  }
+
+  return statusData;
+};
+
 export async function changeCalendarStatus(selectedSlots : any, timeSlots : any) {
   console.log('BEFORE SUPABASE AWAIT');
   const supabase = await createClient();
@@ -156,10 +206,10 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
     console.log("Current Date:", date);
 
     timeSlots[date].forEach(async (timeSlot, index) => {
-      console.log("Time Slot:", timeSlot);
+      console.log("Time Slot:", timeSlot.time);
       console.log("Selected Status:", selectedSlots[date][index]);
 
-      const split_time = timeSlot.split(' -')[0];
+      const split_time = timeSlot.time.split(' -')[0];
 
 
       const status = selectedSlots[date][index] === true ? 'Unavailable' : 'Available';
@@ -176,6 +226,45 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
         console.log('Updated status:', data);
       }
     });
+  }
+}
+
+export async function acceptAppointment(appointmentData : pending_appointment){
+  const supabase = createClient();
+
+  console.log(appointmentData);
+
+  const { error } = await supabase
+  .from('Schedule')
+  .update({status : 'Appointed'})
+  .match({
+    date : appointmentData.date, 
+    starttime : appointmentData.starttime, 
+    appointmentid : appointmentData.appointmentid
+  });
+
+  if(error){
+    console.error(error);
+  }
+
+}
+
+export async function rejectAppointment(appointmentData : pending_appointment){
+  const supabase = createClient();
+
+  console.log(appointmentData);
+
+  const { error } = await supabase
+  .from('Schedule')
+  .update({status : 'Available'})
+  .match({
+    date : appointmentData.date, 
+    starttime : appointmentData.starttime, 
+    appointmentid : appointmentData.appointmentid
+  });
+
+  if(error){
+    console.error(error);
   }
 }
 
