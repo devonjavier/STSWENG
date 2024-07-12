@@ -41,3 +41,7 @@ export interface pending_appointment {
   appointmentid : string;
 }
 
+export interface TimeSlot {
+  time: string;
+  status: string;
+}

@@ -14,7 +14,7 @@ import { reservation } from '@/utils/supabase/interfaces'
 
 const Page: React.FC = () => {
   
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState<reservation[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

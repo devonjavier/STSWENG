@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation';
 import { findDates, getCurrentStatus } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
 import { changeCalendarStatus } from '@/app/lib/actions';
+import { TimeSlot } from '@/utils/supabase/interfaces'
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -12,14 +13,14 @@ const Page = () => {
 
   const parsed_dates = JSON.parse(dates_selected);
 
-  const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: { time: string, status: string }[] }>({});
+  const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: TimeSlot[] }>({});
   const [selectedSlots, setSelectedSlots] = useState<{ [key: string]: boolean[] }>({});
 
   const handleDates = useCallback(async () => {
     try {
       const grouped_time_slots = await findDates(parsed_dates, dates_selected);
 
-      const newTimeSlotsData: { [key: string]: { time: string, status: string }[] } = {};
+      const newTimeSlotsData: { [key: string]: TimeSlot[] } = {};
       const newSelectedSlots: { [key: string]: boolean[] } = {};
 
       Object.keys(grouped_time_slots).forEach(date => {
