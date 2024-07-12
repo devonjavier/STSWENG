@@ -1,13 +1,16 @@
-// page.tsx
+//page.tsx
 'use client'
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
 import { useEffect } from 'react';
 import { fetchCalendarData } from '@/utils/supabase/data';
+import { pending_appointment } from '@/utils/supabase/interfaces'
+import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
 
 const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [appointmentData, setAppointmentData] = useState<pending_appointment | null>(null);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -16,14 +19,24 @@ const Page = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = fetchCalendarData(selectedDate);
+        const data = await fetchCalendarData(selectedDate);
+        setAppointmentData(data);
       } catch (error) { 
-
+        console.error(error);
       }
     }
 
     getData();
   }, [selectedDate])
+
+
+  const handleAccept = useCallback(() => {
+    acceptAppointment(appointmentData as pending_appointment);
+  }, [appointmentData]);
+
+  const handleReject =useCallback(() => {
+    rejectAppointment(appointmentData as pending_appointment)
+  }, [appointmentData]);
 
   return (
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -40,9 +53,9 @@ const Page = () => {
                 <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                   <p className="font-bold">Main customer:</p>
                   <div className="pl-4">
-                    <p>Name: Austin</p>
-                    <p>Email: austin@gmail.com</p>
-                    <p>Phone Number: 09165475437457</p>
+                    <p>{appointmentData?.name}</p>
+                    <p>{appointmentData?.emailaddress}</p>
+                    <p>{appointmentData?.contactnumber}</p>
                   </div>
               </div>
                 
@@ -60,17 +73,17 @@ const Page = () => {
                 <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                   <p className="font-bold">Parking</p>
                   <div className="pl-4">
-                    <p>Parking Needed: No</p>
+                    <p>Parking Needed: {appointmentData?.isparkingspotneeded}</p>
                   </div>
                 </div>
                 
                 <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
                   <p className="font-bold">Reservation Details:</p>
                   <div className="pl-4">
-                    <p>Package Selected: Recording Session</p>
+                    <p>Package Selected: {appointmentData?.title}</p>
                     <p>Date/s: {formatDate(selectedDate)}</p>
-                    <p>Start Time: 10:00 AM</p>
-                    <p>End Time: 11:00 AM</p>
+                    <p>Start Time: {appointmentData?.starttime}</p>
+                    <p>End Time: {appointmentData?.endtime}</p>
                     <p>Additional request/s:</p>
                     {/* fill in data according to populating */}
                   </div>
@@ -79,8 +92,8 @@ const Page = () => {
             </div>
             
             <div className="flex justify-between mt-4">
-              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Accept</button>
-              <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40">Reject</button>
+              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick = {handleAccept}>Accept</button>
+              <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick = {handleReject}>Reject</button>
             </div>
           </div>
         )}

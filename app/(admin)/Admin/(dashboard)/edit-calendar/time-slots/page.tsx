@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { findDates, getCurrentStatus } from '@/app/lib/actions';
+import { findDates, getCurrentStatus } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
 import { changeCalendarStatus } from '@/app/lib/actions';
 
@@ -32,6 +33,11 @@ const Page = () => {
       });
 
       console.log('Grouped Time Slots:', grouped_time_slots);
+
+      const currentStatus = await getCurrentStatus(parsed_dates, id);
+      for (const date of Object.keys(currentStatus)) {
+        newSelectedSlots[date] = currentStatus[date];
+      }
 
       const currentStatus = await getCurrentStatus(parsed_dates, id);
       for (const date of Object.keys(currentStatus)) {
@@ -77,6 +83,8 @@ const Page = () => {
   };
 
   const confirm = useCallback(() => {
+    console.log('Selected Slots:', selectedSlots);
+    console.log('Time Slots Data:', timeSlotsData);
     console.log('Selected Slots:', selectedSlots);
     console.log('Time Slots Data:', timeSlotsData);
     changeCalendarStatus(selectedSlots, timeSlotsData);

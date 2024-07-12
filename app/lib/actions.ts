@@ -3,9 +3,8 @@
 import { createClient } from '@/utils/supabase/server';
 import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
-import { accountData } from '@/utils/supabase/interfaces';
+import { accountData, pending_appointment, schedule} from '@/utils/supabase/interfaces';
 import jwt from 'jsonwebtoken';
-import { schedule } from '@/utils/supabase/interfaces';
 import { NextResponse } from 'next/server';
 import { fetchSchedules } from '@/utils/supabase/data'
 import { create } from 'domain';
@@ -229,6 +228,45 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
         console.log('Updated status:', data);
       }
     });
+  }
+}
+
+export async function acceptAppointment(appointmentData : pending_appointment){
+  const supabase = createClient();
+
+  console.log(appointmentData);
+
+  const { error } = await supabase
+  .from('Schedule')
+  .update({status : 'Appointed'})
+  .match({
+    date : appointmentData.date, 
+    starttime : appointmentData.starttime, 
+    appointmentid : appointmentData.appointmentid
+  });
+
+  if(error){
+    console.error(error);
+  }
+
+}
+
+export async function rejectAppointment(appointmentData : pending_appointment){
+  const supabase = createClient();
+
+  console.log(appointmentData);
+
+  const { error } = await supabase
+  .from('Schedule')
+  .update({status : 'Available'})
+  .match({
+    date : appointmentData.date, 
+    starttime : appointmentData.starttime, 
+    appointmentid : appointmentData.appointmentid
+  });
+
+  if(error){
+    console.error(error);
   }
 }
 

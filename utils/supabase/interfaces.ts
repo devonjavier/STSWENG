@@ -28,3 +28,16 @@ export interface reservation {
   service: string;
   status: string;
 }
+
+export interface pending_appointment {
+  name: string;
+  contactnumber: string;
+  emailaddress: string;
+  isparkingspotneeded: boolean;
+  title: string;
+  date: string;
+  starttime: string;
+  endtime: string;
+  appointmentid : string;
+}
+
