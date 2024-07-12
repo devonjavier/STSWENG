@@ -68,7 +68,7 @@ const Page: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-cusBlue font-medium">
-          {reservations.map((row, index) => {
+          {reservations.map((reservation, index) => {
             
             return(
               <tr
