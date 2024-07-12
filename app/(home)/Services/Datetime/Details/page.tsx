@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Component, Dispatch, SetStateAction, useState, useEffect} from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import GenerateDivs  from '@/app/components/GenerateDivs';
-import { testingCustomer } from '@/utils/supabase/data';
+import { fetchSelectedSchedules } from '@/utils/supabase/data';
 
 const Page = ({searchParams}:{
     searchParams: {
@@ -12,9 +12,11 @@ const Page = ({searchParams}:{
     }
 }) => {
 
-    useEffect(()=>{
-        
-    });
+    const [selectedSchedules,setSelectedSchedules] = useState<[]>([])
+
+
+    useEffect(()=>{}
+    );
     
     function getadditionalCustomers(count: number){
         const additionalCustomers = []

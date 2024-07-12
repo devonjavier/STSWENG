@@ -2,7 +2,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchOneAppointment, fetchServices } from '@/utils/supabase/data'
+import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
 import { service } from '@/utils/supabase/interfaces'
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -11,7 +11,9 @@ export default function displayPage() {
 
     const [trackingNumber, setTrackingNumber] = useState<number>() 
     
-    const [isChecked, setIsChecked] = useState(false); // assume its false
+    const [isChecked, setIsChecked] = useState(); // assume its false
+
+    const [selectedService, setSelectedService] = useState();
 
     const [maincustomerfirstname, setmaincustomerfirstname] = useState(" "); // assume no customer
     const [maincustomermiddlename, setmaincustomermiddlename] = useState(" "); // assume no customer
@@ -20,24 +22,92 @@ export default function displayPage() {
     const [phonenumber, setPhonenumber] = useState(" "); // assume no customer
     const [emailaddress, setEmailaddress] = useState(" "); // assume no customer
 
-    const [additionalRequests, setadditionalRequests] = useState(" "); // assume no request
-    const [additionalCustomers, setadditionalCustomers] = useState<string[]>([]);// assume no addtional customer
+    const [additionalRequests, setadditionalRequests] = useState(" "); // assume no request\
 
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
     const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);// assume no addtional customer
     const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);// assume no addtional customer
 
+    const [listofschedules,setlistofschedules] = useState<[]>([])
+    
     const trackingNumberChange = ((term:number) => {
         setTrackingNumber(term);
     });
 
     const getService = async() =>{
+
+        
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
-        console.log((getThatAppointment[0])['appointmentid']);
+        //console.log(getThatAppointment[0].appointmentid); // this is the appointmentid
+
+        const appid:number = getThatAppointment[0].appointmentid
+        // main customer
+        const mainCustomer = await fetchOneCustomer(appid, true);
+        setadditionalRequests(getThatAppointment[0].additionalrequest);
+        setIsChecked(getThatAppointment[0].isparkingspotneeded);
+        //console.log(mainCustomer[0].personid);
+
+        const selectedservice = await fetchOneService(parseInt(getThatAppointment[0].serviceid));
+                //console.log(selectedservice[0].title);
+        setSelectedService(selectedservice[0].title);
+
+
+        const mainCustomerDetails = await fetchOnePerson(mainCustomer[0].personid);
+        console.log(mainCustomerDetails[0].firstname);
+
+        setmaincustomerfirstname(mainCustomerDetails[0].firstname);
+        setmaincustomermiddlename(mainCustomerDetails[0].middlename)
+        setmaincustomerlastname(mainCustomerDetails[0].lastname);
+        setPhonenumber(mainCustomerDetails[0].contactnumber);
+        setEmailaddress(mainCustomerDetails[0].emailaddress);
+
+        const additionalCustomers = await fetchOneCustomer(appid, false);
+        //const additionalCustomersDetails = await fetchMultiplePerson(additionalCustomers);
+        
+        let additionalcust  = []
+        let additionalfirstnames = []
+        let additionalmiddlenames = []
+        let additionallastnames = []
+
+
+        for(let detail of additionalCustomers){
+
+            additionalcust = await fetchOnePerson(detail.personid);
+
+            additionalfirstnames.push(additionalcust[0].firstname);
+            additionalmiddlenames.push(additionalcust[0].middlename);
+            additionallastnames.push(additionalcust[0].lastname);
+
+        }
+
+        setadditionalCustomersFirstname(additionalfirstnames);
+        setadditionalCustomersMiddlename(additionalmiddlenames);
+        setadditionalCustomersLastname(additionallastnames);
+
+        const newSchedules:number[] = [];
+
+        const getData = await fetchSelectedSchedule(appid);
+        //const date = new Date(new Date(selectedsched.date).setDate(new Date(selectedsched.date).getDate() + 1)).toISOString()
+        
+        getData.forEach((one) => {
+            
+            console.log(one);
+            newSchedules.push(one);
+            console.log(newSchedules);
+            
+        });
+
+        setlistofschedules(newSchedules);
+        //console.log(listofschedules)
+   
+   
     }
+    
 
     
     useEffect(() => {
+
+        
         
     }, [trackingNumber]); // if the tracking number changes
 
@@ -60,11 +130,11 @@ export default function displayPage() {
                         <div className="flex flex-col ">
                             <span className='text-cusBlue font-bold mb-5  text-3xl'> Main Customer: </span>
                             <div className='flex flex-col p-0 ml-12 my-0 mr-0'>
-                                <span className='text-cusBlue font-bold mb-5  text-xl mar '> First name: </span>
-                                <span className='text-cusBlue font-bold mb-5  text-xl'> Middle name: </span>
-                                <span className='text-cusBlue font-bold mb-5  text-xl'> Last name: </span>
-                                <span className='text-cusBlue font-bold mb-5  text-xl'> Contact number: </span>
-                                <span className='text-cusBlue font-bold mb-5  text-xl'> Email addres: </span>
+                                <span className='text-cusBlue font-bold mb-5  text-xl mar '> First name: {maincustomerfirstname} </span>
+                                <span className='text-cusBlue font-bold mb-5  text-xl'> Middle name: {maincustomermiddlename} </span>
+                                <span className='text-cusBlue font-bold mb-5  text-xl'> Last name: {maincustomerlastname} </span>
+                                <span className='text-cusBlue font-bold mb-5  text-xl'> Contact number: {phonenumber} </span>
+                                <span className='text-cusBlue font-bold mb-5  text-xl'> Email addres: {emailaddress} </span>
                             </div>
                             
                         </div>
@@ -72,32 +142,37 @@ export default function displayPage() {
                         <div className='flex flex-col'>
                             <span className='text-cusBlue font-bold  text-3xl mr-16 my-6'> Additional Persons Involved: </span>
                             <div className='flex flex-col p-0 ml-5 my-0 mr-0'>
-                                <span className='text-cusBlue text-xl font-bold mb-5 ml-7 text-md'>
-                                    Person 
+                            
+                            {additionalCustomersFirstname.map((firstName:string, i:number) => (
+                                <span className='text-cusBlue text-xl font-bold mb-5 ml-7 text-md' key={i}>
+                                    Person {i+1}. {firstName} {additionalCustomersMiddlename[i]} {additionalCustomersLastname[i]}
                                 </span>
-
+                            ))}
+                            
                             </div>
                             
                         </div>
 
                         <div className='flex flex-col'>
-                            <span className='text-cusBlue font-bold  text-2xl mr-16 my-6'> Parking Spot: 1234 ? "Will need" : "Will not need" </span>
+                            <span className='text-cusBlue font-bold  text-2xl mr-16 my-6'> Parking Spot: {isChecked ? "Will need" : "Will not need"} </span>
                         </div>
                         
                     </div>
                     
                     <div className='flex flex-col ml-28'>
                         <span className='text-cusBlue font-bold mb-2 text-2xl'> Reservation Details: </span>
-                        <span className='text-cusBlue font-bold mb-5 ml-7  text-md'> Package Selection::   </span>
+                        <span className='text-cusBlue font-bold mb-5 ml-7  text-md'> Package Selection:: {selectedService}  </span>
                         <span className='text-cusBlue font-bold mb-2 ml-7  text-md'> Appointment schedules: </span>
                         <div className='flex flex-col mb-4'>
-                            <span className='text-black font-bold mb-0 ml-12  text-md'> Date:  </span>
+                            {listofschedules.map((schedule) => (
+                                    <span className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.starttime} - {schedule.endtime} </span>
+                            ))}
                         </div>
                         
             
                         <span className='text-cusBlue font-bold mb-5 ml-7  text-md'> Additional Requests:  </span>
                         <div className="flex flex-col ml-16">
-                            <span className='text-cusBlue font-bold mb-5 text-md'>  </span>
+                            <span className='text-cusBlue font-bold mb-5 text-md'> {additionalRequests} </span>
                         </div>
 
                     </div>

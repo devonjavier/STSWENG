@@ -12,6 +12,7 @@ const Page = ({ searchParams }: {
 }) => {
   const [schedules, setSchedules] = useState<[]>([]);
   const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,11 +57,12 @@ const Page = ({ searchParams }: {
           <div className='flex flex-row'>
             <div className='flex flex-col mr-32'>
               <Calendar setArrFunc={setselectedSchedules} schedules={schedules} />
+
               <Link href={
                 {
                   pathname: "/Services/Datetime/Details",
                   query: {
-                    schedules: JSON.stringify(schedules),
+                    schedules: JSON.stringify(selectedSchedules),
                     serviceid: searchParams.serviceid
                   }
                 }

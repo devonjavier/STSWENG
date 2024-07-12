@@ -3,13 +3,13 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { fetchSchedule, addPeople, addOneAppointment, addCustomer} from '@/utils/supabase/data'
+import { fetchSchedule, addPeople, addOneAppointment, addCustomer, updateSchedule} from '@/utils/supabase/data'
 import Link from "next/link"
 import { tracingChannel } from "diagnostics_channel"
 
 const Page = ({searchParams}:{
     searchParams: {
-        schedules: string,
+        schedules: string, // LISTOF ALL SCHEDS
         serviceid: string,
 
         maincustomerfirstname: string,
@@ -31,7 +31,8 @@ const Page = ({searchParams}:{
     const randomNumber = Math.random() * 9999;
 
     const [trackingNumber, setTrackingNumber] = useState(Math.round(randomNumber));
-
+    //const [theAppointentid, setTheAppointentid] = useState();
+    let appointentid;
     const [isProcessed, setIsProcessed] = useState(false);
 
     if(!isProcessed){
@@ -47,10 +48,28 @@ const Page = ({searchParams}:{
                 const addtheAppointment = await addOneAppointment(
                     searchParams.serviceid,
                     dotheyneedparking,
-                    trackingNumber
+                    trackingNumber,
+                    searchParams.additionalrequests
                 );
 
-                console.log("hello: " + addtheAppointment)
+                appointentid = addtheAppointment;
+
+                let updating = []
+                let count = 0
+
+                const selectedschedules = JSON.parse(searchParams.schedules)
+
+                for (const selectedsched of selectedschedules) {
+                    updating[count] = await updateSchedule(
+                        appointentid,
+                        selectedsched.scheduleid,
+                    );
+
+                    count = count + 1;
+                }
+
+
+                console.log(appointentid)
 
                 } catch (error) {
                 console.error('Error fetching services:', error);
@@ -105,9 +124,12 @@ const Page = ({searchParams}:{
                 console.error('Error fetching services:', error);
                 } 
         }
+
+        //console.log(appointentid);
         console.log(trackingNumber);
         // add the appointment to Appointment
-        addAppointment();
+        addAppointment(); 
+        
         // add all customers to People
         addPerson();
         setIsProcessed(true);

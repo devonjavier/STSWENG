@@ -20,6 +20,19 @@ export async function fetchSchedule() {
     }
 }
 
+export async function fetchSelectedSchedule(appointmentid:number) {
+    const supabase = createClient();
+    const { data, error } = await supabase.from('Schedule').select().eq('appointmentid', appointmentid); 
+
+    if(error){
+        return ["error", "error"]
+    }
+    if (data)
+    {
+        return data;
+    }
+}
+
 export async function fetchOneAppointment( id:number ) {
     const supabase = createClient();
     const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);;
@@ -31,6 +44,45 @@ export async function fetchOneAppointment( id:number ) {
     {
         return data;
     }
+}
+export async function fetchOneCustomer(appointmentid:number, isMain:boolean){
+    const supabase = createClient();
+    let whatkind;
+
+    if(isMain)
+        whatkind = true
+    else   
+        whatkind = false
+
+    const { data, error} = await supabase.from('Customers').select().eq('appointmentid', appointmentid)
+    .eq('ismain', whatkind);
+
+    if(error)
+        return error
+
+    return data
+}
+
+export async function fetchOnePerson(personid:number){
+    const supabase = createClient();
+
+    const { data, error} = await supabase.from('Person').select().eq('personid', personid);
+
+    if(error)
+        return error
+
+    return data
+}
+
+export async function fetchMultiplePerson(personObject:object){
+    const supabase = createClient();
+
+    const { data, error} = await supabase.from('Person').select().contains('personid', personObject);
+
+    if(error)
+        return error
+
+    return data
 }
 
 export async function fetchOneService( id:number ) {
@@ -189,8 +241,8 @@ export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
     //status
-    trackingnumber:number
-    //discount
+    trackingnumber:number,
+    additionalrequest:string
 ){
     const supabase = createClient();
 
@@ -214,13 +266,13 @@ export async function addOneAppointment(
         isparkingspotneeded:isparkingspotneeded,
         status:"Pending",
         trackingnumber: trackingnumber,
-        discount:15.0
-    })
-
+        discount:15.0,
+        additionalrequest:additionalrequest
+    }) 
     if(error)
         return error
 
-    return trackingnumber;
+    return largestidnumber;
 }
 
 export async function fetchSchedules(){
@@ -232,6 +284,41 @@ export async function fetchSchedules(){
         return [];
     }
     return data;
+}
+
+export async function fetchSelectedSchedules(thedate:string, starttime:string,endtime:string){
+    const supabase = createClient();
+
+    const date = new Date(new Date(thedate).setDate(new Date(thedate).getDate() + 1)).toISOString()
+
+    //var startingtime = new Date("1970-01-01T" + starttime);
+
+    //var endingtime = new Date("1970-01-01T" + endtime);
+
+    const {data, error } = await supabase.from('Schedule').select()
+        .eq('date', date)
+        .gte('starttime', starttime)
+        .lte('endtime', endtime);
+
+    if (error) {
+        return error
+    }
+    
+    return data;
+}
+
+export async function updateSchedule(appointmentid:number, scheduleid:number){
+    const supabase = createClient();
+
+    const { error } = await supabase
+        .from('Schedule')
+        .update({ appointmentid: appointmentid })
+        .eq('scheduleid', scheduleid)
+
+    if (error)
+        return error
+    
+    return 1
 }
 
 
