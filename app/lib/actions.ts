@@ -196,8 +196,6 @@ export const getCurrentStatus = async (dates: any, id: any) => {
   return statusData;
 };
 
-
-
 export async function changeCalendarStatus(selectedSlots : any, timeSlots : any) {
   console.log('BEFORE SUPABASE AWAIT');
   const supabase = await createClient();
