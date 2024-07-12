@@ -38,5 +38,6 @@ export interface pending_appointment {
   date: string;
   starttime: string;
   endtime: string;
+  appointmentid : string;
 }
 

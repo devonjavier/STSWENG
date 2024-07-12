@@ -1,15 +1,16 @@
 //page.tsx
 'use client'
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
 import { useEffect } from 'react';
 import { fetchCalendarData } from '@/utils/supabase/data';
 import { pending_appointment } from '@/utils/supabase/interfaces'
+import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
 
 const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [appointmentData, setAppointmentData] = useState<pending_appointment | null>(null);
+  const [appointmentData, setAppointmentData] = useState<pending_appointment[] | null>(null);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -27,6 +28,15 @@ const Page = () => {
 
     getData();
   }, [selectedDate])
+
+
+  const handleAccept = useCallback(() => {
+    acceptAppointment(appointmentData[0] as pending_appointment);
+  }, [appointmentData]);
+
+  const handleReject =useCallback(() => {
+    rejectAppointment(appointmentData[0] as pending_appointment)
+  }, [appointmentData]);
 
   return (
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -82,8 +92,8 @@ const Page = () => {
             </div>
             
             <div className="flex justify-between mt-4">
-              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Accept</button>
-              <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40">Reject</button>
+              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick = {handleAccept}>Accept</button>
+              <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick = {handleReject}>Reject</button>
             </div>
           </div>
         )}

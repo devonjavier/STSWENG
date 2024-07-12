@@ -71,7 +71,7 @@ const Page: React.FC = () => {
           {reservations.map((row, index) => {
             
             const reservation = {row};
-            console.dir('fuck you 111' + reservation);
+            console.dir(reservation);
             return(
               <tr
               key={index}

@@ -156,6 +156,7 @@ export async function fetchCalendarData(selectedDate : any){
         date: formattedDate,
         starttime: schedule.starttime,
         endtime: schedule.endtime,
+        appointmentid : schedule.appointmentid
       };
     })
   );
