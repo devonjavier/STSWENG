@@ -34,13 +34,14 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
     for(const schedule of schedules){
         if (new Date(schedule.date).toDateString() === date.toDateString())
         {
-          
-          return schedule.status !== "Available" || schedule.status === null;
-        } 
-          
+          if(schedule.status === "Available")
+          {
+            return false
+          }
+        }  
     }
 
-    return true;
+    return true
   };
   return (
     <div className='app'>

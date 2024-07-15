@@ -15,29 +15,30 @@ const Page = ({ searchParams }: {
   
   const [loading, setLoading] = useState(true);
 
+  const getSchedule = async () => {
+    try {
+      const fetchedSchedules = await fetchSchedules();
+      
+      const newSelectedDates = fetchedSchedules.map((schedule: { scheduleid: any; date: any; starttime: any; endtime: any; status: any }) => ({
+        scheduleid: schedule.scheduleid,
+        date: schedule.date,
+        starttime: schedule.starttime,
+        endtime: schedule.endtime,
+        status: schedule.status
+      }));
+      setSchedules(newSelectedDates);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getSchedule = async () => {
-      try {
-        const fetchedSchedules = await fetchSchedules();
-        
-
-        const newSelectedDates = fetchedSchedules.map((schedule: { scheduleid: any; date: any; starttime: any; endtime: any; status: any }) => ({
-          scheduleid: schedule.scheduleid,
-          date: schedule.date,
-          starttime: schedule.starttime,
-          endtime: schedule.endtime,
-          status: schedule.status
-        }));
-        setSchedules(newSelectedDates);
-      } catch (error) {
-        console.error('Error fetching services:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getSchedule();
   }, []);
+
+  
 
   return (
     <>

@@ -244,6 +244,7 @@ export async function fetchOneService( id:number ) {
     }
 }
 
+
 export async function fetchServices(){
     const supabase = createClient();
     const { data: services } = await supabase.from('Service').select();
