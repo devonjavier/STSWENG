@@ -15,6 +15,7 @@ const Page = () => {
 
   const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: TimeSlot[] }>({});
   const [selectedSlots, setSelectedSlots] = useState<{ [key: string]: boolean[] }>({});
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleDates = useCallback(async () => {
     try {
@@ -96,6 +97,11 @@ const Page = () => {
     console.log('Filtered Selected Slots:', filteredSelectedSlots);
     console.log('Filtered Time Slots Data:', filteredTimeSlotsData);
     changeCalendarStatus(filteredSelectedSlots, filteredTimeSlotsData);
+
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3000); 
   }, [selectedSlots, timeSlotsData]);
 
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
@@ -111,9 +117,10 @@ const Page = () => {
             {timeSlotsData[date].map((slot, index) => (
               <div
                 key={index}
-                className={`cursor-pointer p-2 mb-1 border rounded-3xl pl-5 text-white text-bold ${selectedSlots[date][index] ? 'bg-rose-700' : 'bg-green-600'} 
-                ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : ''}`}
-                onClick={() => (slot.status !== 'pending' && slot.status !== 'appointed') && handleSelectSlot(date, index)}
+                className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
+                  ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
+                    selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
+                onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
               >
                 {slot.time}
               </div>
@@ -131,6 +138,11 @@ const Page = () => {
             </div>  
           </div>
         ))}
+        {showPopup && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
+          Calendar Updated Successfully!
+        </div>
+      )}
       </div>
       <button onClick={confirm} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
     </div>
