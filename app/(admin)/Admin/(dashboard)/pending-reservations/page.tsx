@@ -32,10 +32,12 @@ const Page = () => {
 
   const handleAccept = useCallback(() => {
     acceptAppointment(appointmentData as pending_appointment);
+    window.location.reload();
   }, [appointmentData]);
 
   const handleReject = useCallback(() => {
     rejectAppointment(appointmentData as pending_appointment);
+    window.location.reload;
   }, [appointmentData]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,8 +114,8 @@ const Page = () => {
             </div>
             
             <div className="flex justify-between mt-4">
-              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleAccept}>Accept</button>
               <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick={handleReject}>Reject</button>
+              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleAccept}>Accept</button>
             </div>
           </div>
         )}

@@ -232,7 +232,8 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
 export async function acceptAppointment(appointmentData : pending_appointment){
   const supabase = createClient();
 
-  console.log(appointmentData);
+  console.log("ARG", appointmentData[0]);
+  appointmentData = appointmentData[0];
 
   const { error } = await supabase
   .from('Schedule')
