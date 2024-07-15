@@ -14,7 +14,7 @@ import { reservation } from '@/utils/supabase/interfaces'
 
 const Page: React.FC = () => {
   
-  const [reservations, setReservations] = useState([]);
+  const [reservations, setReservations] = useState<reservation[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -68,10 +68,8 @@ const Page: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-cusBlue font-medium">
-          {reservations.map((row, index) => {
+          {reservations.map((reservation, index) => {
             
-            const reservation = {row};
-            console.dir(reservation);
             return(
               <tr
               key={index}
