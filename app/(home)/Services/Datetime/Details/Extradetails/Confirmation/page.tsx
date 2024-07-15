@@ -170,7 +170,7 @@ const Page = ({searchParams}:{
                     <span className='text-cusBlue font-bold mb-2 ml-7  text-md'> Appointment schedules: </span>
                     <div className='flex flex-col mb-4'>
                         {listofschedules.map((schedule) => (
-                                <span className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.starttime} - {schedule.endtime} </span>
+                                <span key={schedule.scheduleid} className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.starttime} - {schedule.endtime} </span>
                         ))}
                     </div>
                     

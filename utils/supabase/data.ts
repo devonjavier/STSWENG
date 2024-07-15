@@ -424,7 +424,9 @@ export async function addOneAppointment(
 export async function fetchSchedules(){
     const supabase = createClient();
 
-    const {data, error } = await supabase.from('Schedule').select();
+    const {data, error } = await supabase.from('Schedule').select('*').order('scheduleid', {ascending:false});
+    console.log(data);
+    
     if (error) {
         console.error('Error fetching reservations:', error);
         return [];

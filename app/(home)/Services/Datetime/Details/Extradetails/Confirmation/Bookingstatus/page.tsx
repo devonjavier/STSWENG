@@ -53,6 +53,7 @@ const Page = ({searchParams}:{
                 );
 
                 appointentid = addtheAppointment;
+                console.log(addtheAppointment);
 
                 let updating = []
                 let count = 0

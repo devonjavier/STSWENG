@@ -5,11 +5,13 @@ import React, { useEffect, useState } from 'react';
 import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
 import { service } from '@/utils/supabase/interfaces'
 import { useDebouncedCallback } from 'use-debounce';
+import Image from "next/image"
 
 
-export default function displayPage() {
 
-    const [trackingNumber, setTrackingNumber] = useState<number>() 
+export default function DisplayPage() {
+
+    const [trackingNumber, setTrackingNumber] = useState<number>(12) 
     
     const [isChecked, setIsChecked] = useState(); // assume its false
 
@@ -29,16 +31,38 @@ export default function displayPage() {
     const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);// assume no addtional customer
 
     const [listofschedules,setlistofschedules] = useState<[]>([])
-    
+
+    const [status, setStatus] = useState<string>("/check_mark.png");
+    const [statusMessage , setStatusMessage] = useState<string>(" ");
+
     const trackingNumberChange = ((term:number) => {
         setTrackingNumber(term);
     });
 
-    const getService = async() =>{
+    const getStatus = async() =>{
 
         
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
         //console.log(getThatAppointment[0].appointmentid); // this is the appointmentid
+
+        const status = getThatAppointment[0].status
+
+        if(status === "Pending")
+        {
+            setStatus("/pending_mark.png");
+            setStatusMessage("Appointment Pending");
+        }
+        else if(status === "Accepted")
+        {
+            setStatus("/check_mark.png");
+            setStatusMessage("Appointment Accepted");
+        }
+        else if(status === "Rejected")
+        {
+            setStatus("/ekis_mark.png");
+            setStatusMessage("Appointment Rejected");
+        }
+            
 
         const appid:number = getThatAppointment[0].appointmentid
         // main customer
@@ -89,7 +113,7 @@ export default function displayPage() {
         const getData = await fetchSelectedSchedule(appid);
         //const date = new Date(new Date(selectedsched.date).setDate(new Date(selectedsched.date).getDate() + 1)).toISOString()
         
-        getData.forEach((one) => {
+        getData.forEach((one: number) => {
             
             console.log(one);
             newSchedules.push(one);
@@ -99,8 +123,6 @@ export default function displayPage() {
 
         setlistofschedules(newSchedules);
         //console.log(listofschedules)
-   
-   
     }
     
 
@@ -115,16 +137,21 @@ export default function displayPage() {
         <>
             <div className='flex flex-col mt-16 ml-16'>
             <span className='text-cusBlue font-bold mb-2 mt-6  text-7xl'> Check Status </span>
-            <span className='text-black font-bold mb-2 mt-6  text-xl'> Track your appointment here. </span>
-            <span className='text-black font-bold mb-2 mt-6  text-2xl'> Reference Number </span>
-            <input placeholder = "Input tracking number" 
+            <span className='text-gray-400 font-bold mb-6 text-xl'> Track your appointment here. </span>
+            <span className='text-black font-bold mb-2  text-xl'> Reference Number: </span>
+            <input placeholder = "Input reference number" 
                             onChange={(e)=>{
                                 trackingNumberChange(parseInt(e.target.value));
                             }}
-                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
-            <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={() => getService()}> Check status </button>
+                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+            <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
             </div>
-            <div className="flex flex-row ml-16 mt-5 mr-96 mb-6 border-2 p-5">
+            <div className='flex flex-col items-center'>
+                <Image src={status} alt=" " width={80} height={80}/>
+                <span className="font-bold text-4xl text-black my-3"> {statusMessage} </span>
+            </div>
+            
+            <div className="flex flex-row mx-96 mt-5 mb-6 border-2 p-5">
                 <div className='flex flex-row'>
                     <div className='flex flex-col'>
                         <div className="flex flex-col ">
@@ -165,7 +192,7 @@ export default function displayPage() {
                         <span className='text-cusBlue font-bold mb-2 ml-7  text-md'> Appointment schedules: </span>
                         <div className='flex flex-col mb-4'>
                             {listofschedules.map((schedule) => (
-                                    <span className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.starttime} - {schedule.endtime} </span>
+                                    <span key={schedule.scheduleid} className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.starttime} - {schedule.endtime} </span>
                             ))}
                         </div>
                         

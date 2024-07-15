@@ -31,12 +31,15 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
   }, [selectedDates, setArrFunc]);
 
   const isDateAvailable = (date: Date) => {
-    const scheduleForDate = schedules.find(
-      schedule => new Date(schedule.date).toDateString() === date.toDateString()
-    );
-    if (scheduleForDate) {
-      return scheduleForDate.status !== "Available" || scheduleForDate.status === null;
+    for(const schedule of schedules){
+        if (new Date(schedule.date).toDateString() === date.toDateString())
+        {
+          
+          return schedule.status !== "Available" || schedule.status === null;
+        } 
+          
     }
+
     return true;
   };
   return (

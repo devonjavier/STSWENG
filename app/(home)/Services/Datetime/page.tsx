@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { useState, useEffect } from 'react';
 import Calendar from '@/app/components/CustomCalendar';
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
-import { fetchSchedule } from '@/utils/supabase/data'
+import { fetchSchedules } from '@/utils/supabase/data'
 
 const Page = ({ searchParams }: {
   searchParams: {
@@ -18,7 +18,9 @@ const Page = ({ searchParams }: {
   useEffect(() => {
     const getSchedule = async () => {
       try {
-        const fetchedSchedules = await fetchSchedule();
+        const fetchedSchedules = await fetchSchedules();
+        
+
         const newSelectedDates = fetchedSchedules.map((schedule: { scheduleid: any; date: any; starttime: any; endtime: any; status: any }) => ({
           scheduleid: schedule.scheduleid,
           date: schedule.date,
@@ -72,7 +74,9 @@ const Page = ({ searchParams }: {
                 </button>
               </Link>
             </div>
-            <div className='flex flex-row'>
+            
+            <div className='flex flex-col'>
+              <span className="text-cusBlue text-3xl font-bold mb-4">Select a time</span>
               <DropdownWrapper items={[]} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} />
             </div>
           </div>

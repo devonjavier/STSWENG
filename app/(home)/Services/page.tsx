@@ -6,7 +6,7 @@ import { fetchServices } from '@/utils/supabase/data'
 import { service } from '@/utils/supabase/interfaces'
 
 
-export default function displayPage() {
+export default function DisplayPage() {
     const [completeServices, setCompleteServices] = useState<service[] | null>(null);
     const [loading, setLoading] = useState(true);
 

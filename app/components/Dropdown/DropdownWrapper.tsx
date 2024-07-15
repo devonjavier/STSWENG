@@ -64,7 +64,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <div className="flex flex-col">
-      <span className="text-cusBlue text-3xl font-bold">Select a time</span>
+      
       <div className='flex flex-row'>
         <div className='flex flex-col mr-20'>
           <span className='font-bold text-black'>{formatDate(selectedDates[dateIndex].date)}</span>
@@ -142,7 +142,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
     const normalizedSelectedDate = normalizeDate(selectedDate);
     const filteredSchedules = schedules.filter(schedule => {
       const scheduleDate = normalizeDate(schedule.date);
-      return scheduleDate.getTime() === normalizedSelectedDate.getTime() && (schedule.status === "Available" || schedule.status === null);
+      return scheduleDate.getTime() === normalizedSelectedDate.getTime() && (schedule.status === "Available");
     });
     const startTimes = filteredSchedules.map(schedule => schedule.starttime).sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
     const endTimes = filteredSchedules.map(schedule => schedule.endtime).sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
