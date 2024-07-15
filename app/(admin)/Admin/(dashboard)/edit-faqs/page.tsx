@@ -1,7 +1,8 @@
 'use client'
 import React, { useState } from 'react';
 import '../scrollbarStyle.css';
-
+import { useEffect } from 'react';
+import { fetchFAQs } from '@/utils/supabase/data';
 interface FAQ {
   question: string;
   answer: string;
@@ -18,6 +19,22 @@ export default function EditFAQs() {
       answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
     },
   ]);
+
+  useEffect(() => {
+    const getFAQs = async () => {
+      try {
+        const data = await fetchFAQs();
+        setFaqs(data);
+
+        console.log(data);
+      } catch(error) {
+        console.error('Error fetching services:', error);
+      }
+      
+    }
+
+    getFAQs();
+  }, []);
 
   const handleInputChange = (index: number, field: keyof FAQ, value: string) => {
     const updatedFaqs = [...faqs];

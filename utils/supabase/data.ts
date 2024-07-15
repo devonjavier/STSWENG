@@ -5,6 +5,7 @@ import { service } from '@/utils/supabase/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
+import { create } from 'domain'
 
 
 export async function fetchAppointments() {
@@ -378,6 +379,21 @@ export async function fetchSchedules(){
         console.error('Error fetching reservations:', error);
         return [];
     }
+    return data;
+}
+
+export async function fetchFAQs(){
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+    .from('FAQ')
+    .select('question, answer')
+
+    if(error){
+        console.error('Error fetching FAQs: ', error);
+        return [];
+    }
+
     return data;
 }
 
