@@ -91,21 +91,21 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
     <div className="flex-1 w-max bg-white shadow-xl p-1 rounded-lg">
       <div className="flex justify-between items-center mb-4 p-4 pb-0">
         <div className="flex-1 mr-4">
-          <label className="block text-gray-700 font-bold text-black">Question</label>
+          <label className="block font-bold text-black">Question</label>
           <input
             type="text"
             value={faq.question}
             onChange={(e) => onInputChange('question', e.target.value)}
-            className="h-10 border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
+            className="h-10 text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
           />
         </div>
       </div>
       <div className="p-4">
-        <label className="block text-gray-700 font-bold text-black">Answer</label>
+        <label className="block font-bold text-black">Answer</label>
         <textarea
           value={faq.answer}
           onChange={(e) => onInputChange('answer', e.target.value)}
-          className="border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
+          className="border text-black border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
         />
       </div>
       <div className="p-4 flex justify-end">
