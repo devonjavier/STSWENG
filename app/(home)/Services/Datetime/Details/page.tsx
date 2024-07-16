@@ -4,7 +4,7 @@ import { Component, Dispatch, SetStateAction, useState, useEffect} from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import GenerateDivs  from '@/app/components/GenerateDivs';
 import { fetchSelectedSchedules } from '@/utils/supabase/data';
-
+import './page.css'
 const Page = ({searchParams}:{
     searchParams: {
         schedules: string, // JSON
@@ -16,6 +16,7 @@ const Page = ({searchParams}:{
 
 
     useEffect(()=>{}
+
     );
     
     function getadditionalCustomers(count: number){
@@ -81,7 +82,7 @@ const Page = ({searchParams}:{
             </div>
             </div>
             <div>
-                Package &gt; Date & Time &gt; <span className='text-cusBlue'>Details </span> &gt; Confirmation &gt;  Booking Status 
+                Services &gt; Date & Time &gt; <span className='text-cusBlue'>Details </span> &gt; Confirmation &gt;  Booking Status 
             </div>
         </div>
         <div className="flex flex-row">
@@ -89,45 +90,45 @@ const Page = ({searchParams}:{
             <div className='flex flex-row'>
                 <div className='flex flex-col'>
                      
-                    <span className='text-cusBlue font-bold mb-5  text-lg'> Main Customer </span>
+                    <span className='text-black drop-shadow-lg  font-bold mb-5  text-lg'> Main Customer </span>
                     <div className='flex flex-col'>
                         <input id='customerfirstname' name='customername' placeholder = "First Name" 
                             onChange={(e)=>{
                                 mainCustomerFirstNameChange(e.target.value);
                         }}
-                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
 
                         <input id='customermiddlename' name='customername' placeholder = "Middle Name" 
                             onChange={(e)=>{
                                 mainCustomerMiddleNameChange(e.target.value);
                         }}
-                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
 
                         <input id='customerlastname' name='customername' placeholder = "Last Name" 
                             onChange={(e)=>{
                                 mainCustomerLastNameChange(e.target.value);
                         }}
-                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                     </div>
 
                 
-                    <span className='text-cusBlue font-bold mb-2 mt-6  text-lg'> Phone Number </span>
+                    <span className='text-black drop-shadow-lg font-bold mb-2 mt-6  text-lg'> Phone Number </span>
 
                     <div className='flex flex-col'>
                         <input placeholder = "09XXXXXXXXX" 
                             onChange={(e)=>{
                                 phoneNumberChange(e.target.value);
                         }}
-                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                     </div>
 
-                    <span className='text-cusBlue font-bold mb-2 mt-6  text-lg'> Email Address </span>
+                    <span className='text-black drop-shadow-lg  font-bold mb-2 mt-6  text-lg'> Email Address </span>
                     <div className='flex flex-col'>
                         <input placeholder = "@gmail.com" 
                             onChange={(e)=>{
                                 emailAddressChange(e.target.value);
                         }}
-                        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
+                        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                     </div>
                    
                     <Link 
@@ -155,23 +156,19 @@ const Page = ({searchParams}:{
                 
                 <div className='flex flex-col ml-28'>
                     <div className='flex flex-col'>
-                        <span className='text-cusBlue font-bold mb-2 text-lg'> Additional Request/s</span>
+                        <span className='text-black drop-shadow-lg font-bold mb-2 text-lg'> Additional Request/s</span>
                         <input id='additionalreq' name='additionalreq' 
                             onChange={(e)=>{
                                 addtionalRequestChange(e.target.value);
                             }}
-                        placeholder = " " className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[250px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                        placeholder = " " className='text-black text-center text-2xl font-medium w-[480px] h-[250px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
                     </div>
-                    <div>
-                        <span className='text-cusBlue font-bold mb-2 text-lg'> Do you need parking? </span>
-                        <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                            className='w-5'
-                        />
+                    <div className='flex gap-4'>
+                        <span className='text-black drop-shadow-lg font-bold mb-2 text-lg'> Do you need parking? </span>
+                        <div onClick={() => setIsChecked(!isChecked)} className={`toggle-switch ${isChecked ? 'checked' : ''}`}>
+                            <span className="slider"></span>
+                        </div> 
                     </div>
-
                 </div>
 
             </div>

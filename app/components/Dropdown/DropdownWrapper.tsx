@@ -102,7 +102,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
     const filteredEndTimes = startTime ? items.endTimes.filter((endTime) => parseTimeString(endTime) > parseTimeString(startTime)) : items.endTimes;
 
     return (
-      <div className='flex flex-row space-x-8 mt-4 w-full'>
+      <div className='flex flex-row space-x-8 mt-4'>
         <div className='flex flex-col w-full relative'> 
           <span className='font-semibold w-full text-neutral-400'>{formatDate(selectedDates[dateIndex].date)}</span>
           <span className='pl-1 text-sm w-full font-bold text-black'>Start</span>
@@ -163,7 +163,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
 
   return (
     <div>
-      <div ref={containerRef} className={`border-4 rounded-3xl p-8 drop-shadow-md ${containerClass}`}>
+      <div ref={containerRef} className={`border-4 rounded-3xl p-8 drop-shadow-md ${containerClass} min-w-[500px]`}>
         <span className="text-black text-xl font-semibold mb-4 block">Select a time</span>
         {selectedDates.map((dateObj, index) => (
           <Dropdown

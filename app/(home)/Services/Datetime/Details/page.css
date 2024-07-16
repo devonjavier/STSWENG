@@ -3,3 +3,32 @@
     width: 250 px;
     height: 300 px;
 }
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background-color: #ccc;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-switch.checked {
+    background-color: #4A28A8;
+}
+
+.toggle-switch .slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background-color: white;
+    border-radius: 50%;
+    transition: left 0.3s;
+}
+
+.toggle-switch.checked .slider {
+    left: 26px;
+}
