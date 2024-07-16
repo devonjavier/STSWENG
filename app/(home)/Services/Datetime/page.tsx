@@ -50,7 +50,7 @@ const Page = ({ searchParams }: {
             </div>
           </div>
           <div>
-            Package &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Details &gt; Confirmation &gt; Booking Status
+            Services &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Details &gt; Confirmation &gt; Booking Status
           </div>
         </div>
 
@@ -58,7 +58,7 @@ const Page = ({ searchParams }: {
           <div>
           </div>
           <div className='flex flex-row'>
-            <div className='flex flex-col mr-32'>
+            <div className='flex flex-col mr-4'>
               <Calendar setArrFunc={setselectedSchedules} schedules={schedules} />
 
               <Link href={
@@ -77,7 +77,6 @@ const Page = ({ searchParams }: {
             </div>
             
             <div className='flex flex-col'>
-              <span className="text-cusBlue text-3xl font-bold mb-4">Select a time</span>
               <DropdownWrapper items={[]} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} />
             </div>
           </div>

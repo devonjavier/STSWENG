@@ -37,7 +37,7 @@ export default function DisplayPage() {
                 Book an Appointment
             </div>
             <div>
-                <span className='text-cusBlue'>Package </span>&gt; Date & Time &gt; Details &gt; Confirmation &gt; Booking Status
+                <span className='text-cusBlue'>Services </span>&gt; Date & Time &gt; Details &gt; Confirmation &gt; Booking Status
             </div>
         </div>
         
@@ -66,7 +66,7 @@ export default function DisplayPage() {
                                     alt={service.title}
                                 />
                             </div>
-                            <div className='text-black text-3xl font-bold'>{service.title}</div>
+                            <div className='text-black text-3xl font-bold italic'>{service.title}</div>
                             <div className='w-full text-cusBlue text-2xl font-light'>{service.description}</div>
                         </Link>
                     );

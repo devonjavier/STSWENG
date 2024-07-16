@@ -4,7 +4,7 @@ import React from 'react'
 export const IntroText = () => {
   return (
     <div className=' relative flex flex-col'>
-    <div className='text-black text-6xl font-extrabold mb-5'>
+    <div className='text-cusBlue text-6xl font-extrabold mb-5'>
       INDIGO STUDIOS PH
     </div>
       <p className='text-cusBlue text-xl font-light mb-10 w-8/12'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque  felis 

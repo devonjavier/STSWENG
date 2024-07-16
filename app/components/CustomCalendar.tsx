@@ -44,8 +44,8 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
   };
   return (
     <div className='app'>
-      <span className="text-cusBlue text-3xl font-bold">Select Date</span>
       <div className='calendar-container'>
+        <div className='border-4 rounded-3xl p-8 drop-shadow-md'>
         <Calendar
           minDate={new Date()}
           onClickDay={handleDateChange}
@@ -55,6 +55,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
             return isSelected && view === 'month' ? 'highlight' : null;
           }}
         />
+        </div>
       </div>
     </div>
   );
