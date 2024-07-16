@@ -60,7 +60,7 @@ const Page = ({searchParams}:{
             </div>
             </div>
             <div>
-            Package &gt; Date & Time &gt; <span className='text-cusBlue'>Details </span> &gt; Confirmation &gt;  Booking Status 
+            Services &gt; Date & Time &gt; <span className='text-cusBlue'>Details </span> &gt; Confirmation &gt;  Booking Status 
             </div>
         </div>
         <div className="flex flex-row">
@@ -70,11 +70,11 @@ const Page = ({searchParams}:{
                      
                    
                     <div className='flex flex-col'>
-                        <div className="flex flex-row mt-5 mb-3 items-center">
-                            <span className='text-cusBlue font-bold  text-lg mr-16'> Additional Persons Involved </span>
-                            <button className='rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers - 1)}> - </button>
+                        <div className="flex flex-row mt-5 mb-3 items-center gap-5">
+                            <span className='text-black drop-shadow-lg font-bold  text-lg mr-16'> Additional Persons Involved </span>
+                            <button className='drop-shadow-2xl rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers - 1)}> - </button>
                             <span className='text-cusBlue font-bold text-lg mx-4'> {countAdditionalCustomers} </span>
-                            <button className='rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
+                            <button className='drop-shadow-2xl rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
                         </div>
 
                         <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomersFirst={setadditionalCustomersFirstname} 

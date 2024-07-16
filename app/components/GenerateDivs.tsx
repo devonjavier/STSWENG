@@ -45,27 +45,26 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
     div.push(
       <> 
       <div className='flex flex-row text-center'>
-      
-      
+      <div className='flex flex-row gap-5 items-center'>
       <span className='text-cusBlue text-xl mr-4'> Person {i + 1}: </span>
-
       <input
         onChange={(e) => handleFirstnameChange(e, i)}
         placeholder=" First name "
-        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex'
+        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex'
         type="text" />
         
         <input
           onChange={(e) => handleMiddlenameChange(e, i)}
           placeholder=" Middle name "
-          className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex'
+          className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex'
           type="text" />
       
       <input
         onChange={(e) => handleLastnameChange(e, i)}
         placeholder=" Lastname "
-        className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex'
+        className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex'
         type="text"/>
+      </div>
 
       </div>
       </>
