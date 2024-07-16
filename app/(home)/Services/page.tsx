@@ -3,11 +3,11 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
 import { fetchServices } from '@/utils/supabase/data'
-import { service } from '@/utils/supabase/interfaces'
+import { allService } from '@/utils/supabase/interfaces'
 
 
 export default function displayPage() {
-    const [completeServices, setCompleteServices] = useState<service[] | null>(null);
+    const [completeServices, setCompleteServices] = useState<allService[] | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
