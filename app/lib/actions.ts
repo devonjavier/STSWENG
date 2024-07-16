@@ -3,7 +3,8 @@
 import { createClient } from '@/utils/supabase/server';
 import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
-import { accountData, pending_appointment, schedule, Service, OnetimeService, HourlyService} from '@/utils/supabase/interfaces';
+import { accountData, pending_appointment, schedule, 
+  Service, OnetimeService, HourlyService, FAQ} from '@/utils/supabase/interfaces';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 import { fetchSchedules } from '@/utils/supabase/data'

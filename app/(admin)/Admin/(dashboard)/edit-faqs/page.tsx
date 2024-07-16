@@ -3,22 +3,11 @@ import React, { useState } from 'react';
 import '../scrollbarStyle.css';
 import { useEffect } from 'react';
 import { fetchFAQs } from '@/utils/supabase/data';
-interface FAQ {
-  question: string;
-  answer: string;
-}
+import { FAQ } from '@/utils/supabase/interfaces'
+import { editFAQs } from '@/app/lib/actions';
 
 export default function EditFAQs() {
-  const [faqs, setFaqs] = useState<FAQ[]>([
-    {
-      question: 'What are the payment methods?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
-    },
-    {
-      question: 'Is a parking spot provided?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
-    },
-  ]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
 
   useEffect(() => {
     const getFAQs = async () => {
@@ -53,7 +42,7 @@ export default function EditFAQs() {
   };
 
   const handleAddQuestion = () => {
-    setFaqs([...faqs, { question: '', answer: '' }]);
+    setFaqs([...faqs, { faq_id: '', question: '', answer: '' }]);
   };
 
   return (

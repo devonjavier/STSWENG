@@ -46,6 +46,13 @@ export interface TimeSlot {
   status: string;
 }
 
+export interface FAQ {
+  faq_id : string,
+  question: string;
+  answer: string;
+}
+
+
 export interface Service {
   serviceid: number;
   title: string;

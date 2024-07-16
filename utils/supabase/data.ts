@@ -426,7 +426,7 @@ export async function fetchFAQs(){
 
     const { data, error } = await supabase
     .from('FAQ')
-    .select('question, answer')
+    .select('*')
 
     if(error){
         console.error('Error fetching FAQs: ', error);
