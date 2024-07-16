@@ -1,10 +1,12 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import { service } from '@/utils/supabase/interfaces'
+import { allService, Service, OnetimeService, HourlyService } from '@/utils/supabase/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
+import { create } from 'domain'
+
 
 
 export async function fetchAppointments() {
@@ -252,10 +254,10 @@ export async function fetchServices(){
     const { data: hourlyServices } = await supabase.from('HourlyService').select();
 
 
-    const completeServices = services?.map((service : service) => {
+    const completeServices = services?.map((service : allService) => {
         
-    const onetimeservice = onetimeServices?.find((ot : service) => ot.serviceid === service.serviceid);
-    const hourlyservice = hourlyServices?.find((h : service) => h.serviceid === service.serviceid);
+    const onetimeservice = onetimeServices?.find((ot : allService) => ot.serviceid === service.serviceid);
+    const hourlyservice = hourlyServices?.find((h : allService) => h.serviceid === service.serviceid);
 
         if(onetimeservice){
             return({
@@ -274,6 +276,44 @@ export async function fetchServices(){
 
     return completeServices; 
 }
+
+export async function fetchEditServices() {
+
+
+    const supabase = createClient();
+  
+    const { data: services, error: serviceError } = await supabase.from('Service').select();
+    const { data: onetimeServices, error: onetimeError } = await supabase.from('OnetimeService').select();
+    const { data: hourlyServices, error: hourlyError } = await supabase.from('HourlyService').select();
+  
+    if (serviceError || onetimeError || hourlyError) {
+      console.error('Error fetching data:', serviceError || onetimeError || hourlyError);
+      return [];
+    }
+  
+    const completeServices = services?.map((service: Service) => {
+      const onetimeService = onetimeServices?.find((ot: OnetimeService) => ot.serviceid === service.serviceid);
+      const hourlyService = hourlyServices?.find((hs: HourlyService) => hs.serviceid === service.serviceid);
+  
+      if (onetimeService) {
+        return {
+          ...service,
+          price: onetimeService.rate,
+        };
+      } else if (hourlyService) {
+        return {
+          ...service,
+          price: hourlyService.rate,
+        };
+      } else {
+        return service;
+      }
+    });
+
+  
+    return completeServices;
+  }
+
 export async function addPeople(
     firstname:string,
     middlename:string,
@@ -432,6 +472,21 @@ export async function fetchSchedules(){
         console.error('Error fetching reservations:', error);
         return [];
     }
+    return data;
+}
+
+export async function fetchFAQs(){
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+    .from('FAQ')
+    .select('*')
+
+    if(error){
+        console.error('Error fetching FAQs: ', error);
+        return [];
+    }
+
     return data;
 }
 

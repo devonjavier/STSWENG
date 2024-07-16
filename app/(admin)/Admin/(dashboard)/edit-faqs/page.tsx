@@ -1,23 +1,29 @@
 'use client'
 import React, { useState } from 'react';
 import '../scrollbarStyle.css';
-
-interface FAQ {
-  question: string;
-  answer: string;
-}
+import { useEffect } from 'react';
+import { fetchFAQs } from '@/utils/supabase/data';
+import { FAQ } from '@/utils/supabase/interfaces'
+import { editFAQs } from '@/app/lib/actions';
 
 export default function EditFAQs() {
-  const [faqs, setFaqs] = useState<FAQ[]>([
-    {
-      question: 'What are the payment methods?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
-    },
-    {
-      question: 'Is a parking spot provided?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
-    },
-  ]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+
+  useEffect(() => {
+    const getFAQs = async () => {
+      try {
+        const data = await fetchFAQs();
+        setFaqs(data);
+
+        console.log(data);
+      } catch(error) {
+        console.error('Error fetching services:', error);
+      }
+      
+    }
+
+    getFAQs();
+  }, []);
 
   const handleInputChange = (index: number, field: keyof FAQ, value: string) => {
     const updatedFaqs = [...faqs];
@@ -25,9 +31,13 @@ export default function EditFAQs() {
     setFaqs(updatedFaqs);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('FAQs:', faqs);
+    try {
+      await editFAQs(faqs);
+    } catch (error) {
+      console.error('Error updating services:', error);
+    }
   };
 
   const handleDelete = (index: number) => {
@@ -36,7 +46,7 @@ export default function EditFAQs() {
   };
 
   const handleAddQuestion = () => {
-    setFaqs([...faqs, { question: '', answer: '' }]);
+    setFaqs([...faqs, { id: '', question: '', answer: '' }]);
   };
 
   return (
@@ -85,21 +95,21 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
     <div className="flex-1 w-max bg-white shadow-xl p-1 rounded-lg">
       <div className="flex justify-between items-center mb-4 p-4 pb-0">
         <div className="flex-1 mr-4">
-          <label className="block text-gray-700 font-bold text-black">Question</label>
+          <label className="block font-bold text-black">Question</label>
           <input
             type="text"
             value={faq.question}
             onChange={(e) => onInputChange('question', e.target.value)}
-            className="h-10 border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
+            className="h-10 text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
           />
         </div>
       </div>
       <div className="p-4">
-        <label className="block text-gray-700 font-bold text-black">Answer</label>
+        <label className="block font-bold text-black">Answer</label>
         <textarea
           value={faq.answer}
           onChange={(e) => onInputChange('answer', e.target.value)}
-          className="border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
+          className="border text-black border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
         />
       </div>
       <div className="p-4 flex justify-end">
