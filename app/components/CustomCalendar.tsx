@@ -3,30 +3,45 @@ import { Dispatch, SetStateAction } from 'react';
 import Calendar from 'react-calendar';
 import './calendar.css';
 
-interface CustomCalendarProps {
-  setArrFunc: Dispatch<{date: Date}[]>; // Define the correct type for setArrFunc
+interface Schedule {
+  date: Date;
+  status: string | null;
 }
 
-const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
-  const [selectedDates, setSelectedDates] = useState<{date: Date}[]>([]);
+interface CustomCalendarProps {
+  setArrFunc: Dispatch<{ date: Date }[]>;
+  schedules: Schedule[];
+}
+
+const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }) => {
+  const [selectedDates, setSelectedDates] = useState<{ date: Date }[]>([]);
 
   const handleDateChange = (date: Date) => {
     const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.date.toDateString() === date.toDateString());
-
+  
     if (dateIndex !== -1) {
-      // Remove date if already selected
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
-      // Add date if not selected
-      setSelectedDates([...selectedDates, {date: date} ]); // empty for now
+      setSelectedDates([...selectedDates, { date: date }]);
     }
   };
 
   useEffect(() => {
-    // Call setArrFunc with selectedDates whenever it changes
     setArrFunc(selectedDates);
-  }, [selectedDates, setArrFunc]); // Include setArrFunc in the dependency array
+  }, [selectedDates, setArrFunc]);
 
+  const isDateAvailable = (date: Date) => {
+    for(const schedule of schedules){
+        if (new Date(schedule.date).toDateString() === date.toDateString())
+        {
+          if(schedule.status === "Available")
+          {
+            return false
+          }
+        }  
+    }
+    return true
+  };
   return (
     <div className='app'>
       <span className="text-cusBlue text-3xl font-bold">Select Date</span>
@@ -34,13 +49,13 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc }) => {
         <Calendar
           minDate={new Date()}
           onClickDay={handleDateChange}
+          tileDisabled={({ date, view }) => view === 'month' && isDateAvailable(date)}
           tileClassName={({ date, view }) => {
             const isSelected = selectedDates.some(selectedDate => selectedDate.date.toDateString() === date.toDateString());
             return isSelected && view === 'month' ? 'highlight' : null;
           }}
         />
       </div>
-      
     </div>
   );
 }

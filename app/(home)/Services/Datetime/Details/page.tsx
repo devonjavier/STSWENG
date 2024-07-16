@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Component, Dispatch, SetStateAction, useState, useEffect} from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import GenerateDivs  from '@/app/components/GenerateDivs';
-import { testingCustomer } from '@/utils/supabase/data';
+import { fetchSelectedSchedules } from '@/utils/supabase/data';
 
 const Page = ({searchParams}:{
     searchParams: {
@@ -12,16 +12,11 @@ const Page = ({searchParams}:{
     }
 }) => {
 
-    useEffect(()=>{
+    const [selectedSchedules,setSelectedSchedules] = useState<[]>([])
 
-        const testing = async () =>{
-            const testing = await testingCustomer();
-            console.log(testing);
-        }
 
-        testing();
-        
-    });
+    useEffect(()=>{}
+    );
     
     function getadditionalCustomers(count: number){
         const additionalCustomers = []
@@ -44,7 +39,6 @@ const Page = ({searchParams}:{
     const [emailaddress, setEmailaddress] = useState(" "); // assume no customer
 
     const [additionalRequests, setadditionalRequests] = useState(" "); // assume no request
-    const [additionalCustomers, setadditionalCustomers] = useState<string[]>([]);// assume no addtional customer
     
 
     const handleCheckboxChange = (e:any) => {
@@ -76,13 +70,6 @@ const Page = ({searchParams}:{
         setEmailaddress(emailadd);
     },300);
 
-
-    function checker(dates:string){
-        var format;
-        format = JSON.parse(dates)
-        // console.log(format);
-        console.log(typeof format[0])
-    }
 
     return (
     <>
@@ -125,6 +112,7 @@ const Page = ({searchParams}:{
 
                 
                     <span className='text-cusBlue font-bold mb-2 mt-6  text-lg'> Phone Number </span>
+
                     <div className='flex flex-col'>
                         <input placeholder = "09XXXXXXXXX" 
                             onChange={(e)=>{

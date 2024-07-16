@@ -47,7 +47,7 @@ const Page = ({ searchParams }: { searchParams: { id: string } }) => {
                 <div>
                     <div className='flex flex-row'>
                         <div className='flex flex-col mr-32'>
-                            <Calendar setArrFunc={setSelectedDates} />
+                            <Calendar setArrFunc={setSelectedDates} schedules={[]} />
 
                             <Link href={{
                                 pathname: "./edit-calendar/time-slots",

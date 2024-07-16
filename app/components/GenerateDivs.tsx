@@ -46,7 +46,8 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
       <> 
       <div className='flex flex-row text-center'>
       
-      <span className='text-cusBlue text-xl  mr-4'> Person {i + 1}: </span>
+      
+      <span className='text-cusBlue text-xl mr-4'> Person {i + 1}: </span>
 
       <input
         onChange={(e) => handleFirstnameChange(e, i)}
