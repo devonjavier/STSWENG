@@ -3,7 +3,8 @@
 import { createClient } from '@/utils/supabase/server';
 import bcrypt from 'bcrypt';
 import { cookies } from 'next/headers';
-import { accountData, pending_appointment, schedule} from '@/utils/supabase/interfaces';
+import { accountData, pending_appointment, schedule, 
+  Service, OnetimeService, HourlyService, FAQ} from '@/utils/supabase/interfaces';
 import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 import { fetchSchedules } from '@/utils/supabase/data'
@@ -269,6 +270,61 @@ export async function rejectAppointment(appointmentData : pending_appointment){
   }
 }
 
+export async function editServices(services: Service[]) {
+  console.log('pasok?');
+  const supabase = createClient();
+  const { data: onetimeServices, error: onetimeError } = await supabase.from('OnetimeService').select();
+  const { data: hourlyServices, error: hourlyError } = await supabase.from('HourlyService').select();
+
+  if (onetimeError) {
+    console.error('Error fetching onetime services:', onetimeError);
+    return;
+  }
+
+  if (hourlyError) {
+    console.error('Error fetching hourly services:', hourlyError);
+    return;
+  }
+
+  for (const service of services) {
+    console.log(service.serviceid);
+    const { error: services_error } = await supabase
+      .from('Service')
+      .update({ title: service.title, description: service.description })
+      .match({ serviceid: service.serviceid });
+
+    if (services_error) {
+      console.error('Error updating services db:', services_error);
+    }
+
+    const oneTimeFound = onetimeServices?.find((ot: OnetimeService) => ot.serviceid === service.serviceid);
+    const hourlyFound = hourlyServices?.find((hs: HourlyService) => hs.serviceid === service.serviceid);
+
+    if (oneTimeFound) {
+      if (service.price != null) { // error handling for now
+        const { error: onetime_error } = await supabase
+          .from('OnetimeService')
+          .update({ rate: service.price })
+          .match({ serviceid: service.serviceid });
+
+        if (onetime_error) {
+          console.error('Error updating onetime services db:', onetime_error);
+        }
+      }
+    } else if (hourlyFound) {
+      if (service.price != null) { // error handling for now
+        const { error: hourly_error } = await supabase
+          .from('HourlyService')
+          .update({ rate: service.price })
+          .match({ serviceid: service.serviceid });
+
+        if (hourly_error) {
+          console.error('Error updating hourly services db:', hourly_error);
+        }
+      }
+    }
+  }
+}
 
 // export async function handleSignup(formData : FormData){
 //   const supabase = createClient();
