@@ -31,9 +31,13 @@ export default function EditFAQs() {
     setFaqs(updatedFaqs);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('FAQs:', faqs);
+    try {
+      await editFAQs(faqs);
+    } catch (error) {
+      console.error('Error updating services:', error);
+    }
   };
 
   const handleDelete = (index: number) => {
@@ -42,7 +46,7 @@ export default function EditFAQs() {
   };
 
   const handleAddQuestion = () => {
-    setFaqs([...faqs, { faq_id: '', question: '', answer: '' }]);
+    setFaqs([...faqs, { id: '', question: '', answer: '' }]);
   };
 
   return (

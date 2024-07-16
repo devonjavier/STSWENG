@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import { NextResponse } from 'next/server';
 import { fetchSchedules } from '@/utils/supabase/data'
 import { create } from 'domain';
+import EditFAQs from '../(admin)/Admin/(dashboard)/edit-faqs/page';
 
  
 export async function createCustomer(formData: FormData) {
@@ -324,6 +325,25 @@ export async function editServices(services: Service[]) {
       }
     }
   }
+}
+
+export async function editFAQs(faqs : FAQ[]){
+  console.log(faqs);
+  const supabase = createClient();
+
+  for(const faq of faqs){
+    console.log(faq.id);
+
+    const {error} = await supabase
+    .from('FAQ')
+    .update({question : faq.question, answer : faq.answer})
+    .match({id : faq.id});
+
+    if(error){
+      console.error('Error : ' + error);
+    }
+  }
+ 
 }
 
 // export async function handleSignup(formData : FormData){
