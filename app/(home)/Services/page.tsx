@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
 import { fetchServices } from '@/utils/supabase/data'
-import { service } from '@/utils/supabase/interfaces'
+import { service2 } from '@/utils/supabase/interfaces'
 
 
 export default function DisplayPage() {

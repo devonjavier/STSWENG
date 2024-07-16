@@ -40,7 +40,6 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
           }
         }  
     }
-
     return true
   };
   return (

@@ -73,7 +73,7 @@ const Page = ({searchParams}:{
                         <div className="flex flex-row mt-5 mb-3 items-center">
                             <span className='text-cusBlue font-bold  text-lg mr-16'> Additional Persons Involved </span>
                             <button className='rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers - 1)}> - </button>
-                            <span className='text-cusBlue font-bold mb-5  text-lg mx-4'> {countAdditionalCustomers} </span>
+                            <span className='text-cusBlue font-bold text-lg mx-4'> {countAdditionalCustomers} </span>
                             <button className='rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
                         </div>
 
