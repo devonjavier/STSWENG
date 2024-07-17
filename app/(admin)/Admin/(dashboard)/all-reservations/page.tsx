@@ -43,7 +43,7 @@ const Page: React.FC = () => {
 
   return (
     <>
-      <div className="p-24 pt-20">
+      <div className="p-24 pt-20 pb-2">
         <div className="flex mb-4 mb-10">
           <input 
           type="text" 
@@ -56,36 +56,38 @@ const Page: React.FC = () => {
           style={{marginLeft: '10px', borderRadius: '15px'}}/>
         </div>
 
-        <table className="min-w-full bg-white border border-transparent shadow-lg" style={{ borderRadius: '20px', overflow: 'hidden' }}>
-          <thead>
-            <tr className="bg-cusBlue text-white text-left">
-              <th className="border border-transparent px-4 py-2">ID</th>
-              <th className="border border-transparent px-4 py-2">Date</th>
-              <th className="border border-transparent px-4 py-2">Time</th>
-              <th className="border border-transparent px-4 py-2">Reservee</th>
-              <th className="border border-transparent px-4 py-2">Service</th>
-              <th className="border border-transparent px-4 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody className="text-cusBlue font-medium">
-          {reservations.map((reservation, index) => {
-            
-            return(
-              <tr
-              key={index}
-              className={`${reservation.status === 'Pending' ? 'bg-purple-100' : ''}`}
-              >
-              <td className="border border-transparent px-4 py-2">{reservation.appointmentid}</td>
-              <td className="border border-transparent px-4 py-2">{reservation.date}</td>
-              <td className="border border-transparent px-4 py-2">{reservation.starttime}</td>
-              <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
-              <td className="border border-transparent px-4 py-2">{reservation.service}</td>
-              <td className="border border-transparent px-4 py-2">{reservation.status}</td>
+        <div className="max-h-[72vh] overflow-y-auto rounded-3xl">
+          <table className="max-h-[70vh] overflow-y-auto min-w-full bg-white border border-transparent shadow-lg" style={{ borderRadius: '20px', overflow: 'hidden' }}>
+            <thead>
+              <tr className="bg-cusBlue text-white text-left">
+                <th className="border border-transparent px-4 py-2">ID</th>
+                <th className="border border-transparent px-4 py-2">Date</th>
+                <th className="border border-transparent px-4 py-2">Time</th>
+                <th className="border border-transparent px-4 py-2">Reservee</th>
+                <th className="border border-transparent px-4 py-2">Service</th>
+                <th className="border border-transparent px-4 py-2">Status</th>
               </tr>
-            )
-          })}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="text-cusBlue font-medium">
+            {reservations.map((reservation, index) => {
+              
+              return(
+                <tr
+                key={index}
+                className={`${reservation.status === 'Pending' ? 'bg-purple-100' : ''}`}
+                >
+                <td className="border border-transparent px-4 py-2">{reservation.appointmentid}</td>
+                <td className="border border-transparent px-4 py-2">{reservation.date}</td>
+                <td className="border border-transparent px-4 py-2">{reservation.starttime}</td>
+                <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
+                <td className="border border-transparent px-4 py-2">{reservation.service}</td>
+                <td className="border border-transparent px-4 py-2">{reservation.status}</td>
+                </tr>
+              )
+            })}
+            </tbody>
+          </table>
+        </div>  
       </div>
     </>
   );

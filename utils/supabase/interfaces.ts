@@ -45,3 +45,27 @@ export interface TimeSlot {
   time: string;
   status: string;
 }
+
+export interface FAQ {
+  faq_id : string,
+  question: string;
+  answer: string;
+}
+
+export interface Service {
+  serviceid: number;
+  title: string;
+  description: string;
+  price?: number; // This will be added based on the type of service
+  // Other fields as needed
+}
+
+export interface OnetimeService {
+  serviceid: number;
+  rate: number;
+}
+
+export interface HourlyService {
+  serviceid: number;
+  rate: number;
+}

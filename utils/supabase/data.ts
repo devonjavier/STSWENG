@@ -222,6 +222,43 @@ export async function fetchServices(){
 
     return completeServices; 
 }
+export async function fetchEditServices() {
+
+
+    const supabase = createClient();
+  
+    const { data: services, error: serviceError } = await supabase.from('Service').select();
+    const { data: onetimeServices, error: onetimeError } = await supabase.from('OnetimeService').select();
+    const { data: hourlyServices, error: hourlyError } = await supabase.from('HourlyService').select();
+  
+    if (serviceError || onetimeError || hourlyError) {
+      console.error('Error fetching data:', serviceError || onetimeError || hourlyError);
+      return [];
+    }
+  
+    const completeServices = services?.map((service: Service) => {
+      const onetimeService = onetimeServices?.find((ot: OnetimeService) => ot.serviceid === service.serviceid);
+      const hourlyService = hourlyServices?.find((hs: HourlyService) => hs.serviceid === service.serviceid);
+  
+      if (onetimeService) {
+        return {
+          ...service,
+          price: onetimeService.rate,
+        };
+      } else if (hourlyService) {
+        return {
+          ...service,
+          price: hourlyService.rate,
+        };
+      } else {
+        return service;
+      }
+    });
+
+  
+    return completeServices;
+  }
+
 export async function addPeople(
     firstname:string,
     middlename:string,
