@@ -516,7 +516,7 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
 
     const { error } = await supabase
         .from('Schedule')
-        .update({ appointmentid: appointmentid })
+        .update({ appointmentid: appointmentid, status:"Pending" })
         .eq('scheduleid', scheduleid)
 
     if (error)

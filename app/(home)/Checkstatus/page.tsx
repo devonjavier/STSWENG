@@ -68,11 +68,13 @@ export default function DisplayPage() {
             setStatusMessage("Appointment Rejected");
         }
             
-
         const appid:number = getThatAppointment[0].appointmentid
+
         // main customer
         const mainCustomer = await fetchOneCustomer(appid, true);
+        
         setadditionalRequests(getThatAppointment[0].additionalrequest);
+
         setIsChecked(getThatAppointment[0].isparkingspotneeded);
         //console.log(mainCustomer[0].personid);
 
@@ -170,7 +172,7 @@ export default function DisplayPage() {
                             <div className='flex flex-col p-0 ml-12 my-0 mr-0'>
                                 <span className='text-black font-bold mb-5  text-xl mar '> Name: {maincustomerfirstname} {maincustomermiddlename} {maincustomerlastname}</span>
                                 <span className='text-black font-bold mb-5  text-xl'> Contact number: {phonenumber} </span>
-                                <span className='text-black font-bold mb-5  text-xl'> Email addres: {emailaddress} </span>
+                                <span className='text-black font-bold mb-5  text-xl'> Email address: {emailaddress} </span>
                             </div>
                         </div>
 
@@ -178,10 +180,10 @@ export default function DisplayPage() {
                 <span className='text-black font-bold text-3xl mr-16 my-6'> Additional Persons Involved: </span>
                 <div className='flex flex-col p-0 my-0 mr-0'>
                   {additionalCustomersFirstname.length === 0 ? (
-                    <span className='text-black text-xl font-semibold mb-5 ml-8 text-md'>None</span>
+                    <span className='text-black text-xl font-semibold mb-5 ml-12 text-md'>None</span>
                   ) : (
                     additionalCustomersFirstname.map((firstName, i) => (
-                      <span className='text-black text-xl font-semibold mb-5 ml-8 text-md' key={i}>
+                      <span className='text-black text-xl font-semibold mb-5 ml-12 text-md' key={i}>
                          Person {i+1}. {firstName} {additionalCustomersMiddlename[i]} {additionalCustomersLastname[i]}
                       </span>
                     ))
@@ -197,8 +199,8 @@ export default function DisplayPage() {
                     
                     <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl ml-4 w-full'>
                         <span className='text-black  font-bold mb-5  text-3xl'> Reservation Details: </span>
-                        <span className='text-black font-bold mb-5 ml-7  text-md'> Package Selection:: {selectedService}  </span>
-                        <span className='text-black font-bold mb-2 ml-7  text-md'> Appointment schedules: </span>
+                        <span className='text-black font-bold mb-5 ml-7  text-2xl'> Package Selection: {selectedService}  </span>
+                        <span className='text-black font-bold mb-2 ml-7  text-2xl'> Appointment schedules: </span>
                         <div className='flex flex-col mb-4'>
                             {listofschedules.map((schedule) => (
                                     <span key={schedule.scheduleid} className='text-black font-bold  mb-5 ml-12  text-md'> Date: {formatDate(schedule.date)} 

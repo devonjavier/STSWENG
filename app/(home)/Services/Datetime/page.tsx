@@ -12,6 +12,7 @@ const Page = ({ searchParams }: {
 }) => {
   const [schedules, setSchedules] = useState<[]>([]);
   const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
+  const [ablebutton, setAbleButton] = useState(false);
   
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +37,17 @@ const Page = ({ searchParams }: {
 
   useEffect(() => {
     getSchedule();
-  }, []);
+    if (selectedSchedules.length !== 0)
+    {
+      setAbleButton(false);
+    }
+    else{
+      setAbleButton(true);
+    }
+    
+
+
+  }, [selectedSchedules]);
 
   
 
@@ -70,7 +81,7 @@ const Page = ({ searchParams }: {
                   }
                 }
               }>
-                <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">
+                <button disabled={ablebutton}className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">
                   Proceed to Details
                 </button>
               </Link>
