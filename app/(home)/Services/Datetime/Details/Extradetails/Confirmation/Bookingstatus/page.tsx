@@ -155,7 +155,7 @@ const Page = ({searchParams}:{
             </div>
             </div>
             <div>
-                Package &gt; Date & Time &gt; Details  &gt; Confirmation &gt;<span className='text-cusBlue'> Booking Status</span> 
+                Services &gt; Date & Time &gt; Details  &gt; Confirmation &gt;<span className='text-cusBlue'> Booking Status</span> 
             </div>
         </div>
         <div className="flex flex-col items-center">
