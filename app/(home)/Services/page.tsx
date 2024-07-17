@@ -1,4 +1,3 @@
-
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
@@ -37,24 +36,20 @@ export default function DisplayPage() {
                 Book an Appointment
             </div>
             <div>
-                <span className='text-cusBlue'>Services </span>&gt; Date & Time &gt; Details &gt; Confirmation &gt; Booking Status
+                <span className='text-cusBlue'>Services </span>&gt; Details &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Booking Status
             </div>
         </div>
         
         <div className='grid grid-cols-2 gap-20 gap-y-10'>
             {completeServices ? (
                 completeServices.map((object, i) => {
-                    
-                    //able to differentiate between onetime and hourly altho needs testing
-
-                    // not sure how to implement the rate within a description automatically though. 
 
                     const { service, serviceType } = object; // one object = service and serviceType
 
                     return (
                         <Link
                             href={{
-                                pathname: '/Services/Datetime',
+                                pathname: '/Services/Details',
                                 query: { serviceid: service.serviceid }
                             }}
                            key={service.serviceid} 
@@ -74,13 +69,8 @@ export default function DisplayPage() {
             ) : (
                 <p>No services available.</p>
             )}
-  
         </div>
         </div>
         </>
     )
 }
-
-
-
-
