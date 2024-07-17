@@ -15,6 +15,7 @@ const navBar = () => {
         <Link href="/Services" className="mr-4 hover:text-gray-700">Services</Link>
         <Link href="/About" className="mr-4 hover:text-gray-700">About</Link>
         <Link href="/Contact" className="mr-4 hover:text-gray-700">Contact</Link>
+        <Link href="/Checkstatus" className="mr-4 hover:text-gray-700">Check Status</Link>
       </div>
       <div className="flex items-center">
         <Link href="/Services" className="btn bg-cusBlue hover:bg-purple-900 py-0 px-4 rounded text-white p-2 text-xl font-medium border-0">Book a session</Link>

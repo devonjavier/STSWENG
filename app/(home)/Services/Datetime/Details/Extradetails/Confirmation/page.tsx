@@ -4,7 +4,7 @@
 import React, {useEffect, useState} from 'react'
 import DateFormatter from "@/app/components/DateFormatter";
 import Link from "next/link";
-import { fetchOneService } from '@/utils/supabase/data'
+import { fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
 import { service } from '@/utils/supabase/interfaces'
 
 const Page = ({searchParams}:{
@@ -29,10 +29,12 @@ const Page = ({searchParams}:{
 }) => {
 
     const [selectedService, setSelectedService] = useState<string>(" ");
+    const [listofschedules,setlistofschedules] = useState<[]>([])
 
-    const listofschedules = JSON.parse(searchParams.schedules);
+    //const listofschedules = JSON.parse(searchParams.schedules);
 
     useEffect (()=>{
+  
 
         const getService = async() => {
             try {
@@ -46,9 +48,38 @@ const Page = ({searchParams}:{
             }
         };
 
-        
+        const selectedschedules = JSON.parse(searchParams.schedules)
+        const getSelectedSchedules = async() =>{
 
+            const newSchedules:number[] = [];
+
+            for (const selectedsched of selectedschedules) {
+
+                const addSchedule= (newSchedule) => {
+                    setlistofschedules([...listofschedules, newSchedule]);
+                };
+                const getData = await fetchSelectedSchedules(selectedsched.date,selectedsched.selectedtime1,selectedsched.selectedtime2);
+                //const date = new Date(new Date(selectedsched.date).setDate(new Date(selectedsched.date).getDate() + 1)).toISOString()
+                
+                getData.forEach((one) => {
+                    if (one.status === 'Available') {
+                        //console.log(one.date);
+                        //console.log(one.status);
+                        console.log(one);
+                        newSchedules.push(one);
+                        console.log(newSchedules);
+                    }
+                });
+
+                setlistofschedules(newSchedules);
+                //console.log(listofschedules)
+                
+            };
+            
+
+        }
         getService();
+        getSelectedSchedules();
        
     },[]);
     
@@ -109,7 +140,7 @@ const Page = ({searchParams}:{
                     href={{
                         pathname:"/Services/Datetime/Details/Extradetails/Confirmation/Bookingstatus",
                         query: {
-                            schedules: searchParams.schedules,
+                            schedules: JSON.stringify(listofschedules),
                             serviceid: searchParams.serviceid,
                             maincustomerfirstname:  searchParams.maincustomerfirstname,
                             maincustomermiddlename:  searchParams.maincustomermiddlename,
@@ -139,7 +170,7 @@ const Page = ({searchParams}:{
                     <span className='text-cusBlue font-bold mb-2 ml-7  text-md'> Appointment schedules: </span>
                     <div className='flex flex-col mb-4'>
                         {listofschedules.map((schedule) => (
-                                <span className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.selectedtime1} - {schedule.selectedtime2} </span>
+                                <span key={schedule.scheduleid} className='text-black font-bold mb-0 ml-12  text-md'> Date: {schedule.date} {schedule.starttime} - {schedule.endtime} </span>
                         ))}
                     </div>
                     

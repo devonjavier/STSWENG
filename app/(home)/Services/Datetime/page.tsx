@@ -1,119 +1,90 @@
-
 'use client'
 import Link from 'next/link'
-import React, {useState, useEffect} from 'react';
-import Calendar from '@/app/components/CustomCalendar'; 
+import React, { useState, useEffect } from 'react';
+import Calendar from '@/app/components/CustomCalendar';
 import DropdownWrapper from '@/app/components/Dropdown/DropdownWrapper';
-import { fetchSchedule, addPeople} from '@/utils/supabase/data'
-import { schedule } from '@/utils/supabase/interfaces'
+import { fetchSchedules } from '@/utils/supabase/data'
 
-const Page = ({searchParams}:{
-    searchParams: {
-        serviceid: string
-    }
+const Page = ({ searchParams }: {
+  searchParams: {
+    serviceid: string
+  }
 }) => {
-    
-    const [schedules, setSchedules] = useState<[]>([]);
-    const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
-    const [loading, setLoading] = useState(true);
+  const [schedules, setSchedules] = useState<[]>([]);
+  const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
+  
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const getSchedule = async () => {
-          try {
-            const schedules = await fetchSchedule();
-        
-            const newSelectedDates = schedules.map((schedule) => ({
-                scheduleid: schedule.scheduleid,
-                date: schedule.date,
-                selectedtime1: schedule.starttime,
-                selectedtime2: schedule.endtime
-            }));
-        
-            setSchedules(newSelectedDates);
-
-            //let schedulesArr = Object.keys(schedules);
-
-            //schedulesArr.forEach((key,index)=>{
-               // console.log(`${index}: ${schedules[key].scheduleid}`);
-            //})
-
-          } catch (error) {
-            console.error('Error fetching services:', error);
-          } finally {
-            setLoading(false);
-          }
-        };
-
-        getSchedule();
-    }, []);
-
-    const time = [];
-
-    const startTime = 9 * 60; // 0900am
-    const endTime = 21 * 60 + 30; //0930pm
-    
-    for (let minutes = startTime; minutes <= endTime; minutes += 30) {
-      const hours = Math.floor(minutes / 60);
-      const mins = minutes % 60;
-      const period = hours >= 12 ? 'PM' : 'AM';
-      const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-      const formattedMins = mins === 0 ? '00' : mins;
-      time.push(`${formattedHours}:${formattedMins}${period}`);
+  const getSchedule = async () => {
+    try {
+      const fetchedSchedules = await fetchSchedules();
+      
+      const newSelectedDates = fetchedSchedules.map((schedule: { scheduleid: any; date: any; starttime: any; endtime: any; status: any }) => ({
+        scheduleid: schedule.scheduleid,
+        date: schedule.date,
+        starttime: schedule.starttime,
+        endtime: schedule.endtime,
+        status: schedule.status
+      }));
+      setSchedules(newSelectedDates);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    function checker(dates: Date){
-        console.log(dates);
-    }
-    
+  useEffect(() => {
+    getSchedule();
+  }, []);
+
+  
+
   return (
     <>
-    <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
-    <div>
-        <div className='text-cusBlue text-6xl font-bold'>
+      <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
+        <div>
+          <div className='text-cusBlue text-6xl font-bold'>
             Book an Appointment
             <div>
-        </div>
-        </div>
-        <div>
-            Package &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Details &gt; Confirmation &gt; Booking Status 
-        </div>
-    </div>
-
-    <div>
-        <div>
-
-        </div>
-        <div className='flex flex-row'>
-
-            <div className='flex flex-col mr-32'>
-
-
-                <Calendar setArrFunc={setselectedSchedules}/>
-
-                <Link href={
-                {
-                    pathname:"/Services/Datetime/Details",
-                    query:{
-                        schedules: JSON.stringify(schedules),
-                        serviceid: searchParams.serviceid
-                    }
-                }
-                    }> <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Details </button> </Link>
-                
-                
-            </div>  a
-            <div className='flex flex-row'>
-                <DropdownWrapper items= {time} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={selectedSchedules}/>
             </div>
-                
-
+          </div>
+          <div>
+            Package &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Details &gt; Confirmation &gt; Booking Status
+          </div>
         </div>
-    </div>
-    
-    </div>
+
+        <div>
+          <div>
+          </div>
+          <div className='flex flex-row'>
+            <div className='flex flex-col mr-32'>
+              <Calendar setArrFunc={setselectedSchedules} schedules={schedules} />
+
+              <Link href={
+                {
+                  pathname: "/Services/Datetime/Details",
+                  query: {
+                    schedules: JSON.stringify(selectedSchedules),
+                    serviceid: searchParams.serviceid
+                  }
+                }
+              }>
+                <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">
+                  Proceed to Details
+                </button>
+              </Link>
+            </div>
+            
+            <div className='flex flex-col'>
+              <span className="text-cusBlue text-3xl font-bold mb-4">Select a time</span>
+              <DropdownWrapper items={[]} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} />
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   )
 }
 
 export default Page
-

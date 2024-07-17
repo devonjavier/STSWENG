@@ -1,5 +1,5 @@
 import React, { Dispatch, useState, useEffect }from 'react';
-import Dropdown from '@/app/components/Dropdown/Dropdown';
+import Dropdown from '@/app/components/Dropdown/DropdownWrapper';
 
 interface GenerateDivsProps {
   setArrFunc: Dispatch<{date: Date, selectedtime1: string, selectedtime2: string}[]>;
@@ -60,6 +60,7 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ setArrFunc }) => {
 
       </div>
   </div>
+    )
   })
 
   }

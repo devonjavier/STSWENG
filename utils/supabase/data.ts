@@ -176,9 +176,9 @@ export async function fetchCalendarData(selectedDate : any){
 }
 
 
-export async function fetchSchedule() {
+export async function fetchSelectedSchedule(appointmentid:number) {
     const supabase = createClient();
-    const { data, error} = await supabase.from('Schedule').select().lte('scheduleid', 1010);
+    const { data, error } = await supabase.from('Schedule').select().eq('appointmentid', appointmentid); 
 
     if(error){
         return ["error", "error"]
@@ -187,6 +187,58 @@ export async function fetchSchedule() {
     {
         return data;
     }
+}
+
+export async function fetchOneAppointment( id:number ) {
+    const supabase = createClient();
+    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);;
+
+    if(error){
+        return ["error", "error"]
+    }
+    if (data)
+    {
+        return data;
+    }
+}
+export async function fetchOneCustomer(appointmentid:number, isMain:boolean){
+    const supabase = createClient();
+    let whatkind;
+
+    if(isMain)
+        whatkind = true
+    else   
+        whatkind = false
+
+    const { data, error} = await supabase.from('Customers').select().eq('appointmentid', appointmentid)
+    .eq('ismain', whatkind);
+
+    if(error)
+        return error
+
+    return data
+}
+
+export async function fetchOnePerson(personid:number){
+    const supabase = createClient();
+
+    const { data, error} = await supabase.from('Person').select().eq('personid', personid);
+
+    if(error)
+        return error
+
+    return data
+}
+
+export async function fetchMultiplePerson(personObject:object){
+    const supabase = createClient();
+
+    const { data, error} = await supabase.from('Person').select().contains('personid', personObject);
+
+    if(error)
+        return error
+
+    return data
 }
 
 export async function fetchOneService( id:number ) {
@@ -201,6 +253,7 @@ export async function fetchOneService( id:number ) {
         return data;
     }
 }
+
 
 export async function fetchServices(){
     const supabase = createClient();
@@ -383,8 +436,8 @@ export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
     //status
-    //tracking number
-    //discount
+    trackingnumber:number,
+    additionalrequest:string
 ){
     const supabase = createClient();
 
@@ -407,21 +460,22 @@ export async function addOneAppointment(
         serviceid:parseInt(serviceid),
         isparkingspotneeded:isparkingspotneeded,
         status:"Pending",
-        trackingnumber: "123456",
-        discount:15.0
-    })
-
+        trackingnumber: trackingnumber,
+        discount:15.0,
+        additionalrequest:additionalrequest
+    }) 
     if(error)
         return error
 
-    return 2;
-    // get the last number in the schedule
+    return largestidnumber;
 }
 
 export async function fetchSchedules(){
     const supabase = createClient();
 
-    const {data, error } = await supabase.from('Schedule').select();
+    const {data, error } = await supabase.from('Schedule').select('*').order('scheduleid', {ascending:false});
+    console.log(data);
+    
     if (error) {
         console.error('Error fetching reservations:', error);
         return [];
@@ -444,44 +498,40 @@ export async function fetchFAQs(){
     return data;
 }
 
+export async function fetchSelectedSchedules(thedate:string, starttime:string,endtime:string){
+    const supabase = createClient();
 
-/*
-export async function addAppointment(req: NextApiRequest, res: NextApiResponse){
-    if (req.method === 'POST') {
-        const { dates, timeslot1, timeslot2, serviceid, 
-            maincustomerfirstname, maincustomermiddlename, 
-            maincustomerlastname, needsparking, additionalrequests, 
-            additionalCustomers } = req.body;
+    const date = new Date(new Date(thedate).setDate(new Date(thedate).getDate() + 1)).toISOString()
 
-        const supabase = createClient();
+    //var startingtime = new Date("1970-01-01T" + starttime);
 
-        const person_stored = await findPerson(maincustomerfirstname, maincustomermiddlename, maincustomerlastname, supabase);
+    //var endingtime = new Date("1970-01-01T" + endtime);
 
-        if(person_stored){
-            console.log('passed correctly : ', person_stored);
-        }
-        
-        // this adds the data, though im not sure how to add the data yet to the db
-        // const { data, error } = await supabase.from('')
-        //     .insert([
-        //         {
-        //             dates,
-        //             timeslot1,
-        //             timeslot2,
-        //             serviceid,
-        //             maincustomerfirstname,
-        //             maincustomermiddlename,
-        //             maincustomerlastname,
-        //             needsparking,
-        //             additionalrequests,
-        //             additionalCustomers
-        //         }
-        //     ]);
+    const {data, error } = await supabase.from('Schedule').select()
+        .eq('date', date)
+        .gte('starttime', starttime)
+        .lte('endtime', endtime);
 
+    if (error) {
+        return error
     }
+    
+    return data;
 }
-    */
 
+export async function updateSchedule(appointmentid:number, scheduleid:number){
+    const supabase = createClient();
+
+    const { error } = await supabase
+        .from('Schedule')
+        .update({ appointmentid: appointmentid })
+        .eq('scheduleid', scheduleid)
+
+    if (error)
+        return error
+    
+    return 1
+}
 
 
 
