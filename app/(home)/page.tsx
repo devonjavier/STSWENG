@@ -13,24 +13,25 @@ import HearTheDifferences from '../components/Home/HearTheDifferences'
 export default async function Home() {
   return (
     <>
-    <div className="bg-cover bg-center h-screen flex flex-col justify-end relative pb-32 pl-16 mx-auto" style={{ backgroundImage: "url('/home_bg.jpg')" }}>
-      <div className="p-2 flex-grow flex flex-col justify-end pl-4 mt-[-2rem]">        
+    <div className='bg-white p-2 h-96 flex flex-col justify-end relative pb-10 mb-5 w-8/12 mx-auto'>
       <IntroText />
-      </div>
     </div>
-    <div className='bg-cusBlue '>
+    <div className='flex justify-center mb-20'>
+      <Images />
+    </div>
+    <div className='bg-cusBlue '> 
       <div className='relative'>
         <Services />
       </div>
     </div>
-    <div className='bg-white p-14 h-max flex flex-col justify-center relative pt-8 pb-10 mb-0 mx-auto w-max'>
+    <div className='bg-white p-14 h-max flex flex-col justify-center relative pb-10 mb-0 mx-auto w-max'>
       <Team />
     </div>
     <div className='flex justify-center'>
       <Testimonials />
     </div>
-    <div className="bg-cover bg-center h-screen flex justify-center items-center" style={{ backgroundImage: "url('/home_collage.png')"}}>
-          <HearTheDifferences />
+    <div className='flex justify-center mb-20'>
+      <HearTheDifferences />
     </div>
     </>
   )
