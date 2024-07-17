@@ -13,12 +13,14 @@ const Page = ({ searchParams }: {
         emailaddress: string,
         needsparking: string,
         additionalrequests: string
+        hours:number,
+        additionalpackage:string
     }
 }) => {
 
     useEffect(() => {
-        console.log(searchParams.phonenumber);
-        console.log(searchParams.emailaddress);
+        console.log(searchParams.hours);
+        console.log(searchParams.additionalpackage);
     });
 
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
@@ -67,7 +69,8 @@ const Page = ({ searchParams }: {
                                         countAdditionalCustomers: countAdditionalCustomers,
                                         additionalCustomersfirstnames: JSON.stringify(additionalCustomersFirstname),
                                         additionalCustomersmiddlenames: JSON.stringify(additionalCustomersMiddlename),
-                                        additionalCustomerslastnames: JSON.stringify(additionalCustomersLastname)
+                                        additionalCustomerslastnames: JSON.stringify(additionalCustomersLastname),
+                                        hours: searchParams.hours, additionalpackage: searchParams.additionalpackage
                                     }
                                 }}>
                                 <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Date & Time </button> </Link>

@@ -18,7 +18,9 @@ const Page = ({ searchParams }: {
         countAdditionalCustomers: string,
         additionalCustomersfirstnames: string,
         additionalCustomersmiddlenames: string,
-        additionalCustomerslastnames: string
+        additionalCustomerslastnames: string,
+        hours:number,
+        additionalpackage:string
     }
 }) => {
     const [schedules, setSchedules] = useState<[]>([]);
@@ -47,6 +49,8 @@ const Page = ({ searchParams }: {
     };
 
     useEffect(() => {
+        console.log(searchParams.hours);
+        console.log(searchParams.additionalpackage);
         getSchedule();
         if (selectedSchedules.length !== 0) {
             setAbleButton(false);

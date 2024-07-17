@@ -6,7 +6,7 @@ import './page.css'
 import { FaChevronDown } from 'react-icons/fa';
 import { fetchAdditionalServices, fetchOneAdditionalService } from '@/utils/supabase/data';
 
-const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
+const Page = ({ searchParams }: { searchParams: { service: string , serviceType:string} }) => {
     const [isChecked, setIsChecked] = useState(false);
     const [maincustomerfirstname, setmaincustomerfirstname] = useState(" ");
     const [maincustomermiddlename, setmaincustomermiddlename] = useState(" ");
@@ -15,13 +15,21 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
     const [emailaddress, setEmailaddress] = useState(" ");
     const [additionalRequests, setadditionalRequests] = useState(" ");
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedPackage, setSelectedPackage] = useState('');
+    const [selectedPackage, setSelectedPackage] = useState([]);
+
+    const [hours, setHours] = useState(4);
+
     //const packages = ["Package 1", "Package 2", "Package 3"];
 
+    const theService = JSON.parse(searchParams.service);
+    const serviceTypeString = JSON.parse(searchParams.serviceType);
+    //console.log(searchParams.service);
+    //console.log(theService);
+    console.log(serviceTypeString === "hourly");
     const [packages,setPackages] = useState([]);
     const getServices = async () => {
         try {
-            const additionalservices = await fetchAdditionalServices(parseInt(searchParams.serviceid)); 
+            const additionalservices = await fetchAdditionalServices(parseInt(theService.serviceid)); 
             const additionalservicegetdetails = [];   
             for (const additionalservice of additionalservices) {
                 let getadditionalservicedetail = await fetchOneAdditionalService(additionalservice.serviceid);
@@ -42,6 +50,10 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
     const handleSelectPackage = (item) => {
         setSelectedPackage(item);
         setIsOpen(false);
+    };
+
+    const changeHours = (item) => {
+        setHours(item);
     };
 
     const additionalRequestChange = (value) => {
@@ -104,7 +116,10 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
                             <div className='flex flex-col'>
                                 <input placeholder="@gmail.com" onChange={(e) => { emailAddressChange(e.target.value); }} className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                             </div>
-                            <Link href={{ pathname: "/Services/Details/Extradetails", query: { serviceid: searchParams.serviceid, maincustomerfirstname: maincustomerfirstname, maincustomermiddlename: maincustomermiddlename, maincustomerlastname: maincustomerlastname, phonenumber: phonenumber, emailaddress: emailaddress, needsparking: isChecked, additionalrequests: additionalRequests, } }}>
+                            <Link href={{ pathname: "/Services/Details/Extradetails", query: { serviceid: searchParams.serviceid, maincustomerfirstname: maincustomerfirstname, maincustomermiddlename: maincustomermiddlename, 
+                                maincustomerlastname: maincustomerlastname, phonenumber: phonenumber, 
+                                emailaddress: emailaddress, needsparking: isChecked, 
+                                additionalrequests: additionalRequests, hours: hours, additionalpackage: JSON.stringify(selectedPackage)} }}>
                                 <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Next</button>
                             </Link>
                         </div>
@@ -140,8 +155,13 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
                             </div>
                             )}
                             <div className='flex flex-row items-center'>
-                                <span className='text-black drop-shadow-lg font-bold mb-2 text-lg mr-5'>How many hours?:</span>
-                                <input id='hours' name='hours' onChange={(e) => { additionalRequestChange(e.target.value); }} placeholder="-" className='text-black text-center font-medium py-2.5 my-4 w-24 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" maxLength="1" onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) { e.preventDefault(); } }} />
+                                {serviceTypeString === "hourly" ? (
+                                    <div>
+                                        <span className='text-black drop-shadow-lg font-bold mb-2 text-lg mr-5'>How many hours?:</span>
+                                        <input id='hours' name='hours' onChange={(e) => { changeHours(e.target.value); }} placeholder="-" className='text-black text-center font-medium py-2.5 my-4 w-24 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" maxLength="1" onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) { e.preventDefault(); } }} />
+                                    </div>
+                                ):(<div> </div>)}
+                                
                             </div>
                         </div>
                     </div>

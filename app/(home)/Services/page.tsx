@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
 import { fetchServices } from '@/utils/supabase/data'
 import { allService } from '@/utils/supabase/interfaces'
+import { serialize } from 'v8';
 
 
 export default function DisplayPage() {
@@ -14,7 +15,6 @@ export default function DisplayPage() {
           try {
             const services = await fetchServices();
             setCompleteServices(services);
-            console.log(services);
           } catch (error) {
             console.error('Error fetching services:', error);
           } finally {
@@ -47,12 +47,13 @@ export default function DisplayPage() {
                 completeServices.map((object, i) => {
 
                     const { service, serviceType } = object; // one object = service and serviceType
-
+                    const serviceString = JSON.stringify(service);
+                    const serviceTypeString = JSON.stringify(serviceType);
                     return (
                         <Link
                             href={{
                                 pathname: '/Services/Details',
-                                query: { serviceid: service.serviceid }
+                                query: { service: serviceString, serviceType:serviceTypeString}
                             }}
                            key={service.serviceid} 
                         >
