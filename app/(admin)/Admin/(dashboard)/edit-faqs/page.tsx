@@ -107,7 +107,7 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
             type="text"
             value={faq.question}
             onChange={(e) => onInputChange('question', e.target.value)}
-            className="h-10 border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
+            className="h-10 text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
           />
         </div>
       </div>
@@ -116,7 +116,7 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
         <textarea
           value={faq.answer}
           onChange={(e) => onInputChange('answer', e.target.value)}
-          className="border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
+          className="text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
         />
       </div>
       <div className="p-4 flex justify-end">

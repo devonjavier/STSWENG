@@ -38,8 +38,8 @@ const Sidebar: React.FC = () => {
           </button>
           <div 
             className={`transition-all duration-300 ease-in-out overflow-hidden ${isDropdownOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-            <Link href="./edit-services" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">Services</Link>
-            <Link href="./edit-faqs" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">FAQs</Link>
+            <Link href="/Admin/edit-services" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">Services</Link>
+            <Link href="/Admin/edit-faqs" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">FAQs</Link>
           </div>
         </div>
       </nav>

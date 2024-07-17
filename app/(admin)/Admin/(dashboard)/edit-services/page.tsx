@@ -93,7 +93,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onInputChange }) => 
             type="text"
             value={service.title}
             onChange={(e) => onInputChange('title', e.target.value)}
-            className="h-10 border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-96 pl-3"
+            className="h-10 text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-96 pl-3"
           />
         </div>
         <div className="flex-1 ml-4">
@@ -111,7 +111,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onInputChange }) => 
         <textarea
           value={service.description}
           onChange={(e) => onInputChange('description', e.target.value)}
-          className="border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3"
+          className="border text-black border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3"
         />
       </div>
     </div>
