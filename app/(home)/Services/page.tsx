@@ -14,6 +14,7 @@ export default function DisplayPage() {
           try {
             const services = await fetchServices();
             setCompleteServices(services);
+            console.log(services);
           } catch (error) {
             console.error('Error fetching services:', error);
           } finally {
@@ -22,6 +23,7 @@ export default function DisplayPage() {
         };
 
         getServices();
+        
     }, []);
 
     if (loading) {

@@ -1,9 +1,10 @@
 'use client'
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import './page.css'
 import { FaChevronDown } from 'react-icons/fa';
+import { fetchAdditionalServices, fetchOneAdditionalService } from '@/utils/supabase/data';
 
 const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
     const [isChecked, setIsChecked] = useState(false);
@@ -15,7 +16,28 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
     const [additionalRequests, setadditionalRequests] = useState(" ");
     const [isOpen, setIsOpen] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState('');
-    const packages = ["Package 1", "Package 2", "Package 3"];
+    //const packages = ["Package 1", "Package 2", "Package 3"];
+
+    const [packages,setPackages] = useState([]);
+
+    const getServices = async () => {
+        try {
+          const additionalservices = await fetchAdditionalServices(parseInt(searchParams.serviceid)); 
+
+          const additionalservicegetdetails = []
+          // additionalservices array of things
+          for(const additionalservice of additionalservices){
+            //console.log(additionalservice.serviceid);
+            let getadditionalservicedetail = await fetchOneAdditionalService(additionalservice.serviceid);
+
+            additionalservicegetdetails.push(getadditionalservicedetail[0]);
+          }
+          
+        } catch (error) {
+          console.error('Error fetching services:', error);
+        } finally {
+        }
+      };
 
     const toggleDropdown = (e) => {
         e.preventDefault();
@@ -58,7 +80,9 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
     const emailAddressChange = useDebouncedCallback((emailadd) => {
         setEmailaddress(emailadd);
     }, 300);
-
+    useEffect(()=>{
+        getServices();
+    },[]);
     return (
         <>
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>

@@ -7,7 +7,16 @@ import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
 import { create } from 'domain'
 
+export async function fetchOneAdditionalService(id:number) {
+    
+    const supabase = createClient();
+    const { data : service } = await supabase
+    .from('Service')
+    .select('title, serviceid')
+    .eq('serviceid', id);
 
+    return service;
+}
 
 export async function fetchAppointments() {
     // for all-reservations page
@@ -252,12 +261,13 @@ export async function fetchServices(){
     const { data: services } = await supabase.from('Service').select();
     const { data: onetimeServices } = await supabase.from('OnetimeService').select();
     const { data: hourlyServices } = await supabase.from('HourlyService').select();
-
+    const { data: additionalServices } = await supabase.from('AdditionalServices').select();
 
     const completeServices = services?.map((service : allService) => {
         
     const onetimeservice = onetimeServices?.find((ot : allService) => ot.serviceid === service.serviceid);
     const hourlyservice = hourlyServices?.find((h : allService) => h.serviceid === service.serviceid);
+    const additionalservice = additionalServices?.find((o : allService) => o.serviceid === service.serviceid);
 
         if(onetimeservice){
             return({
@@ -265,7 +275,7 @@ export async function fetchServices(){
                 onetimeservice,
                 serviceType: 'onetime'
             });
-        } else {
+        } else if (hourlyservice){
             return({
                 service,
                 hourlyservice,
@@ -276,7 +286,23 @@ export async function fetchServices(){
 
     return completeServices; 
 }
+export async function fetchAdditionalServices(serviceid:number){
 
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from('AdditionalServices').select('serviceid').eq('forwhichserviceid',serviceid);
+
+
+    return data
+
+    if(additionalservices){
+        return additionalservices
+    }
+    else    
+        return []
+
+    // this will return the {additionalservices} which will have the service id of the service
+}
 export async function fetchEditServices() {
 
 
