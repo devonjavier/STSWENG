@@ -44,5 +44,10 @@
     "@types/react": "18.3.3",
     "daisyui": "^4.11.1",
     "typescript": "5.5.2"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "next.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
