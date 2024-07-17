@@ -19,25 +19,20 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
     //const packages = ["Package 1", "Package 2", "Package 3"];
 
     const [packages,setPackages] = useState([]);
-
     const getServices = async () => {
         try {
-          const additionalservices = await fetchAdditionalServices(parseInt(searchParams.serviceid)); 
-
-          const additionalservicegetdetails = []
-          // additionalservices array of things
-          for(const additionalservice of additionalservices){
-            //console.log(additionalservice.serviceid);
-            let getadditionalservicedetail = await fetchOneAdditionalService(additionalservice.serviceid);
-
-            additionalservicegetdetails.push(getadditionalservicedetail[0]);
-          }
-          
+            const additionalservices = await fetchAdditionalServices(parseInt(searchParams.serviceid)); 
+            const additionalservicegetdetails = [];   
+            for (const additionalservice of additionalservices) {
+                let getadditionalservicedetail = await fetchOneAdditionalService(additionalservice.serviceid);
+                additionalservicegetdetails.push(getadditionalservicedetail[0]);
+            }
+            // Set the fetched services to the packages state
+            setPackages(additionalservicegetdetails.map(service => service.title));  
         } catch (error) {
-          console.error('Error fetching services:', error);
-        } finally {
-        }
-      };
+            console.error('Error fetching services:', error);
+        } 
+    };
 
     const toggleDropdown = (e) => {
         e.preventDefault();
@@ -124,6 +119,7 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
                                     <span className="slider"></span>
                                 </div>
                             </div>
+                            {packages.length > 0 && (
                             <div className='flex flex-row mt-5 relative'>
                                 <span className='text-black drop-shadow-lg font-bold mb-2 text-lg mr-5 mt-2'>Additional Packages:</span>
                                 <details className="dropdown relative" open={isOpen}>
@@ -142,9 +138,10 @@ const Page = ({ searchParams }: { searchParams: { serviceid: string } }) => {
                                     )}
                                 </details>
                             </div>
+                            )}
                             <div className='flex flex-row items-center'>
                                 <span className='text-black drop-shadow-lg font-bold mb-2 text-lg mr-5'>How many hours?:</span>
-                                <input id='hours' name='hours' onChange={(e) => { additionalRequestChange(e.target.value); }} placeholder="--" className='text-black text-center font-medium py-2.5 my-4 w-24 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" maxLength="2" onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) { e.preventDefault(); } }} />
+                                <input id='hours' name='hours' onChange={(e) => { additionalRequestChange(e.target.value); }} placeholder="-" className='text-black text-center font-medium py-2.5 my-4 w-24 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" maxLength="1" onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) { e.preventDefault(); } }} />
                             </div>
                         </div>
                     </div>
