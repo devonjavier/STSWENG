@@ -179,6 +179,7 @@ export const getCurrentStatus = async (dates: any, id: any) => {
   let statusData = {};
 
   for (const date of dateArray) {
+
     const { data, error } = await supabase
       .from('Schedule')
       .select('starttime, status')
@@ -189,7 +190,10 @@ export const getCurrentStatus = async (dates: any, id: any) => {
       return {};
     }
 
+
     if (data.length > 0) {
+      // sort data before updating statusData
+      data.sort((a, b) => new Date(`1970-01-01T${a.starttime}Z`).getTime() - new Date(`1970-01-01T${b.starttime}Z`).getTime());
       statusData[date] = data.map(entry => entry.status === 'Unavailable');
     }
   }

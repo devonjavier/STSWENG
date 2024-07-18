@@ -15,7 +15,6 @@ const Page = () => {
 
   const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: TimeSlot[] }>({});
   const [selectedSlots, setSelectedSlots] = useState<{ [key: string]: boolean[] }>({});
-  const [showPopup, setShowPopup] = useState(false);
 
   const handleDates = useCallback(async () => {
     try {
@@ -25,7 +24,7 @@ const Page = () => {
       const newSelectedSlots: { [key: string]: boolean[] } = {};
 
       Object.keys(grouped_time_slots).forEach(date => {
-        const timeSlots = grouped_time_slots[date].map((slot: { starttime: any; endtime: any; status: any; }) => ({
+        const timeSlots = grouped_time_slots[date].map(slot => ({
           time: `${slot.starttime} - ${slot.endtime}`,
           status: slot.status,
         }));
@@ -63,6 +62,8 @@ const Page = () => {
     handleDates();
   }, []);
 
+  
+
   const handleSelectAll = (date: string) => {
     const allSelected = selectedSlots[date].every(Boolean);
     setSelectedSlots((prev) => ({
@@ -97,17 +98,12 @@ const Page = () => {
     console.log('Filtered Selected Slots:', filteredSelectedSlots);
     console.log('Filtered Time Slots Data:', filteredTimeSlotsData);
     changeCalendarStatus(filteredSelectedSlots, filteredTimeSlotsData);
-
-    setShowPopup(true);
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 3000); 
   }, [selectedSlots, timeSlotsData]);
 
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   return (
-    <div className="p-4 max-h-[91.8vh] overflow-x-auto custom-scrollbar">
+    <div className="p-4 max-h-[91.8vh] overflow-x-auto">
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -115,14 +111,23 @@ const Page = () => {
           <div key={date} className="p-2 border rounded shadow max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
             <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
             {timeSlotsData[date].map((slot, index) => (
+              // <div
+              //   key={index}
+              //   className={`cursor-pointer p-2 mb-1 border rounded-3xl pl-5 text-white text-bold ${selectedSlots[date][index] ? 'bg-rose-700' : 'bg-green-600'} 
+              //   ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : ''}`}
+              //   onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
+              // >
+              //   {slot.time}
+              // </div>
+
               <div
-                key={index}
-                className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
-                  ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
-                    slot.status === 'Unavailable' ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
-                onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
+              key={index}
+              className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
+                ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
+                  selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
+              onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
               >
-                {slot.time}
+              {slot.time}
               </div>
             ))}
             <div className="mt-2">
@@ -138,11 +143,6 @@ const Page = () => {
             </div>  
           </div>
         ))}
-        {showPopup && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
-          Calendar Updated Successfully!
-        </div>
-      )}
       </div>
       <button onClick={confirm} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
     </div>
