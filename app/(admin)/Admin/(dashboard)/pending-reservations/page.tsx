@@ -11,6 +11,7 @@ const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [appointmentData, setAppointmentData] = useState<pending_appointment | null>(null);
+  const [appointment, setAppointment] = useState<pending_appointment | null>(null);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -20,23 +21,30 @@ const Page = () => {
     const getData = async () => {
       try {
         const data = await fetchCalendarData(selectedDate);
+        console.log("HEY YOU!", data)
         setAppointmentData(data);
+        if (data && data.length > 0) {
+          setAppointment(data[0]);
+        }
       } catch (error) { 
         console.error(error);
       }
     }
-
     getData();
   }, [selectedDate])
 
+  useEffect(() => {
+    console.log("BYE BYE!", appointment);
+  }, [appointment]);
+
 
   const handleAccept = useCallback(() => {
-    acceptAppointment(appointmentData as pending_appointment);
-  }, [appointmentData]);
+    acceptAppointment(appointment as pending_appointment);
+  }, [appointment]);
 
   const handleReject =useCallback(() => {
-    rejectAppointment(appointmentData as pending_appointment)
-  }, [appointmentData]);
+    rejectAppointment(appointment as pending_appointment)
+  }, [appointment]);
 
   return (
     <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -53,9 +61,9 @@ const Page = () => {
                 <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                   <p className="font-bold">Main customer:</p>
                   <div className="pl-4">
-                    <p>{appointmentData?.name}</p>
-                    <p>{appointmentData?.emailaddress}</p>
-                    <p>{appointmentData?.contactnumber}</p>
+                    <p>{appointment?.name}</p>
+                    <p>{appointment?.emailaddress}</p>
+                    <p>{appointment?.contactnumber}</p>
                   </div>
               </div>
                 
@@ -73,17 +81,17 @@ const Page = () => {
                 <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                   <p className="font-bold">Parking</p>
                   <div className="pl-4">
-                    <p>Parking Needed: {appointmentData?.isparkingspotneeded}</p>
+                    <p>Parking Needed: {appointment?.isparkingspotneeded ? "Yes" : "No"}</p>
                   </div>
                 </div>
                 
                 <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
                   <p className="font-bold">Reservation Details:</p>
                   <div className="pl-4">
-                    <p>Package Selected: {appointmentData?.title}</p>
+                    <p>Package Selected: {appointment?.title}</p>
                     <p>Date/s: {formatDate(selectedDate)}</p>
-                    <p>Start Time: {appointmentData?.starttime}</p>
-                    <p>End Time: {appointmentData?.endtime}</p>
+                    <p>Start Time: {appointment?.starttime}</p>
+                    <p>End Time: {appointment?.endtime}</p>
                     <p>Additional request/s:</p>
                     {/* fill in data according to populating */}
                   </div>
