@@ -45,6 +45,7 @@ const Page = ({searchParams}:{
                 else
                     dotheyneedparking = false
 
+                console.log(searchParams.serviceid)
                 const addtheAppointment = await addOneAppointment(
                     searchParams.serviceid,
                     dotheyneedparking,

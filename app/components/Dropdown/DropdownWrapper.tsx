@@ -18,15 +18,17 @@ interface DropdownProps {
   setSelectedDates: React.Dispatch<React.SetStateAction<{ date: string; selectedtime1?: string; selectedtime2?: string }[]>>;
   openDropdown: { [key: string]: boolean };
   setOpenDropdown: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
+  maxHours: number;
 }
 
 interface DropdownWrapperProps {
   selectedDates: { date: string; selectedtime1?: string; selectedtime2?: string }[];
   setSelectedDates: React.Dispatch<React.SetStateAction<{ date: string; selectedtime1?: string; selectedtime2?: string }[]>>;
   schedules: Schedule[];
+  hours: number;
 }
 
-const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSelectedDates, schedules }) => {
+const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSelectedDates, schedules, hours }) => {
   const [openDropdown, setOpenDropdown] = useState<{ [key: string]: boolean }>({});
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,23 +54,46 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
     return date;
   };
 
+  const formatTime = (date: Date): string => {
+    return date.toTimeString().split(' ')[0].substring(0, 5);
+  };
+
+  const calculateTimeDifferenceInHours = (startTime: string, endTime: string): number => {
+    const startDate = parseTimeString(startTime);
+    const endDate = parseTimeString(endTime);
+    return (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+  };
+
+  const filterTimes = (startTimes: string[], endTimes: string[], maxHours: number) => {
+    const validStartTimes = startTimes.filter(startTime =>
+      endTimes.some(endTime => calculateTimeDifferenceInHours(startTime, endTime) <= maxHours)
+    );
+
+    const validEndTimes = (startTime?: string) => endTimes.filter(endTime =>
+      startTime ? (parseTimeString(endTime) > parseTimeString(startTime) && calculateTimeDifferenceInHours(startTime, endTime) <= maxHours) : true
+    );
+
+    return { validStartTimes, validEndTimes };
+  };
+
   const getScheduleTimes = (selectedDate: string) => {
     const normalizedSelectedDate = normalizeDate(selectedDate);
     const filteredSchedules = schedules.filter(schedule => {
       const scheduleDate = normalizeDate(schedule.date);
       return scheduleDate.getTime() === normalizedSelectedDate.getTime() && (schedule.status === "Available");
     });
-    const startTimes = filteredSchedules.map(schedule => schedule.starttime).sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
-    const endTimes = filteredSchedules.map(schedule => schedule.endtime).sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
-    return {
-      startTimes,
-      endTimes
-    };
+
+    const startTimes = filteredSchedules.map(schedule => schedule.starttime)
+      .sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
+    const endTimes = filteredSchedules.map(schedule => schedule.endtime)
+      .sort((a, b) => parseTimeString(a).getTime() - parseTimeString(b).getTime());
+
+    return filterTimes(startTimes, endTimes, hours);
   };
 
   const itemsPerDate = selectedDates.map(selectedDateObj => getScheduleTimes(selectedDateObj.date));
 
-  const Dropdown: React.FC<DropdownProps> = ({ items, dateIndex, selectedDates, setSelectedDates, openDropdown, setOpenDropdown }) => {
+  const Dropdown: React.FC<DropdownProps> = ({ items, dateIndex, selectedDates, setSelectedDates, openDropdown, setOpenDropdown, maxHours }) => {
     const isStartOpen = openDropdown[`start-${dateIndex}`];
     const isEndOpen = openDropdown[`end-${dateIndex}`];
 
@@ -82,7 +107,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
       if (type === 'start') {
         updatedDates[dateIndex].selectedtime1 = item;
         const endTime = updatedDates[dateIndex].selectedtime2;
-        if (endTime && parseTimeString(endTime) <= parseTimeString(item)) {
+        if (endTime && (parseTimeString(endTime) <= parseTimeString(item) || calculateTimeDifferenceInHours(item, endTime) > maxHours)) {
           updatedDates[dateIndex].selectedtime2 = undefined;
         }
       } else {
@@ -99,11 +124,11 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
     };
 
     const startTime = selectedDates[dateIndex].selectedtime1;
-    const filteredEndTimes = startTime ? items.endTimes.filter((endTime) => parseTimeString(endTime) > parseTimeString(startTime)) : items.endTimes;
+    const filteredEndTimes = items.validEndTimes(startTime);
 
     return (
       <div className='flex flex-row space-x-8 mt-4'>
-        <div className='flex flex-col w-full relative'> 
+        <div className='flex flex-col w-full relative'>
           <span className='font-semibold w-full text-neutral-400'>{formatDate(selectedDates[dateIndex].date)}</span>
           <span className='pl-1 text-sm w-full font-bold text-black'>Start</span>
           <details className="dropdown" open={isStartOpen}>
@@ -116,7 +141,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
             </summary>
             {isStartOpen && (
               <ul className="dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48">
-                {items.startTimes.map((item, index) => (
+                {items.validStartTimes.map((item, index) => (
                   <li
                     key={index}
                     className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
@@ -130,7 +155,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
           </details>
         </div>
         
-        <div className='flex flex-col w-full relative'> 
+        <div className='flex flex-col w-full relative'>
           <span className='pl-1 text-sm font-bold text-black pt-6'>End</span>
           <details className="dropdown" open={isEndOpen}>
             <summary 
@@ -174,6 +199,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
             setSelectedDates={setSelectedDates}
             openDropdown={openDropdown}
             setOpenDropdown={setOpenDropdown}
+            maxHours={hours}
           />
         ))}
       </div>

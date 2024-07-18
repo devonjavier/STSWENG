@@ -27,13 +27,11 @@ const Page = ({ searchParams }: {
     const [schedules, setSchedules] = useState<[]>([]);
     const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
     const [ablebutton, setAbleButton] = useState(false);
-
     const [loading, setLoading] = useState(true);
 
     const getSchedule = async () => {
         try {
             const fetchedSchedules = await fetchSchedules();
-
             const newSelectedDates = fetchedSchedules.map((schedule: { scheduleid: any; date: any; starttime: any; endtime: any; status: any }) => ({
                 scheduleid: schedule.scheduleid,
                 date: schedule.date,
@@ -50,12 +48,10 @@ const Page = ({ searchParams }: {
     };
 
     useEffect(() => {
-        console.log(searchParams.serviceType);
         getSchedule();
         if (selectedSchedules.length !== 0) {
             setAbleButton(false);
-        }
-        else {
+        } else {
             setAbleButton(true);
         }
     }, [selectedSchedules]);
@@ -66,25 +62,22 @@ const Page = ({ searchParams }: {
                 <div>
                     <div className='text-cusBlue text-6xl font-bold'>
                         Book an Appointment
-                        <div>
-                        </div>
+                        <div></div>
                     </div>
                     <div>
                         Services &gt; Details &gt; ExtraDetails &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Confirmation &gt; Booking Status
                     </div>
                 </div>
                 <div>
-                    <div>
-                    </div>
+                    <div></div>
                     <div className='flex flex-row'>
                         <div className='flex flex-col mr-4'>
                             <Calendar setArrFunc={setselectedSchedules} schedules={schedules} />
-
                             <Link href={{
                                 pathname: "/Services/Details/Extradetails/Datetime/Confirmation",
                                 query: {
                                     service: searchParams.service,
-                                    serviceType:searchParams.serviceType,
+                                    serviceType: searchParams.serviceType,
                                     maincustomerfirstname: searchParams.maincustomerfirstname,
                                     maincustomermiddlename: searchParams.maincustomermiddlename,
                                     maincustomerlastname: searchParams.maincustomerlastname,
@@ -107,13 +100,13 @@ const Page = ({ searchParams }: {
                             </Link>
                         </div>
                         <div className='flex flex-col'>
-                            <DropdownWrapper items={[]} setArrFunc={setselectedSchedules} selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} />
+                            <DropdownWrapper selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} hours={searchParams.hours} />
                         </div>
                     </div>
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-export default Page
+export default Page;
