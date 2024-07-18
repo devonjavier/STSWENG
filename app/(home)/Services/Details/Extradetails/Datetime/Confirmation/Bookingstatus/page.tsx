@@ -3,7 +3,7 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { fetchSchedule, addPeople, addOneAppointment, addCustomer, updateSchedule, fetchOneMainServiceOnetime, fetchOneMainServiceHourlyPrice, fetchOneAdditionalServiceWithTitle} from '@/utils/supabase/data'
+import { fetchSchedule, addPeople, addOneAppointment, addCustomer, updateSchedule, fetchOneAdditionalServiceWithTitle} from '@/utils/supabase/data'
 import Link from "next/link"
 import { tracingChannel } from "diagnostics_channel"
 
@@ -31,49 +31,35 @@ const Page = ({searchParams}:{
         additionalpackage:string
     }
 }) => {
-
     const theService = JSON.parse(searchParams.service);
-    
-    const [additionalserviceid,setadditionalserviceid] = useState(null);
 
     const randomNumber = Math.random() * 9999;
 
     const [trackingNumber, setTrackingNumber] = useState(Math.round(randomNumber));
     //const [theAppointentid, setTheAppointentid] = useState();
     let appointentid;
-
     const [isProcessed, setIsProcessed] = useState(false);
 
     if(!isProcessed){
-
         const addAppointment = async() =>{
-            
             try {
-
                 let dotheyneedparking: boolean;
-
-                console.log(additionalserviceid);
                 
                 if(searchParams.needsparking == 'true') 
                     dotheyneedparking = true
                 else
                     dotheyneedparking = false
 
-                const price = await fetchOneAdditionalServiceWithTitle(JSON.parse(searchParams.additionalpackage));
-                
-                setadditionalserviceid(price[0].serviceid);
-                console.log('CHECKING' + price[0].serviceid);
-                
                 const addtheAppointment = await addOneAppointment(
                     theService.serviceid,
                     dotheyneedparking,
                     trackingNumber,
                     searchParams.additionalrequests,
-                    price[0].serviceid
+                    JSON.parse(searchParams.additionalpackage)
                 );
 
                 appointentid = addtheAppointment;
-            
+                console.log(addtheAppointment);
 
                 let updating = []
                 let count = 0
@@ -89,6 +75,8 @@ const Page = ({searchParams}:{
                     count = count + 1;
                 }
 
+
+                console.log(appointentid)
 
                 } catch (error) {
                 console.error('Error fetching services:', error);
@@ -108,6 +96,7 @@ const Page = ({searchParams}:{
                     true
                 );
 
+                console.log(addMainCustomer);
 
                 let fnames: string[] = []
                 let mnames: string[] = []
@@ -143,6 +132,9 @@ const Page = ({searchParams}:{
                 } 
         }
 
+        //console.log(appointentid);
+        console.log(trackingNumber);
+        // add the appointment to Appointment
         addAppointment(); 
         
         // add all customers to People
@@ -211,4 +203,3 @@ const Page = ({searchParams}:{
 }
 
 export default Page
-

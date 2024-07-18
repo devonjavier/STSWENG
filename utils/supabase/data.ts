@@ -494,9 +494,14 @@ export async function addOneAppointment(
     //status
     trackingnumber:number,
     additionalrequest:string,
-    additionalserviceid:number
+    additionalpackage:string
 ){
     const supabase = createClient();
+
+    const { data : additionalservice } = await supabase
+    .from('Service')
+    .select('serviceid')
+    .eq('title', additionalpackage);
 
     // getting the largest id number from the table
     let largestidnumber;
@@ -511,6 +516,7 @@ export async function addOneAppointment(
     })
 
     largestidnumber = largestidnumber + 1;
+    console.log(additionalservice);
 
     const { error } = await supabase.from('Appointment').insert({
         appointmentid: largestidnumber,
@@ -520,8 +526,9 @@ export async function addOneAppointment(
         trackingnumber: trackingnumber,
         discount:15.0,
         additionalrequest:additionalrequest,
-        additionalserviceid:additionalserviceid
+        additionalserviceid:additionalservice[0].serviceid
     }) 
+    
     if(error)
         return error
 
