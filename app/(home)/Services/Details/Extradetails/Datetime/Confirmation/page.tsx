@@ -47,7 +47,7 @@ const Page = ({ searchParams }: {
     useEffect(() => {
         const theService = JSON.parse(searchParams.service);
 
-        console.log(JSON.parse(searchParams.additionalpackage).length === 0)
+        console.log(theService.serviceid);
 
         
 
@@ -71,8 +71,8 @@ const Page = ({ searchParams }: {
         }
 
         // get the price of the main package
-        console.log(theService);
-        console.log(theService.serviceid);
+        //console.log(theService);
+        //console.log(theService.serviceid);
 
         // get the price of the additional package
         const getPriceAdditional= async () => {

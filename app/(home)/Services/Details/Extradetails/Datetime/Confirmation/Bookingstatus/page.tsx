@@ -9,24 +9,29 @@ import { tracingChannel } from "diagnostics_channel"
 
 const Page = ({searchParams}:{
     searchParams: {
-        schedules: string, // LISTOF ALL SCHEDS
-        serviceid: string,
+        schedules: string,
+
+        service: string,
+        serviceType:string,
 
         maincustomerfirstname: string,
-        maincustomermiddlename: string
+        maincustomermiddlename: string,
         maincustomerlastname: string,
 
         phonenumber: string,
         emailaddress: string,
+        countAdditionalCustomers: number,
 
-        countAdditionalCustomers:number,
         needsparking: string,
         additionalrequests: string,
-        additionalCustomersfirstnames: string // JOSN
-        additionalCustomersmiddlenames: string //JSON
-        additionalCustomerslastnames: string //JSON
+        additionalCustomersfirstnames: string, // JSON
+        additionalCustomersmiddlenames: string, // JSON
+        additionalCustomerslastnames: string, // JSON
+        hours:number,
+        additionalpackage:string
     }
 }) => {
+    const theService = JSON.parse(searchParams.service);
 
     const randomNumber = Math.random() * 9999;
 
@@ -45,9 +50,9 @@ const Page = ({searchParams}:{
                 else
                     dotheyneedparking = false
 
-                console.log(searchParams.serviceid)
+                
                 const addtheAppointment = await addOneAppointment(
-                    searchParams.serviceid,
+                    theService.serviceid,
                     dotheyneedparking,
                     trackingNumber,
                     searchParams.additionalrequests
