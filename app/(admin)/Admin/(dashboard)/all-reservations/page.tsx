@@ -3,6 +3,7 @@ import React from 'react';
 import { fetchAppointments } from '@/utils/supabase/data';
 import { useState, useEffect } from 'react';
 import { reservation } from '@/utils/supabase/interfaces'
+import '../scrollbarStyle.css';
 // import AdminLayout from '../../components/AdminLayout';
 
 //sample dataset
@@ -56,7 +57,7 @@ const Page: React.FC = () => {
           style={{marginLeft: '10px', borderRadius: '15px'}}/>
         </div>
 
-        <div className="max-h-[72vh] overflow-y-auto rounded-3xl">
+        <div className="max-h-[72vh] overflow-y-auto rounded-3xl custom-scrollbar">
           <table className="max-h-[70vh] overflow-y-auto min-w-full bg-white border border-transparent shadow-lg" style={{ borderRadius: '20px', overflow: 'hidden' }}>
             <thead>
               <tr className="bg-cusBlue text-white text-left">

@@ -28,13 +28,14 @@ const Page = ({ searchParams }: { searchParams: { id: string } }) => {
 
     return (
         <>
-            <ul>
+            {/* <ul>
                 {selectedDates.map((obj, index) => (
                     <li key={index}>
                         {obj.date.toDateString()}
                     </li>
                 ))}
-            </ul>
+            </ul> */}
+            {/* above COMMENTED code displays currently selected dates */}
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
                 <div>
                     <div className='text-4xl font-bold text-black'>

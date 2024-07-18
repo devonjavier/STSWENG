@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { fetchCalendarData } from '@/utils/supabase/data';
 import { pending_appointment } from '@/utils/supabase/interfaces'
 import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
+import '../scrollbarStyle.css';
 
 const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
@@ -57,7 +58,7 @@ const Page = () => {
   };
 
   return (
-    <div className='px-32 flex flex-col gap-8 pt-20 pb-32 max-h-[91.8vh] overflow-y-auto'>
+    <div className='px-32 flex flex-col gap-8 pt-20 pb-32 max-h-[91.8vh] overflow-y-auto custom-scrollbar'>
       <div className="flex">
         <PendingCalendar setArrFunc={setSelectedDates} setSelectedDate={setSelectedDate} />
         

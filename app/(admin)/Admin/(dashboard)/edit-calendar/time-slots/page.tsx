@@ -107,7 +107,7 @@ const Page = () => {
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   return (
-    <div className="p-4 max-h-[91.8vh] overflow-x-auto">
+    <div className="p-4 max-h-[91.8vh] overflow-x-auto custom-scrollbar">
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
