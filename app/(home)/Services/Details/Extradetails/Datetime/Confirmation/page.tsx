@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Link from "next/link";
-import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetimePrice, fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
+import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetime, fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
 
 const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -47,14 +47,14 @@ const Page = ({ searchParams }: {
     useEffect(() => {
         const theService = JSON.parse(searchParams.service);
 
-        console.log(theService.serviceid);
+        //console.log(searchParams.additionalpackage);
 
         
 
         if(JSON.parse(searchParams.serviceType) === 'onetime'){
             const getPriceAdditional= async () =>{
-                const onetimeprice = await fetchOneMainServiceOnetimePrice(JSON.parse(theService.serviceid));
-                
+                const onetimeprice = await fetchOneMainServiceOnetime(JSON.parse(theService.serviceid));
+                console.log(typeof onetimeprice[0].serviceid);
                 setPriceMainService(onetimeprice[0].rate);
             }
             

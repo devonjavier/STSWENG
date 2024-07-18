@@ -186,21 +186,21 @@ export async function fetchOneAdditionalServiceWithTitle(title:string) {
 
     const { data : service } = await supabase
     .from('AdditionalServices')
-    .select('rate')
+    .select('rate, serviceid')
     .eq('serviceid', additionalservice[0].serviceid);
 
     return service;
 }
 
-export async function fetchOneMainServiceOnetimePrice(serviceid:number) {
+export async function fetchOneMainServiceOnetime(serviceid:number) {
     
     const supabase = createClient();
-    const { data : onetimeprice } = await supabase
+    const { data : onetime } = await supabase
     .from('OnetimeService')
-    .select('rate')
+    .select('rate, serviceid')
     .eq('serviceid', serviceid);
 
-    return onetimeprice;
+    return onetime;
 }
 
 export async function fetchOneMainServiceHourlyPrice(serviceid:number) {
@@ -208,12 +208,11 @@ export async function fetchOneMainServiceHourlyPrice(serviceid:number) {
     const supabase = createClient();
     const { data : hourlyprice } = await supabase
     .from('HourlyService')
-    .select('rate, hours')
+    .select('rate, hours, serviceid')
     .eq('serviceid', serviceid);
 
     return hourlyprice;
 }
-
 
 
 export async function fetchSelectedSchedule(appointmentid:number) {
@@ -494,7 +493,8 @@ export async function addOneAppointment(
     isparkingspotneeded:boolean,
     //status
     trackingnumber:number,
-    additionalrequest:string
+    additionalrequest:string,
+    additionalserviceid:number
 ){
     const supabase = createClient();
 
@@ -519,7 +519,8 @@ export async function addOneAppointment(
         status:"Pending",
         trackingnumber: trackingnumber,
         discount:15.0,
-        additionalrequest:additionalrequest
+        additionalrequest:additionalrequest,
+        additionalserviceid:additionalserviceid
     }) 
     if(error)
         return error
