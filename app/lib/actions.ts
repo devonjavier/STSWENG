@@ -244,7 +244,7 @@ export async function acceptAppointment(appointmentData : pending_appointment){
   .update({status : 'Appointed'})
   .match({
     date : appointmentData.date, 
-    starttime : appointmentData.starttime, 
+    // starttime : appointmentData.starttime, 
     appointmentid : appointmentData.appointmentid
   });
 

@@ -15,6 +15,7 @@ const Page = () => {
 
   const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: TimeSlot[] }>({});
   const [selectedSlots, setSelectedSlots] = useState<{ [key: string]: boolean[] }>({});
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleDates = useCallback(async () => {
     try {
@@ -98,6 +99,11 @@ const Page = () => {
     console.log('Filtered Selected Slots:', filteredSelectedSlots);
     console.log('Filtered Time Slots Data:', filteredTimeSlotsData);
     changeCalendarStatus(filteredSelectedSlots, filteredTimeSlotsData);
+
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3000); 
   }, [selectedSlots, timeSlotsData]);
 
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
@@ -143,6 +149,11 @@ const Page = () => {
             </div>  
           </div>
         ))}
+        {showPopup && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
+          Calendar Updated Successfully!
+        </div>
+      )}
       </div>
       <button onClick={confirm} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
     </div>

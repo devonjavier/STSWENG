@@ -1,4 +1,3 @@
-// page.tsx
 'use client'
 import React, { useCallback, useState } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
@@ -14,6 +13,7 @@ const Page = () => {
   const [appointments, setAppointments] = useState<pending_appointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<pending_appointment | null>(null);
   const [proofOfPayment, setProofOfPayment] = useState<File | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -42,12 +42,20 @@ const Page = () => {
   const handleAccept = useCallback(() => {
     if (selectedAppointment) {
       acceptAppointment(selectedAppointment);     // changes Schedule table status
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 1500); 
     }
   }, [selectedAppointment]);
 
   const handleReject = useCallback(() => {
     if (selectedAppointment) {
       rejectAppointment(selectedAppointment);     // changes Schedule table status
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 1500); 
     }
   }, [selectedAppointment]);
 
@@ -57,16 +65,46 @@ const Page = () => {
     }
   };
 
+  const getCombinedAppointments = () => {
+    const combined = appointments.reduce((acc, curr) => {
+      const { appointmentid, starttime, endtime } = curr;
+  
+      if (!acc[appointmentid]) {
+        acc[appointmentid] = { ...curr };
+      } else {
+        acc[appointmentid].starttime = acc[appointmentid].starttime < starttime ? acc[appointmentid].starttime : starttime;
+        acc[appointmentid].endtime = acc[appointmentid].endtime > endtime ? acc[appointmentid].endtime : endtime;
+      }
+  
+      return acc;
+    }, {} as { [key: string]: pending_appointment });
+  
+
+    //sorts it
+    const sortedAppointments = Object.values(combined).sort((a, b) => {
+
+      const startTimeA = new Date(`2000-01-01T${a.starttime}`);
+      const startTimeB = new Date(`2000-01-01T${b.starttime}`);
+  
+      return startTimeA.getTime() - startTimeB.getTime();
+    });
+  
+    return sortedAppointments;
+  };
+  
+
+  const combinedAppointments = getCombinedAppointments();
+
   return (
     <div className='px-32 flex flex-col gap-8 pt-20 pb-32 max-h-[91.8vh] overflow-y-auto custom-scrollbar'>
       <div className="flex">
         <PendingCalendar setArrFunc={setSelectedDates} setSelectedDate={setSelectedDate} />
         
         {selectedDate && (
-          <div className="appointment-list ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 h-shadow-lg bg-white text-black flex flex-col">
+          <div className="ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 h-shadow-lg bg-white text-black flex flex-col overflow-h-auto">
             <h2 className="text-xl font-bold mb-4 text-left">Appointments on {formatDate(selectedDate)}</h2>
-            <div className="appointment-buttons flex flex-col gap-2">
-              {appointments.map((appointment) => (
+            <div className="flex flex-col gap-2">
+              {combinedAppointments.map((appointment) => (
                 <button
                   key={appointment.appointmentid}
                   className={`p-2 border border-gray-300 rounded-lg ${
@@ -152,6 +190,11 @@ const Page = () => {
             <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleReject}>Reject</button>
             <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleAccept}>Accept</button>
           </div>
+        </div>
+      )}
+      {showPopup && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
+          Calendar Updated Successfully!
         </div>
       )}
 
