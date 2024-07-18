@@ -39,6 +39,7 @@ export interface pending_appointment {
   starttime: string;
   endtime: string;
   appointmentid : string;
+  additionalreq: string;
 }
 
 export interface TimeSlot {

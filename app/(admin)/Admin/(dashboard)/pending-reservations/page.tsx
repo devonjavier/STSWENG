@@ -1,4 +1,4 @@
-//page.tsx
+// page.tsx
 'use client'
 import React, { useCallback, useState } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
@@ -10,8 +10,9 @@ import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
 const Page = () => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [appointmentData, setAppointmentData] = useState<pending_appointment | null>(null);
-  const [appointment, setAppointment] = useState<pending_appointment | null>(null);
+  const [appointments, setAppointments] = useState<pending_appointment[]>([]);
+  const [selectedAppointment, setSelectedAppointment] = useState<pending_appointment | null>(null);
+  const [proofOfPayment, setProofOfPayment] = useState<File | null>(null);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -20,11 +21,11 @@ const Page = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const data = await fetchCalendarData(selectedDate);
-        console.log("HEY YOU!", data)
-        setAppointmentData(data);
-        if (data && data.length > 0) {
-          setAppointment(data[0]);
+        if (selectedDate) {
+          const data = await fetchCalendarData(selectedDate);
+          setAppointments(data);
+          console.log("OVER HERE!!!!!!!!", data)
+          setSelectedAppointment(null);
         }
       } catch (error) { 
         console.error(error);
@@ -34,78 +35,124 @@ const Page = () => {
   }, [selectedDate])
 
   useEffect(() => {
-    console.log("BYE BYE!", appointment);
-  }, [appointment]);
-
+    console.log("Selected appointment changed:", selectedAppointment);
+  }, [selectedAppointment]);
 
   const handleAccept = useCallback(() => {
-    acceptAppointment(appointment as pending_appointment);
-  }, [appointment]);
+    if (selectedAppointment) {
+      acceptAppointment(selectedAppointment);     // changes Schedule table status
+    }
+  }, [selectedAppointment]);
 
-  const handleReject =useCallback(() => {
-    rejectAppointment(appointment as pending_appointment)
-  }, [appointment]);
+  const handleReject = useCallback(() => {
+    if (selectedAppointment) {
+      rejectAppointment(selectedAppointment);     // changes Schedule table status
+    }
+  }, [selectedAppointment]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setProofOfPayment(event.target.files[0]);
+    }
+  };
 
   return (
-    <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
+    <div className='px-32 flex flex-col gap-8 pt-20 pb-32 max-h-[91.8vh] overflow-y-auto'>
       <div className="flex">
         <PendingCalendar setArrFunc={setSelectedDates} setSelectedDate={setSelectedDate} />
-
         
         {selectedDate && (
-          <div className="reservation-details ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 h-shadow-lg bg-white text-black flex flex-col justify-between">
-            <div>
-              <h2 className="text-xl font-bold mb-4 text-left">Details</h2>
-              
-              <div className="flex justify-between mb-4">
-                <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
-                  <p className="font-bold">Main customer:</p>
-                  <div className="pl-4">
-                    <p>{appointment?.name}</p>
-                    <p>{appointment?.emailaddress}</p>
-                    <p>{appointment?.contactnumber}</p>
-                  </div>
-              </div>
-                
-                <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
-                  <p className="font-bold">Additional persons involved:</p>
-                  <div className="pl-4">
-                    <p>Person 1: Name</p>
-                    <p>Person 2: Name</p>
-                    <p>Person 3: Name</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex justify-between mb-4">
-                <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
-                  <p className="font-bold">Parking</p>
-                  <div className="pl-4">
-                    <p>Parking Needed: {appointment?.isparkingspotneeded ? "Yes" : "No"}</p>
-                  </div>
-                </div>
-                
-                <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
-                  <p className="font-bold">Reservation Details:</p>
-                  <div className="pl-4">
-                    <p>Package Selected: {appointment?.title}</p>
-                    <p>Date/s: {formatDate(selectedDate)}</p>
-                    <p>Start Time: {appointment?.starttime}</p>
-                    <p>End Time: {appointment?.endtime}</p>
-                    <p>Additional request/s:</p>
-                    {/* fill in data according to populating */}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex justify-between mt-4">
-              <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick = {handleAccept}>Accept</button>
-              <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick = {handleReject}>Reject</button>
+          <div className="appointment-list ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 h-shadow-lg bg-white text-black flex flex-col">
+            <h2 className="text-xl font-bold mb-4 text-left">Appointments on {formatDate(selectedDate)}</h2>
+            <div className="appointment-buttons flex flex-col gap-2">
+              {appointments.map((appointment) => (
+                <button
+                  key={appointment.appointmentid}
+                  className={`p-2 border border-gray-300 rounded-lg ${
+                    selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-blue-100' : 'bg-white'
+                  }`}
+                  onClick={() => setSelectedAppointment(appointment)}
+                >
+                  {appointment.name}
+                </button>
+              ))}
             </div>
           </div>
         )}
       </div>
+
+      {selectedAppointment && (
+        <div className="reservation-details mt-6 p-4 border border-gray-300 rounded-lg w-full h-shadow-lg bg-white text-black flex flex-col justify-between">
+          <div>
+            <h2 className="text-xl font-bold mb-4 text-left">Details for Customer {selectedAppointment.name}</h2>
+
+            <div className="flex justify-between mb-4">
+              <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
+                <p className="font-bold">Main customer:</p>
+                <div className="pl-4">
+                  <p>{selectedAppointment.name}</p>
+                  <p><a href={`mailto:${selectedAppointment.emailaddress}`} className="text-gray-500 font-xs italic">
+                    {selectedAppointment.emailaddress}
+                  </a></p>
+                  <p>{selectedAppointment.contactnumber}</p>
+                </div>
+              </div>
+
+              <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
+                <p className="font-bold">Additional persons involved:</p>
+                <div className="pl-4">
+                  <p>Person 1: Name</p>
+                  <p>Person 2: Name</p>
+                  <p>Person 3: Name</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between mb-4">
+              <div className="details p-2 border border-cusBlue rounded w-full">
+              <p className="font-bold">Reservation Details:</p>
+                <div className="pl-4 flex justify-between">
+                  <div className="w-1/2">
+                    <p>Package Selected: {selectedAppointment.title}</p>
+                    <p>Date/s: {formatDate(selectedDate)}</p>
+                    <p>Start Time: {selectedAppointment.starttime}</p>
+                    <p>End Time: {selectedAppointment.endtime}</p>
+                  </div>
+
+                  <div className="flex items-start text-center w-1/2">
+                    <p>Additional request/s: {selectedAppointment.additionalreq}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between mb-4">
+              <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
+                <p className="font-bold">Parking</p>
+                <div className="pl-4">
+                  <p>Parking Needed: {selectedAppointment.isparkingspotneeded ? "Yes" : "No"}</p>
+                </div>
+              </div>
+
+              <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
+                <p className="font-bold">Proof of Payment:</p>
+                <div className="py-2">
+                  <label className="custom-file-upload w-2/5 justify-center flex bg-white text-cusBlue font-bold px-4 py-2 rounded-xl
+                                    border border-gray-300 cursor-pointer">
+                    Upload a File
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                  </label>
+                  {proofOfPayment && <p className='text-cusBlue font-bold'>File selected: {proofOfPayment.name}</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between mt-4">
+            <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleReject}>Reject</button>
+            <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleAccept}>Accept</button>
+          </div>
+        </div>
+      )}
 
       <div className="legend flex mt-0">
         <div className="legend-item flex items-center mr-4">

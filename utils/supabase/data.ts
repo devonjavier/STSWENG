@@ -68,103 +68,117 @@ export async function fetchAppointments() {
       return filteredAppointmentDetails;
 }
 
-export async function fetchCalendarData(selectedDate : any){
+export async function fetchCalendarData(selectedDate: any) {
+  const supabase = createClient();
+  const offset = selectedDate.getTimezoneOffset();
+  const adjustedDate = new Date(selectedDate.getTime() - (offset * 60 * 1000));
+  const formattedDate = adjustedDate.toISOString().split('T')[0]; 
 
-    const supabase = createClient();
-    const offset = selectedDate.getTimezoneOffset();
-    const adjustedDate = new Date(selectedDate.getTime() - (offset * 60 * 1000));
-    const formattedDate = adjustedDate.toISOString().split('T')[0]; 
-
-    const { data : schedules, error : schedules_error} = await supabase
+  const { data: schedules, error: schedulesError } = await supabase
     .from('Schedule')
     .select('appointmentid, starttime, endtime')
-    .eq('date', formattedDate)
-    .limit(1)
+    .eq('date', formattedDate);
 
-    console.log(formattedDate);
-    console.log(schedules);
+  console.log(formattedDate);
+  console.log(schedules);
 
-   if(schedules_error){
-    console.error(schedules_error);
-   }
+  if (schedulesError) {
+    console.error(schedulesError);
+    return [];
+  }
 
-   const calendarData = await Promise.all(
+  const calendarData = await Promise.all(
     schedules.map(async (schedule) => {
       const { data: customerData, error: customerError } = await supabase
         .from('Customers')
         .select('*')
         .eq('appointmentid', schedule.appointmentid);
 
-
-
       if (customerError) {
-        console.error('Error fetching customer ID:', customerError);
+        console.error('Error fetching customer data:', customerError);
         return null;
       }
 
       const customer = customerData.length > 0 ? customerData[0] : null;
-      
+
       if (!customer) {
         console.error('No customer found for appointment:', schedule.appointmentid);
         return null;
       }
 
-      const cust = customerData[0];
-      const cust_id = cust.personid;
+      const cust_id = customer.personid;
 
       const { data: persons, error: personsError } = await supabase
         .from('Person')
         .select('firstname, middlename, lastname, emailaddress, contactnumber')
-        .eq('personid', cust_id)
+        .eq('personid', cust_id);
 
-    
-        const per = persons[0];
+      if (personsError) {
+        console.error('Error fetching person data:', personsError);
+        return null;
+      }
 
+      const person = persons.length > 0 ? persons[0] : null;
+
+      if (!person) {
+        console.error('No person found for person ID:', cust_id);
+        return null;
+      }
 
       const { data: appointments, error: appointmentsError } = await supabase
         .from('Appointment')
-        .select('serviceid, isparkingspotneeded')
-        .eq('appointmentid', schedule.appointmentid)
-
-        const app = appointments[0];
-        const app_id = app.serviceid;
-
+        .select('serviceid, isparkingspotneeded, additionalrequest')
+        .eq('appointmentid', schedule.appointmentid);
 
       if (appointmentsError) {
         console.error('Error fetching appointment data:', appointmentsError);
         return null;
       }
 
+      const appointment = appointments.length > 0 ? appointments[0] : null;
+
+      if (!appointment) {
+        console.error('No appointment found for appointment ID:', schedule.appointmentid);
+        return null;
+      }
+
       const { data: services, error: servicesError } = await supabase
         .from('Service')
         .select('title')
-        .eq('serviceid', app_id)
-
-        const ser = services[0];
-
+        .eq('serviceid', appointment.serviceid);
 
       if (servicesError) {
         console.error('Error fetching service data:', servicesError);
         return null;
       }
 
+      const service = services.length > 0 ? services[0] : null;
+
+      if (!service) {
+        console.error('No service found for service ID:', appointment.serviceid);
+        return null;
+      }
+
       return {
-        name: `${per.firstname} ${per.middlename} ${per.lastname}`,
-        contactnumber: per.contactnumber,
-        emailaddress: per.emailaddress,
-        isparkingspotneeded: app.isparkingspotneeded,
-        title: ser.title,
+        name: `${person.firstname} ${person.middlename ? person.middlename + ' ' : ''}${person.lastname}`,
+        contactnumber: person.contactnumber,
+        emailaddress: person.emailaddress,
+        isparkingspotneeded: appointment.isparkingspotneeded,
+        title: service.title,
         date: formattedDate,
         starttime: schedule.starttime,
         endtime: schedule.endtime,
-        appointmentid : schedule.appointmentid
+        appointmentid: schedule.appointmentid,
+        additionalreq: appointment.additionalrequest
       };
     })
   );
 
-  console.log('Calendar Data:', calendarData.filter(item => item !== null));
-  return calendarData.filter(item => item !== null);
+  const filteredCalendarData = calendarData.filter(item => item !== null);
+  console.log('Calendar Data:', filteredCalendarData);
+  return filteredCalendarData;
 }
+
 
 
 export async function fetchSchedule() {
