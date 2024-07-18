@@ -176,6 +176,45 @@ export async function fetchCalendarData(selectedDate : any){
   return calendarData.filter(item => item !== null);
 }
 
+export async function fetchOneAdditionalServiceWithTitle(title:string) {
+    
+    const supabase = createClient();
+    const { data : additionalservice } = await supabase
+    .from('Service')
+    .select('serviceid')
+    .eq('title', title);
+
+    const { data : service } = await supabase
+    .from('AdditionalServices')
+    .select('rate')
+    .eq('serviceid', additionalservice[0].serviceid);
+
+    return service;
+}
+
+export async function fetchOneMainServiceOnetimePrice(serviceid:number) {
+    
+    const supabase = createClient();
+    const { data : onetimeprice } = await supabase
+    .from('OnetimeService')
+    .select('rate')
+    .eq('serviceid', serviceid);
+
+    return onetimeprice;
+}
+
+export async function fetchOneMainServiceHourlyPrice(serviceid:number) {
+    
+    const supabase = createClient();
+    const { data : hourlyprice } = await supabase
+    .from('HourlyService')
+    .select('rate, hours')
+    .eq('serviceid', serviceid);
+
+    return hourlyprice;
+}
+
+
 
 export async function fetchSelectedSchedule(appointmentid:number) {
     const supabase = createClient();

@@ -7,7 +7,8 @@ import { fetchSchedules } from '@/utils/supabase/data';
 
 const Page = ({ searchParams }: {
     searchParams: {
-        serviceid: string,
+        service: string,
+        serviceType:string,
         maincustomerfirstname: string,
         maincustomermiddlename: string,
         maincustomerlastname: string,
@@ -49,8 +50,7 @@ const Page = ({ searchParams }: {
     };
 
     useEffect(() => {
-        console.log(searchParams.hours);
-        console.log(searchParams.additionalpackage);
+        console.log(searchParams.serviceType);
         getSchedule();
         if (selectedSchedules.length !== 0) {
             setAbleButton(false);
@@ -83,7 +83,8 @@ const Page = ({ searchParams }: {
                             <Link href={{
                                 pathname: "/Services/Details/Extradetails/Datetime/Confirmation",
                                 query: {
-                                    serviceid: searchParams.serviceid,
+                                    service: searchParams.service,
+                                    serviceType:searchParams.serviceType,
                                     maincustomerfirstname: searchParams.maincustomerfirstname,
                                     maincustomermiddlename: searchParams.maincustomermiddlename,
                                     maincustomerlastname: searchParams.maincustomerlastname,
@@ -95,7 +96,9 @@ const Page = ({ searchParams }: {
                                     additionalCustomersfirstnames: searchParams.additionalCustomersfirstnames,
                                     additionalCustomersmiddlenames: searchParams.additionalCustomersmiddlenames,
                                     additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
-                                    schedules: JSON.stringify(selectedSchedules)
+                                    schedules: JSON.stringify(selectedSchedules),
+                                    hours: searchParams.hours, 
+                                    additionalpackage: searchParams.additionalpackage
                                 }
                             }}>
                                 <button disabled={ablebutton} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">

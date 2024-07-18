@@ -89,6 +89,7 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
     }, 300);
     useEffect(()=>{
         getServices();
+        console.log(searchParams.service);
     },[]);
     return (
         <>
@@ -116,7 +117,8 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
                             <div className='flex flex-col'>
                                 <input placeholder="@gmail.com" onChange={(e) => { emailAddressChange(e.target.value); }} className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex mb-3' type="text" />
                             </div>
-                            <Link href={{ pathname: "/Services/Details/Extradetails", query: { serviceid: searchParams.serviceid, maincustomerfirstname: maincustomerfirstname, maincustomermiddlename: maincustomermiddlename, 
+                            <Link href={{ pathname: "/Services/Details/Extradetails", query: { service: searchParams.service, serviceType:searchParams.serviceType,
+                             maincustomerfirstname: maincustomerfirstname, maincustomermiddlename: maincustomermiddlename, 
                                 maincustomerlastname: maincustomerlastname, phonenumber: phonenumber, 
                                 emailaddress: emailaddress, needsparking: isChecked, 
                                 additionalrequests: additionalRequests, hours: hours, additionalpackage: JSON.stringify(selectedPackage)} }}>

@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Link from "next/link";
-import { fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
+import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetimePrice, fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
 
 const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -11,7 +11,9 @@ const formatDate = (dateString) => {
 const Page = ({ searchParams }: {
     searchParams: {
         schedules: string,
-        serviceid: string,
+
+        service: string,
+        serviceType:string,
 
         maincustomerfirstname: string,
         maincustomermiddlename: string,
@@ -25,17 +27,68 @@ const Page = ({ searchParams }: {
         additionalrequests: string,
         additionalCustomersfirstnames: string, // JSON
         additionalCustomersmiddlenames: string, // JSON
-        additionalCustomerslastnames: string // JSON
+        additionalCustomerslastnames: string, // JSON
+        hours:number,
+        additionalpackage:string
     }
 }) => {
 
     const [selectedService, setSelectedService] = useState<string>(" ");
-    const [listofschedules, setlistofschedules] = useState<[]>([])
+    const [listofschedules, setlistofschedules] = useState<[]>([]);
+
+
+    const [priceAdditionalService, setPriceAdditionalService] = useState(0);
+    const [priceMainService, setPriceMainService] = useState(0);
+
+    
+    
+    
 
     useEffect(() => {
+        const theService = JSON.parse(searchParams.service);
+
+        console.log(JSON.parse(searchParams.additionalpackage).length === 0)
+
+        
+
+        if(JSON.parse(searchParams.serviceType) === 'onetime'){
+            const getPriceAdditional= async () =>{
+                const onetimeprice = await fetchOneMainServiceOnetimePrice(JSON.parse(theService.serviceid));
+                
+                setPriceMainService(onetimeprice[0].rate);
+            }
+            
+            getPriceAdditional();
+        }
+        else{
+            const getPriceAdditional= async () =>{
+                const hourlyprice = await fetchOneMainServiceHourlyPrice(JSON.parse(theService.serviceid));
+                
+                setPriceMainService(hourlyprice[0].rate * (searchParams.hours/hourlyprice[0].hours));
+            }
+            
+            getPriceAdditional();
+        }
+
+        // get the price of the main package
+        console.log(theService);
+        console.log(theService.serviceid);
+
+        // get the price of the additional package
+        const getPriceAdditional= async () => {
+            try {
+                const price = await fetchOneAdditionalServiceWithTitle(JSON.parse(searchParams.additionalpackage));
+                //console.log(price[0].rate);
+                setPriceAdditionalService(price[0].rate);
+
+            } catch (error) {
+                console.error('Error fetching services:', error);
+            }
+        };
+
         const getService = async () => {
             try {
-                const selectedservice = await fetchOneService(parseInt(searchParams.serviceid));
+                const selectedservice = await fetchOneService(parseInt(theService.serviceid));
                 setSelectedService(selectedservice[0].title);
 
             } catch (error) {
@@ -66,6 +119,7 @@ const Page = ({ searchParams }: {
         }
         getService();
         getSelectedSchedules();
+        getPriceAdditional();
 
     }, []);
 
@@ -121,7 +175,8 @@ const Page = ({ searchParams }: {
                                     pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
                                     query: {
                                         schedules: JSON.stringify(listofschedules),
-                                        serviceid: searchParams.serviceid,
+                                        service: searchParams.service,
+                                        serviceType:searchParams.serviceType,
                                         maincustomerfirstname: searchParams.maincustomerfirstname,
                                         maincustomermiddlename: searchParams.maincustomermiddlename,
                                         maincustomerlastname: searchParams.maincustomerlastname,
@@ -132,7 +187,9 @@ const Page = ({ searchParams }: {
                                         additionalrequests: searchParams.additionalrequests,
                                         additionalCustomersfirstnames: searchParams.additionalCustomersfirstnames,
                                         additionalCustomersmiddlenames: searchParams.additionalCustomersmiddlenames,
-                                        additionalCustomerslastnames: searchParams.additionalCustomerslastnames
+                                        additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
+                                        hours: searchParams.hours, 
+                                        additionalpackage: searchParams.additionalpackage
                                     }
                                 }}>
                                 <button
@@ -142,12 +199,22 @@ const Page = ({ searchParams }: {
 
                         <div className='flex flex-col ml-20 border-2 border-indigo-800 rounded-lg p-4 h-fit'>
                             <span className='text-black font-bold mb-2 text-3xl'> Reservation Details: </span>
-                            <span className='text-black font-bold mb-5 text-md'> Package Selected: {selectedService}  </span>
+                            <span className='text-black mb-0 text-lg'> <span className='font-bold'> Package Selected: </span> {selectedService}   - Price {priceMainService} pesos </span>
+                        
+                            {JSON.parse(searchParams.additionalpackage).length === 0 ? (
+                                <div>
+                                    <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> NONE SELECTED </span>
+                                </div>
+                            ):(<div> 
+                                <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> {JSON.parse(searchParams.additionalpackage)} - Price: {priceAdditionalService} pesos </span>
+                                </div>)}
+                            
+
                             <span className='text-black font-bold mb-2 text-md'> Appointment schedules: </span>
                             <div className='flex flex-col'>
                                 {listofschedules.map((schedule: any) => (
                                     <span key={schedule.scheduleid}
-                                        className='text-black font-bold mb-5 text-md'> Date: {formatDate(schedule.date)}
+                                        className='text-black mb-5 text-md'> Date: {formatDate(schedule.date)}
                                         <div>
                                             Time: {schedule.starttime} - {schedule.endtime}
                                         </div>

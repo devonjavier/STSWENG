@@ -5,7 +5,8 @@ import GenerateDivs from '@/app/components/GenerateDivs';
 
 const Page = ({ searchParams }: {
     searchParams: {
-        serviceid: string,
+        service: string,
+        serviceType:string,
         maincustomerfirstname: string,
         maincustomermiddlename: string,
         maincustomerlastname: string,
@@ -21,6 +22,8 @@ const Page = ({ searchParams }: {
     useEffect(() => {
         console.log(searchParams.hours);
         console.log(searchParams.additionalpackage);
+        console.log(searchParams.service);
+        console.log(searchParams.serviceType);
     });
 
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
@@ -58,7 +61,8 @@ const Page = ({ searchParams }: {
                                 href={{
                                     pathname: "/Services/Details/Extradetails/Datetime",
                                     query: {
-                                        serviceid: searchParams.serviceid,
+                                        service: searchParams.service,
+                                        serviceType:searchParams.serviceType,
                                         maincustomerfirstname: searchParams.maincustomerfirstname,
                                         maincustomermiddlename: searchParams.maincustomermiddlename,
                                         maincustomerlastname: searchParams.maincustomerlastname,
@@ -70,7 +74,8 @@ const Page = ({ searchParams }: {
                                         additionalCustomersfirstnames: JSON.stringify(additionalCustomersFirstname),
                                         additionalCustomersmiddlenames: JSON.stringify(additionalCustomersMiddlename),
                                         additionalCustomerslastnames: JSON.stringify(additionalCustomersLastname),
-                                        hours: searchParams.hours, additionalpackage: searchParams.additionalpackage
+                                        hours: searchParams.hours, 
+                                        additionalpackage: searchParams.additionalpackage
                                     }
                                 }}>
                                 <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Date & Time </button> </Link>
