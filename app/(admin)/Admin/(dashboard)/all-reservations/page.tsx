@@ -23,8 +23,7 @@ const Page: React.FC = () => {
 
       try{
         const data = await fetchAppointments();
-
-        console.log('THERE', data);
+        console.log("RESERVATIONS:", data)
 
         setReservations(data);
       } catch(error) {

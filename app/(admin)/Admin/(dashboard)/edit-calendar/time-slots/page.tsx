@@ -117,15 +117,6 @@ const Page = () => {
           <div key={date} className="p-2 border rounded shadow max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
             <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
             {timeSlotsData[date].map((slot, index) => (
-              // <div
-              //   key={index}
-              //   className={`cursor-pointer p-2 mb-1 border rounded-3xl pl-5 text-white text-bold ${selectedSlots[date][index] ? 'bg-rose-700' : 'bg-green-600'} 
-              //   ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : ''}`}
-              //   onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
-              // >
-              //   {slot.time}
-              // </div>
-
               <div
               key={index}
               className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
