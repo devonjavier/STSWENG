@@ -77,9 +77,9 @@ const Page = ({ searchParams }: {
         // get the price of the additional package
         const getPriceAdditional= async () => {
             try {
-                const price = await fetchOneAdditionalServiceWithTitle(JSON.parse(searchParams.additionalpackage));
-                //console.log(price[0].rate);
-                setPriceAdditionalService(price[0].rate);
+                const additionalserviceid = await fetchOneAdditionalServiceWithTitle(JSON.parse(searchParams.additionalpackage));
+                if (!(additionalserviceid === 0))
+                    setPriceAdditionalService(additionalserviceid[0].rate);
 
             } catch (error) {
                 console.error('Error fetching services:', error);

@@ -19,10 +19,7 @@ const Page = ({ searchParams }: {
     }
 }) => {
     useEffect(() => {
-        console.log(searchParams.hours);
-        console.log(searchParams.additionalpackage);
-        console.log(searchParams.service);
-        console.log(searchParams.serviceType);
+        console.log(JSON.parse(searchParams.additionalpackage));
     });
 
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);

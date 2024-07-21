@@ -179,6 +179,10 @@ export async function fetchCalendarData(selectedDate : any){
 export async function fetchOneAdditionalServiceWithTitle(title:string) {
     
     const supabase = createClient();
+
+    if (title === "")
+        return 0
+
     const { data : additionalservice } = await supabase
     .from('Service')
     .select('serviceid')
@@ -488,45 +492,63 @@ export async function addCustomer(
     // get the last number in the schedule
 }
 
+export async function fetchtrackingnumber(){
+    const supabase = createClient();
+
+    const { data: appointment } = await supabase.from('Appointment').select().order('trackingnumber', {ascending:false});
+
+    if (!(appointment.length === 0))
+        return appointment[0].trackingnumber + 1
+    else
+        return 10000
+
+}
 export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
-    //status
     trackingnumber:number,
+    //status
     additionalrequest:string,
     additionalpackage:string
 ){
     const supabase = createClient();
 
-    const { data : additionalservice } = await supabase
-    .from('Service')
-    .select('serviceid')
-    .eq('title', additionalpackage);
+    let additionalpack; // store here the service if for the additional package
 
+
+    if (additionalpackage === "") // if there is no additional package
+        additionalpack = null
+    else{
+        const { data : additionalservice } = await supabase
+        .from('Service')
+        .select('serviceid')
+        .eq('title', additionalpackage);
+
+        additionalpack = additionalservice[0].serviceid
+    }
+    
     // getting the largest id number from the table
-    let largestidnumber;
-    
-    const { data: appointment } = await supabase.from('Appointment').select('appointmentid').order('appointmentid', {ascending:false});
-    const appointmentArr = Object.keys(appointment);
-    
-    const targetAppointment = appointment[appointmentArr[0]] // just filter out the first one
+    let largestidnumber = 6000;
 
-    Object.values(targetAppointment).forEach((key)=>{
-        largestidnumber = key
-    })
-
+    const { data: appointment } = await supabase.from('Appointment').select().order('appointmentid', {ascending:false});
+    
+    if (!(appointment.length === 0))
+    {
+        largestidnumber = appointment[0].appointmentid// just filter out the first one
+    }
+        
     largestidnumber = largestidnumber + 1;
-    console.log(additionalservice);
+    console.log("largest" + largestidnumber)
 
     const { error } = await supabase.from('Appointment').insert({
         appointmentid: largestidnumber,
-        serviceid:parseInt(serviceid),
+        serviceid: parseInt(serviceid),
         isparkingspotneeded:isparkingspotneeded,
         status:"Pending",
         trackingnumber: trackingnumber,
         discount:15.0,
         additionalrequest:additionalrequest,
-        additionalserviceid:additionalservice[0].serviceid
+        additionalserviceid:additionalpack
     }) 
     
     if(error)

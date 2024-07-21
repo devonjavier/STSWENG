@@ -32,10 +32,13 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
 
   const isDateAvailable = (date: Date) => {
     for(const schedule of schedules){
+      console.log(schedule.date);
         if (new Date(schedule.date).toDateString() === date.toDateString())
         {
+          console.log("hi" + schedule.status);
           if(schedule.status === "Available")
           {
+            
             return false
           }
         }  

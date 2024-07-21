@@ -3,7 +3,7 @@
 
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { fetchSchedule, addPeople, addOneAppointment, addCustomer, updateSchedule, fetchOneAdditionalServiceWithTitle} from '@/utils/supabase/data'
+import { addOneAppointment, addCustomer, updateSchedule, fetchOneAdditionalServiceWithTitle, fetchtrackingnumber} from '@/utils/supabase/data'
 import Link from "next/link"
 import { tracingChannel } from "diagnostics_channel"
 
@@ -32,17 +32,17 @@ const Page = ({searchParams}:{
     }
 }) => {
     const theService = JSON.parse(searchParams.service);
+    const [trackingNumber, setTrackingNumber] = useState(10000);
 
-    const randomNumber = Math.random() * 9999;
-
-    const [trackingNumber, setTrackingNumber] = useState(Math.round(randomNumber));
-    //const [theAppointentid, setTheAppointentid] = useState();
     let appointentid;
     const [isProcessed, setIsProcessed] = useState(false);
 
     if(!isProcessed){
         const addAppointment = async() =>{
             try {
+                const gettrackingnumber = await fetchtrackingnumber();
+                setTrackingNumber(gettrackingnumber);
+
                 let dotheyneedparking: boolean;
                 
                 if(searchParams.needsparking == 'true') 
@@ -53,13 +53,12 @@ const Page = ({searchParams}:{
                 const addtheAppointment = await addOneAppointment(
                     theService.serviceid,
                     dotheyneedparking,
-                    trackingNumber,
+                    gettrackingnumber,
                     searchParams.additionalrequests,
                     JSON.parse(searchParams.additionalpackage)
                 );
 
                 appointentid = addtheAppointment;
-                console.log(addtheAppointment);
 
                 let updating = []
                 let count = 0
@@ -75,18 +74,6 @@ const Page = ({searchParams}:{
                     count = count + 1;
                 }
 
-
-                console.log(appointentid)
-
-                } catch (error) {
-                console.error('Error fetching services:', error);
-        }
-        }
-
-        const addPerson = async() =>{
-            try {
-                // insert all customers to people
-                // add customers
                 const addMainCustomer = await addCustomer(
                     searchParams.maincustomerfirstname,
                     searchParams.maincustomermiddlename,
@@ -95,8 +82,6 @@ const Page = ({searchParams}:{
                     searchParams.emailaddress,
                     true
                 );
-
-                console.log(addMainCustomer);
 
                 let fnames: string[] = []
                 let mnames: string[] = []
@@ -127,18 +112,15 @@ const Page = ({searchParams}:{
                         false
                     );
                 }
+
                 } catch (error) {
                 console.error('Error fetching services:', error);
-                } 
+        }
         }
 
-        //console.log(appointentid);
         console.log(trackingNumber);
-        // add the appointment to Appointment
+
         addAppointment(); 
-        
-        // add all customers to People
-        addPerson();
         setIsProcessed(true);
 
     }
