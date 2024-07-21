@@ -3,8 +3,8 @@ import React, { useCallback, useState } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
 import { useEffect } from 'react';
 import { fetchCalendarData } from '@/utils/supabase/data';
-import { pending_appointment } from '@/utils/supabase/interfaces'
-import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
+import { pending_appointment } from '@/utils/supabase/interfaces';
+import { acceptAppointment, rejectAppointment } from '@/app/lib/actions';
 import '../scrollbarStyle.css';
 
 const Page = () => {
@@ -12,7 +12,7 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [appointments, setAppointments] = useState<pending_appointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] = useState<pending_appointment | null>(null);
-  const [proofOfPayment, setProofOfPayment] = useState<File | null>(null);
+  const [proofOfPayment, setProofOfPayment] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const formatDate = (date: Date) => {
@@ -25,15 +25,15 @@ const Page = () => {
         if (selectedDate) {
           const data = await fetchCalendarData(selectedDate);
           setAppointments(data);
-          console.log("OVER HERE!!!!!!!!", data)
+          console.log("OVER HERE!!!!!!!!", data);
           setSelectedAppointment(null);
         }
       } catch (error) { 
         console.error(error);
       }
-    }
+    };
     getData();
-  }, [selectedDate])
+  }, [selectedDate]);
 
   useEffect(() => {
     console.log("Selected appointment changed:", selectedAppointment);
@@ -59,10 +59,8 @@ const Page = () => {
     }
   }, [selectedAppointment]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setProofOfPayment(event.target.files[0]);
-    }
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setProofOfPayment(event.target.checked);
   };
 
   const getCombinedAppointments = () => {
@@ -176,12 +174,10 @@ const Page = () => {
               <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                 <p className="font-bold">Proof of Payment:</p>
                 <div className="py-2">
-                  <label className="custom-file-upload w-2/5 justify-center flex bg-white text-cusBlue font-bold px-4 py-2 rounded-xl
-                                    border border-gray-300 cursor-pointer">
-                    Upload a File
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                  <label className="flex items-center">
+                    <input type="checkbox" checked={proofOfPayment} onChange={handleCheckboxChange} className="mr-2" />
+                    Proof of Payment
                   </label>
-                  {proofOfPayment && <p className='text-cusBlue font-bold'>File selected: {proofOfPayment.name}</p>}
                 </div>
               </div>
             </div>
@@ -210,6 +206,6 @@ const Page = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Page;
