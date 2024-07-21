@@ -23,8 +23,7 @@ const Page: React.FC = () => {
 
       try{
         const data = await fetchAppointments();
-
-        console.log(typeof data);
+        console.log("RESERVATIONS:", data)
 
         setReservations(data);
       } catch(error) {
@@ -71,6 +70,8 @@ const Page: React.FC = () => {
             </thead>
             <tbody className="text-cusBlue font-medium">
             {reservations.map((reservation, index) => {
+
+              console.log("HERE", reservation);
               
               return(
                 <tr
@@ -81,7 +82,7 @@ const Page: React.FC = () => {
                 <td className="border border-transparent px-4 py-2">{reservation.date}</td>
                 <td className="border border-transparent px-4 py-2">{reservation.starttime}</td>
                 <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
-                <td className="border border-transparent px-4 py-2">{reservation.service}</td>
+                <td className="border border-transparent px-4 py-2">{reservation.title}</td>
                 <td className="border border-transparent px-4 py-2">{reservation.status}</td>
                 </tr>
               )

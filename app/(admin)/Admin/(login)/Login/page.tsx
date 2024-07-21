@@ -37,8 +37,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white pb-8">
         <div className="flex justify-center mb-6">
-            <div className="w-full md:w-64 h-auto md:h-48 overflow-hidden rounded-full">
-                <img src="/IndigoStudios.png" alt="Logo" className="object-cover object-center w-full h-full" />
+            <div className="w-full md:w-64 h-auto md:h-64  rounded-full">
+                <img src="/IndigoStudios.png" alt="Logo" className="object-contain object-center w-full h-full" />
             </div>
         </div>
         <div className="bg-white p-6 md:p-12 rounded-lg shadow-lg w-full max-w-lg">
