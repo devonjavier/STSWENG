@@ -13,8 +13,10 @@ import HearTheDifferences from '../components/Home/HearTheDifferences'
 export default async function Home() {
   return (
     <>
-    <div className='bg-white p-2 h-96 flex flex-col justify-end relative pb-10 mb-5 w-8/12 mx-auto'>
-      <IntroText />
+    <div className='bg-[url(../public/home1.png)] w-[1300px] h-[800px] p-2  flex flex-col relative pb-10 mb-5 mx-auto'> 
+      <div className='relative pt-96 pl-20'>
+        <IntroText />
+      </div>
     </div>
     <div className='flex justify-center mb-20'>
       <Images />
