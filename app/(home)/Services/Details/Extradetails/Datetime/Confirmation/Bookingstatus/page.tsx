@@ -122,6 +122,7 @@ const Page = ({searchParams}:{
 
         addAppointment(); 
         setIsProcessed(true);
+
     }
 
     function parkingChecker(needsparking:string){
