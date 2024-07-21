@@ -1,24 +1,23 @@
-'use client'
-import Link from 'next/link'
+'use client';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import GenerateDivs from '@/app/components/GenerateDivs';
 
 const Page = ({ searchParams }: {
     searchParams: {
         service: string,
-        serviceType:string,
+        serviceType: string,
         maincustomerfirstname: string,
         maincustomermiddlename: string,
         maincustomerlastname: string,
         phonenumber: string,
         emailaddress: string,
         needsparking: string,
-        additionalrequests: string
-        hours:number,
-        additionalpackage:string
+        additionalrequests: string,
+        hours: number,
+        additionalpackage: string
     }
 }) => {
-
     useEffect(() => {
         console.log(searchParams.hours);
         console.log(searchParams.additionalpackage);
@@ -26,10 +25,38 @@ const Page = ({ searchParams }: {
         console.log(searchParams.serviceType);
     });
 
-    const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
-    const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);// assume no addtional customer
-    const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);// assume no addtional customer
+    const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);
+    const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);
+    const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);
     const [countAdditionalCustomers, setcountAdditionalCustomers] = useState(0);
+    const [errors, setErrors] = useState<string[]>([]);
+    const [submitted, setSubmitted] = useState(false);
+
+    const validateAdditionalCustomerNames = () => {
+        let tempErrors: string[] = [];
+
+        for (let i = 0; i < countAdditionalCustomers; i++) {
+            if (!additionalCustomersFirstname[i] || !additionalCustomersFirstname[i].trim()) {
+                tempErrors[i] = tempErrors[i] || ""; // Ensure array entry exists
+                tempErrors[i] += "FirstNameRequired ";
+            }
+            if (!additionalCustomersLastname[i] || !additionalCustomersLastname[i].trim()) {
+                tempErrors[i] = tempErrors[i] || ""; // Ensure array entry exists
+                tempErrors[i] += "LastNameRequired ";
+            }
+        }
+
+        setErrors(tempErrors);
+        return tempErrors.length === 0;
+    };
+
+    const handleNextClick = (e) => {
+        setSubmitted(true);
+
+        if (!validateAdditionalCustomerNames()) {
+            e.preventDefault();
+        }
+    };
 
     return (
         <>
@@ -52,9 +79,13 @@ const Page = ({ searchParams }: {
                                     <span className='text-cusBlue font-bold text-lg mx-4'> {countAdditionalCustomers} </span>
                                     <button className='drop-shadow-2xl rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
                                 </div>
-                                <GenerateDivs counter={countAdditionalCustomers} setadditionalCustomersFirst={setadditionalCustomersFirstname}
+                                <GenerateDivs
+                                    counter={countAdditionalCustomers}
+                                    setadditionalCustomersFirst={setadditionalCustomersFirstname}
                                     setadditionalCustomersMiddle={setadditionalCustomersMiddlename}
                                     setadditionalCustomersLast={setadditionalCustomersLastname}
+                                    errors={errors}
+                                    submitted={submitted}
                                 />
                             </div>
                             <Link
@@ -62,7 +93,7 @@ const Page = ({ searchParams }: {
                                     pathname: "/Services/Details/Extradetails/Datetime",
                                     query: {
                                         service: searchParams.service,
-                                        serviceType:searchParams.serviceType,
+                                        serviceType: searchParams.serviceType,
                                         maincustomerfirstname: searchParams.maincustomerfirstname,
                                         maincustomermiddlename: searchParams.maincustomermiddlename,
                                         maincustomerlastname: searchParams.maincustomerlastname,
@@ -74,11 +105,12 @@ const Page = ({ searchParams }: {
                                         additionalCustomersfirstnames: JSON.stringify(additionalCustomersFirstname),
                                         additionalCustomersmiddlenames: JSON.stringify(additionalCustomersMiddlename),
                                         additionalCustomerslastnames: JSON.stringify(additionalCustomersLastname),
-                                        hours: searchParams.hours, 
+                                        hours: searchParams.hours,
                                         additionalpackage: searchParams.additionalpackage
                                     }
                                 }}>
-                                <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Proceed to Date & Time </button> </Link>
+                                <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={handleNextClick}> Proceed to Date & Time </button>
+                            </Link>
                         </div>
                     </div>
                     <div>
@@ -86,7 +118,7 @@ const Page = ({ searchParams }: {
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-export default Page
+export default Page;

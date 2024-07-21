@@ -8,7 +8,7 @@ import { fetchSchedules } from '@/utils/supabase/data';
 const Page = ({ searchParams }: {
     searchParams: {
         service: string,
-        serviceType:string,
+        serviceType: string,
         maincustomerfirstname: string,
         maincustomermiddlename: string,
         maincustomerlastname: string,
@@ -20,13 +20,13 @@ const Page = ({ searchParams }: {
         additionalCustomersfirstnames: string,
         additionalCustomersmiddlenames: string,
         additionalCustomerslastnames: string,
-        hours:number,
-        additionalpackage:string
+        hours: number,
+        additionalpackage: string
     }
 }) => {
     const [schedules, setSchedules] = useState<[]>([]);
-    const [selectedSchedules, setselectedSchedules] = useState<[]>([]);
-    const [ablebutton, setAbleButton] = useState(false);
+    const [selectedSchedules, setselectedSchedules] = useState<any[]>([]); // Changed type to `any[]`
+    const [ablebutton, setAbleButton] = useState(true); // Default to true since all fields need to be filled
     const [loading, setLoading] = useState(true);
 
     const getSchedule = async () => {
@@ -49,11 +49,11 @@ const Page = ({ searchParams }: {
 
     useEffect(() => {
         getSchedule();
-        if (selectedSchedules.length !== 0) {
-            setAbleButton(false);
-        } else {
-            setAbleButton(true);
-        }
+    }, []);
+
+    useEffect(() => {
+        const allSelected = selectedSchedules.every(schedule => schedule.selectedtime1 && schedule.selectedtime2);
+        setAbleButton(!allSelected);
     }, [selectedSchedules]);
 
     return (
@@ -90,11 +90,11 @@ const Page = ({ searchParams }: {
                                     additionalCustomersmiddlenames: searchParams.additionalCustomersmiddlenames,
                                     additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
                                     schedules: JSON.stringify(selectedSchedules),
-                                    hours: searchParams.hours, 
+                                    hours: searchParams.hours,
                                     additionalpackage: searchParams.additionalpackage
                                 }
                             }}>
-                                <button disabled={ablebutton} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">
+                                <button disabled={ablebutton} className={`rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold ${ablebutton ? 'bg-gray-400' : 'bg-cusBlue'}`}>
                                     Proceed to Confirmation
                                 </button>
                             </Link>
