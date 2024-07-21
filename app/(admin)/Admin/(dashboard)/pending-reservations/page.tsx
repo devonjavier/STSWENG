@@ -25,7 +25,6 @@ const Page = () => {
         if (selectedDate) {
           const data = await fetchCalendarData(selectedDate);
           setAppointments(data);
-          console.log("OVER HERE!!!!!!!!", data)
           setSelectedAppointment(null);
         }
       } catch (error) { 
