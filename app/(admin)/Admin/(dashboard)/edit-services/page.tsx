@@ -4,7 +4,7 @@ import '../scrollbarStyle.css';
 import { useEffect, useCallback } from 'react';
 import { fetchEditServices } from '@/utils/supabase/data';
 import { Service } from '@/utils/supabase/interfaces';
-import { editServices } from '@/app/lib/actions';
+import { checkCookie, editServices } from '@/app/lib/actions';
 
 
 export default function EditServiceDetails() {
@@ -13,13 +13,20 @@ export default function EditServiceDetails() {
 
   useEffect(() => {
     const getServices = async () => {
-      try {
-        const data = await fetchEditServices();
-        console.log(data);
-        setServices(data);
-        setOriginalServices(data);
-      } catch (error) {
-        console.error('Error fetching services:', error);
+
+      const authenticated = await checkCookie();
+
+      if(!authenticated){
+        window.location.href = '/'
+      } else {
+        try {
+          const data = await fetchEditServices();
+          console.log(data);
+          setServices(data);
+          setOriginalServices(data);
+        } catch (error) {
+          console.error('Error fetching services:', error);
+        }
       }
     };
 

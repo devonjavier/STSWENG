@@ -3,6 +3,7 @@ import React from 'react';
 import { fetchAppointments } from '@/utils/supabase/data';
 import { useState, useEffect } from 'react';
 import { reservation } from '@/utils/supabase/interfaces'
+import { checkCookie } from '@/app/lib/actions';
 import '../scrollbarStyle.css';
 // import AdminLayout from '../../components/AdminLayout';
 
@@ -22,10 +23,20 @@ const Page: React.FC = () => {
     async function getReservations() {
 
       try{
-        const data = await fetchAppointments();
-        console.log("RESERVATIONS:", data)
 
-        setReservations(data);
+        const authenticated = await checkCookie();
+        console.log('Authentication status:', authenticated);
+
+        if(!authenticated){
+          console.log('pasokkkk');
+          window.location.href = '/';
+        } else {
+          const data = await fetchAppointments();
+          console.log("RESERVATIONS:", data)
+  
+          setReservations(data);
+        }
+
       } catch(error) {
         console.error('Error fetching services:', error);
       } finally {

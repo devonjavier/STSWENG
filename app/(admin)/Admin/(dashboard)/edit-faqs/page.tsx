@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import '../scrollbarStyle.css';
 import { useEffect } from 'react';
 import { fetchFAQs } from '@/utils/supabase/data';
+import { checkCookie } from '@/app/lib/actions';
 interface FAQ {
   question: string;
   answer: string;
@@ -22,15 +23,21 @@ export default function EditFAQs() {
 
   useEffect(() => {
     const getFAQs = async () => {
-      try {
-        const data = await fetchFAQs();
-        setFaqs(data);
 
-        console.log(data);
-      } catch(error) {
-        console.error('Error fetching services:', error);
+      const authenticated = await checkCookie();
+
+      if(!authenticated){
+        window.location.href = '/'
+      } else {
+        try {
+          const data = await fetchFAQs();
+          setFaqs(data);
+  
+          console.log(data);
+        } catch(error) {
+          console.error('Error fetching services:', error);
+        }
       }
-      
     }
 
     getFAQs();

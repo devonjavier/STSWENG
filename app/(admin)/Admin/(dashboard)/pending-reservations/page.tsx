@@ -4,7 +4,7 @@ import PendingCalendar from '@/app/components/PendingCalendar';
 import { useEffect } from 'react';
 import { fetchCalendarData } from '@/utils/supabase/data';
 import { pending_appointment } from '@/utils/supabase/interfaces'
-import { acceptAppointment, rejectAppointment } from '@/app/lib/actions'
+import { acceptAppointment, checkCookie, rejectAppointment } from '@/app/lib/actions'
 import '../scrollbarStyle.css';
 
 const Page = () => {
@@ -21,14 +21,21 @@ const Page = () => {
 
   useEffect(() => {
     const getData = async () => {
-      try {
-        if (selectedDate) {
-          const data = await fetchCalendarData(selectedDate);
-          setAppointments(data);
-          setSelectedAppointment(null);
+
+      const authenticated = await checkCookie();
+
+      if(!authenticated){
+        window.location.href = '/';
+      } else {
+        try {
+          if (selectedDate) {
+            const data = await fetchCalendarData(selectedDate);
+            setAppointments(data);
+            setSelectedAppointment(null);
+          }
+        } catch (error) { 
+          console.error(error);
         }
-      } catch (error) { 
-        console.error(error);
       }
     }
     getData();
