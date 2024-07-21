@@ -36,8 +36,9 @@ const Page = ({searchParams}:{
 
     let appointentid;
     const [isProcessed, setIsProcessed] = useState(false);
+    const isAlreadyRun = localStorage.getItem('isAppointmentProcessed');
 
-    if(!isProcessed){
+    if(!isProcessed && !isAlreadyRun){
         const addAppointment = async() =>{
             try {
                 const gettrackingnumber = await fetchtrackingnumber();
@@ -122,10 +123,10 @@ const Page = ({searchParams}:{
 
         addAppointment(); 
         setIsProcessed(true);
+        localStorage.setItem('isAppointmentProcessed', 'true');
 
     }
 
-    
     function parkingChecker(needsparking:string){
         if(needsparking == "true")
             return true;
