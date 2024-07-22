@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useCallback, useState, useEffect } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
 import { fetchCalendarData } from '@/utils/supabase/data';
@@ -13,6 +13,7 @@ const Page = () => {
   const [selectedAppointment, setSelectedAppointment] = useState<pending_appointment | null>(null);
   const [proofOfPayment, setProofOfPayment] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showConfirmReject, setShowConfirmReject] = useState(false);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -39,7 +40,9 @@ const Page = () => {
   }, [selectedDate]);
 
   useEffect(() => {
-    console.log("Selected appointment changed:", selectedAppointment);
+    if (selectedAppointment) {
+      setProofOfPayment(selectedAppointment.status === 'Appointed');
+    }
   }, [selectedAppointment]);
 
   const handleAccept = useCallback(() => {
@@ -54,13 +57,24 @@ const Page = () => {
 
   const handleReject = useCallback(() => {
     if (selectedAppointment) {
+      setShowConfirmReject(true);
+    }
+  }, [selectedAppointment]);
+
+  const confirmReject = useCallback(() => {
+    if (selectedAppointment) {
       rejectAppointment(selectedAppointment);
+      setShowConfirmReject(false);
       setShowPopup(true);
       setTimeout(() => {
         setShowPopup(false);
       }, 1500);
     }
   }, [selectedAppointment]);
+
+  const cancelReject = useCallback(() => {
+    setShowConfirmReject(false);
+  }, []);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProofOfPayment(event.target.checked);
@@ -102,7 +116,9 @@ const Page = () => {
                 <button
                   key={appointment.appointmentid}
                   className={`p-2 border border-gray-300 rounded-lg ${
-                    selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-blue-100' : 'bg-white'
+                    selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-cusBlue text-white' : 
+                    appointment.status === 'Pending' ? 'bg-yellow-400 text-black' : 
+                    appointment.status === 'Appointed' ? 'bg-green-700 text-black' : 'bg-white'
                   }`}
                   onClick={() => setSelectedAppointment(appointment)}
                 >
@@ -200,9 +216,31 @@ const Page = () => {
           </div>
         </div>
       )}
+
       {showPopup && (
         <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
           Calendar Updated Successfully!
+        </div>
+      )}
+
+      {showConfirmReject && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+          <h3 className="text-lg font-bold text-black mb-4">Confirm Rejection</h3>
+          <p className="text-black">Are you sure you want to reject this appointment?</p>
+          <div className="flex justify-end mt-4">
+            <button 
+              className="bg-rose-700 text-white px-4 py-2 rounded mr-2"
+              onClick={confirmReject}
+            >
+              Yes
+            </button>
+            <button 
+              className="bg-gray-400 text-white px-4 py-2 rounded"
+              onClick={cancelReject}
+            >
+              No
+            </button>
+          </div>
         </div>
       )}
 

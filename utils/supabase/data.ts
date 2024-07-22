@@ -97,21 +97,25 @@ export async function fetchCalendarData(selectedDate: any) {
   const adjustedDate = new Date(selectedDate.getTime() - (offset * 60 * 1000));
   const formattedDate = adjustedDate.toISOString().split('T')[0];
 
+  // schedules given date
   const { data: schedules, error: schedulesError } = await supabase
     .from('Schedule')
-    .select('appointmentid, starttime, endtime')
+    .select('appointmentid, starttime, endtime, status') // Include status in the fetch
     .eq('date', formattedDate);
-
-  console.log(formattedDate);
-  console.log(schedules);
 
   if (schedulesError) {
     console.error(schedulesError);
     return [];
   }
 
+  // filter: pending or appointed only
+  const filteredSchedules = schedules.filter(schedule => 
+    schedule.status === 'Pending' || schedule.status === 'Appointed'
+  );
+
+  // fetch appointment details for each filtered schedule
   const calendarData = await Promise.all(
-    schedules.map(async (schedule) => {
+    filteredSchedules.map(async (schedule) => {
       const { data: customerData, error: customerError } = await supabase
         .from('Customers')
         .select('*')
@@ -227,15 +231,16 @@ export async function fetchCalendarData(selectedDate: any) {
         endtime: schedule.endtime,
         appointmentid: schedule.appointmentid,
         additionalreq: appointment.additionalrequest,
-        additionalPersonNames: additionalCustomerNames.filter(name => name !== null)
+        additionalPersonNames: additionalCustomerNames.filter(name => name !== null),
+        status: schedule.status 
       };
     })
   );
 
-  const filteredCalendarData = calendarData.filter(item => item !== null);
-  console.log('Calendar Data:', filteredCalendarData);
-  return filteredCalendarData;
+  return calendarData.filter(data => data !== null); // remove null
 }
+
+
 
 
 

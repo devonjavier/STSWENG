@@ -234,42 +234,63 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
   }
 }
 
-export async function acceptAppointment(appointmentData : pending_appointment){
+export async function acceptAppointment(appointmentData) {
   const supabase = createClient();
 
   console.log(appointmentData);
 
-  const { error } = await supabase
-  .from('Schedule')
-  .update({status : 'Appointed'})
-  .match({
-    date : appointmentData.date, 
-    // starttime : appointmentData.starttime, 
-    appointmentid : appointmentData.appointmentid
-  });
+  // schedule
+  const { error: scheduleError } = await supabase
+    .from('Schedule')
+    .update({ status: 'Appointed' })
+    .match({
+      date: appointmentData.date,
+      appointmentid: appointmentData.appointmentid
+    });
 
-  if(error){
-    console.error(error);
+  if (scheduleError) {
+    console.error(scheduleError);
   }
 
+  // appointment
+  const { error: appointmentError } = await supabase
+    .from('Appointment')
+    .update({ status: 'Accepted' })
+    .match({ appointmentid: appointmentData.appointmentid });
+
+  if (appointmentError) {
+    console.error(appointmentError);
+  }
 }
 
-export async function rejectAppointment(appointmentData : pending_appointment){
+
+export async function rejectAppointment(appointmentData) {
   const supabase = createClient();
 
   console.log(appointmentData);
 
-  const { error } = await supabase
-  .from('Schedule')
-  .update({status : 'Available'})
-  .match({
-    date : appointmentData.date, 
-    starttime : appointmentData.starttime, 
-    appointmentid : appointmentData.appointmentid
-  });
+  // schedule table
+  const { error: scheduleError } = await supabase
+    .from('Schedule')
+    .update({ status: 'Available' })
+    .match({
+      date: appointmentData.date,
+      starttime: appointmentData.starttime,
+      appointmentid: appointmentData.appointmentid
+    });
 
-  if(error){
-    console.error(error);
+  if (scheduleError) {
+    console.error(scheduleError);
+  }
+
+  // appointment table
+  const { error: appointmentError } = await supabase
+    .from('Appointment')
+    .update({ status: 'Rejected' })
+    .match({ appointmentid: appointmentData.appointmentid });
+
+  if (appointmentError) {
+    console.error(appointmentError);
   }
 }
 

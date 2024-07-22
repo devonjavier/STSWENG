@@ -108,7 +108,7 @@ const Page: React.FC = () => {
             <option value="All">All</option>
             <option value="Pending">Pending</option>
             <option value="Done">Done</option>
-            <option value="Cancelled">Rejected</option>
+            <option value="Rejected">Rejected</option>
             <option value="Cancelled">Cancelled</option>
           </select>
           <select
