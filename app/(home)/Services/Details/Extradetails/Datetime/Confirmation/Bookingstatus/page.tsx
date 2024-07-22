@@ -150,7 +150,13 @@ const Page = ({searchParams}:{
                         false
                     );
                 }
-
+                fetch('/api/sendEmail', {
+                    method: 'POST',
+                                     headers: {
+                                         'Content-Type': 'application/json'
+                                     },
+                                     body: JSON.stringify({ searchParams, trackingNumber: gettrackingnumber })});
+                                     
                 localStorage.setItem('lastAppointmentTime', currentTime.toString());
 
                 } catch (error) {
