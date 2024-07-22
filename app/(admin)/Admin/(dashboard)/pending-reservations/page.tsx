@@ -1,7 +1,6 @@
 'use client'
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
-import { useEffect } from 'react';
 import { fetchCalendarData } from '@/utils/supabase/data';
 import { pending_appointment } from '@/utils/supabase/interfaces';
 import { acceptAppointment, checkCookie, rejectAppointment } from '@/app/lib/actions';
@@ -21,10 +20,8 @@ const Page = () => {
 
   useEffect(() => {
     const getData = async () => {
-
       const authenticated = await checkCookie();
-
-      if(!authenticated){
+      if (!authenticated) {
         window.location.href = '/';
       } else {
         try {
@@ -33,7 +30,7 @@ const Page = () => {
             setAppointments(data);
             setSelectedAppointment(null);
           }
-        } catch (error) { 
+        } catch (error) {
           console.error(error);
         }
       }
@@ -47,21 +44,21 @@ const Page = () => {
 
   const handleAccept = useCallback(() => {
     if (selectedAppointment) {
-      acceptAppointment(selectedAppointment);     // changes Schedule table status
+      acceptAppointment(selectedAppointment);
       setShowPopup(true);
       setTimeout(() => {
         setShowPopup(false);
-      }, 1500); 
+      }, 1500);
     }
   }, [selectedAppointment]);
 
   const handleReject = useCallback(() => {
     if (selectedAppointment) {
-      rejectAppointment(selectedAppointment);     // changes Schedule table status
+      rejectAppointment(selectedAppointment);
       setShowPopup(true);
       setTimeout(() => {
         setShowPopup(false);
-      }, 1500); 
+      }, 1500);
     }
   }, [selectedAppointment]);
 
@@ -72,30 +69,23 @@ const Page = () => {
   const getCombinedAppointments = () => {
     const combined = appointments.reduce((acc, curr) => {
       const { appointmentid, starttime, endtime } = curr;
-  
       if (!acc[appointmentid]) {
         acc[appointmentid] = { ...curr };
       } else {
         acc[appointmentid].starttime = acc[appointmentid].starttime < starttime ? acc[appointmentid].starttime : starttime;
         acc[appointmentid].endtime = acc[appointmentid].endtime > endtime ? acc[appointmentid].endtime : endtime;
       }
-  
       return acc;
     }, {} as { [key: string]: pending_appointment });
-  
 
-    //sorts it
     const sortedAppointments = Object.values(combined).sort((a, b) => {
-
       const startTimeA = new Date(`2000-01-01T${a.starttime}`);
       const startTimeB = new Date(`2000-01-01T${b.starttime}`);
-  
       return startTimeA.getTime() - startTimeB.getTime();
     });
-  
+
     return sortedAppointments;
   };
-  
 
   const combinedAppointments = getCombinedAppointments();
 
@@ -132,8 +122,6 @@ const Page = () => {
               <p className="text-xs text-red-500 mt-2">* indicates a required field</p>
             </h2>
 
-            
-
             <div className="flex justify-between mb-4">
               <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                 <p className="font-bold">Main customer:</p>
@@ -149,16 +137,20 @@ const Page = () => {
               <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
                 <p className="font-bold">Additional persons involved:</p>
                 <div className="pl-4">
-                  <p>Person 1: Name</p>
-                  <p>Person 2: Name</p>
-                  <p>Person 3: Name</p>
+                  {selectedAppointment.additionalPersonNames.length > 0 ? (
+                    selectedAppointment.additionalPersonNames.map((name, index) => (
+                      <p key={index}>Person {index + 1}: {name}</p>
+                    ))
+                  ) : (
+                    <p>No additional persons</p>
+                  )}
                 </div>
               </div>
             </div>
 
             <div className="flex justify-between mb-4">
               <div className="details p-2 border border-cusBlue rounded w-full">
-              <p className="font-bold">Reservation Details:</p>
+                <p className="font-bold">Reservation Details:</p>
                 <div className="pl-4 flex justify-between">
                   <div className="w-1/2">
                     <p>Package Selected: {selectedAppointment.title}</p>
@@ -166,7 +158,6 @@ const Page = () => {
                     <p>Start Time: {selectedAppointment.starttime}</p>
                     <p>End Time: {selectedAppointment.endtime}</p>
                   </div>
-
                   <div className="flex items-start text-center w-1/2">
                     <p>Additional request/s: {selectedAppointment.additionalreq}</p>
                   </div>

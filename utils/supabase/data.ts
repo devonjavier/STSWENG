@@ -95,7 +95,7 @@ export async function fetchCalendarData(selectedDate: any) {
   const supabase = createClient();
   const offset = selectedDate.getTimezoneOffset();
   const adjustedDate = new Date(selectedDate.getTime() - (offset * 60 * 1000));
-  const formattedDate = adjustedDate.toISOString().split('T')[0]; 
+  const formattedDate = adjustedDate.toISOString().split('T')[0];
 
   const { data: schedules, error: schedulesError } = await supabase
     .from('Schedule')
@@ -115,7 +115,8 @@ export async function fetchCalendarData(selectedDate: any) {
       const { data: customerData, error: customerError } = await supabase
         .from('Customers')
         .select('*')
-        .eq('appointmentid', schedule.appointmentid);
+        .eq('appointmentid', schedule.appointmentid)
+        .eq('ismain', true);
 
       if (customerError) {
         console.error('Error fetching customer data:', customerError);
@@ -125,7 +126,7 @@ export async function fetchCalendarData(selectedDate: any) {
       const customer = customerData.length > 0 ? customerData[0] : null;
 
       if (!customer) {
-        console.error('No customer found for appointment:', schedule.appointmentid);
+        console.error('No main customer found for appointment:', schedule.appointmentid);
         return null;
       }
 
@@ -182,6 +183,39 @@ export async function fetchCalendarData(selectedDate: any) {
         return null;
       }
 
+      // Fetch additional customers
+      const { data: additionalCustomers, error: additionalCustomersError } = await supabase
+        .from('Customers')
+        .select('personid')
+        .eq('appointmentid', schedule.appointmentid)
+        .eq('ismain', false);
+
+      if (additionalCustomersError) {
+        console.error('Error fetching additional customers:', additionalCustomersError);
+        return null;
+      }
+
+      const additionalCustomerNames = await Promise.all(
+        additionalCustomers.map(async (additionalCustomer) => {
+          const { data: additionalPerson, error: additionalPersonError } = await supabase
+            .from('Person')
+            .select('firstname, middlename, lastname')
+            .eq('personid', additionalCustomer.personid);
+
+          if (additionalPersonError) {
+            console.error('Error fetching additional person data:', additionalPersonError);
+            return null;
+          }
+
+          if (additionalPerson.length > 0) {
+            const person = additionalPerson[0];
+            return `${person.firstname} ${person.middlename ? person.middlename + ' ' : ''}${person.lastname}`;
+          } else {
+            return null;
+          }
+        })
+      );
+
       return {
         name: `${person.firstname} ${person.middlename ? person.middlename + ' ' : ''}${person.lastname}`,
         contactnumber: person.contactnumber,
@@ -192,7 +226,8 @@ export async function fetchCalendarData(selectedDate: any) {
         starttime: schedule.starttime,
         endtime: schedule.endtime,
         appointmentid: schedule.appointmentid,
-        additionalreq: appointment.additionalrequest
+        additionalreq: appointment.additionalrequest,
+        additionalPersonNames: additionalCustomerNames.filter(name => name !== null)
       };
     })
   );
@@ -201,6 +236,7 @@ export async function fetchCalendarData(selectedDate: any) {
   console.log('Calendar Data:', filteredCalendarData);
   return filteredCalendarData;
 }
+
 
 
 
