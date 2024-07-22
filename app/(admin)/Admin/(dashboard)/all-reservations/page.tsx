@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAppointments, fetchServices } from '@/utils/supabase/data';
 import { reservation } from '@/utils/supabase/interfaces';
+import { checkCookie } from '@/app/lib/actions';
 import '../scrollbarStyle.css';
 
 const Page: React.FC = () => {
@@ -15,9 +16,19 @@ const Page: React.FC = () => {
   useEffect(() => {
     async function getReservations() {
       try {
-        const data = await fetchAppointments();
-        console.log("RESERVATIONS:", data);
-        setReservations(data);
+
+        const authenticated = await checkCookie();
+        console.log('Authentication status:', authenticated);
+
+        if(!authenticated){
+          console.log('pasokkkk');
+          window.location.href = '/';
+        } else {
+          const data = await fetchAppointments();
+          console.log("RESERVATIONS:", data);  
+          setReservations(data);
+        }
+
       } catch (error) {
         console.error('Error fetching reservations:', error);
       } finally {

@@ -329,6 +329,15 @@ export async function editServices(services: Service[]) {
   }
 }
 
+export async function checkCookie(){
+  const cookieStore = cookies();
+
+  const hasCookie = await cookieStore.has('token')
+  console.log(hasCookie);
+
+  return hasCookie;
+}
+
 // export async function handleSignup(formData : FormData){
 //   const supabase = createClient();
 

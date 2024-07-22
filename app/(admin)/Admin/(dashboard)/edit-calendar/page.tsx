@@ -1,6 +1,8 @@
 'use client'
 import Link from 'next/link'
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { checkCookie } from '@/app/lib/actions';
 import Calendar from '@/app/components/CustomCalendar';
 
 const Page = ({ searchParams }: { searchParams: { id: string } }) => {
@@ -8,6 +10,19 @@ const Page = ({ searchParams }: { searchParams: { id: string } }) => {
     const datesString = JSON.stringify(selectedDates.map(obj => ({
         date: formatDateToLocal(obj.date)
     })));
+
+    useEffect(() => {
+        async function checkAuth() {
+            const authenticated = await checkCookie();
+
+            if(!authenticated){
+                window.location.href = '/';
+            }
+
+        }
+
+        checkAuth();
+    }, [])
 
     function checker(dates: Date) {
         console.log(dates);
