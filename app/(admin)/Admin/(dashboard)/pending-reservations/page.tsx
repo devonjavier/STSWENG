@@ -171,9 +171,9 @@ const Page = () => {
           <div className="ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 h-shadow-lg bg-white text-black flex flex-col overflow-h-auto">
             <h2 className="text-xl font-bold mb-4 text-left">Appointments on {formatDate(selectedDate)}</h2>
             <div className="flex flex-col gap-2">
-              {combinedAppointments.map((appointment) => (
+              {combinedAppointments.map((appointment, index) => (
                 <button
-                  key={appointment.appointmentid}
+                  key={`${appointment.appointmentid}-${index}`} // Ensure keys are unique
                   className={`p-2 border border-gray-300 rounded-lg ${
                     selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-cusBlue text-white font-bold' : 
                     appointment.status === 'Pending' ? 'bg-yellow-400 text-black' : 
@@ -229,7 +229,7 @@ const Page = () => {
                 <div className="pl-4 flex justify-between">
                   <div className="w-1/2">
                     <p>Package Selected: {selectedAppointment.title}</p>
-                    <p>Date/s: {formatDate(selectedDate)}</p>
+                    <p>Date/s: {selectedDate ? formatDate(selectedDate) : 'No date selected'}</p>
                     <p>Start Time: {selectedAppointment.starttime}</p>
                     <p>End Time: {selectedAppointment.endtime}</p>
                   </div>

@@ -28,6 +28,7 @@ export interface reservation {
   reservee: string;
   service: string;
   status: string;
+  title: string;
 }
 
 export interface pending_appointment {
