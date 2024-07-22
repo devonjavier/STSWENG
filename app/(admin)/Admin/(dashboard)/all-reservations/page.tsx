@@ -50,9 +50,33 @@ const Page: React.FC = () => {
     getServices();
   }, []);
 
-  const sortedReservations = reservations.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const getCombinedAppointments = () => {
+    const combined = reservations.reduce((acc, curr) => {
+      const { appointmentid, starttime, endtime } = curr;
 
-  const filteredReservations = sortedReservations.filter((reservation) => {
+      if (!acc[appointmentid]) {
+        acc[appointmentid] = { ...curr };
+      } else {
+        acc[appointmentid].starttime = acc[appointmentid].starttime < starttime ? acc[appointmentid].starttime : starttime;
+        acc[appointmentid].endtime = acc[appointmentid].endtime > endtime ? acc[appointmentid].endtime : endtime;
+      }
+
+      return acc;
+    }, {} as { [key: string]: reservation });
+
+    const sortedAppointments = Object.values(combined).sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      return dateA.getTime() - dateB.getTime();
+    });
+
+    return sortedAppointments;
+  };
+
+  const combinedAppointments = getCombinedAppointments();
+
+  const filteredReservations = combinedAppointments.filter((reservation) => {
     const matchesStatus = filter === 'All' || reservation.status === filter;
     const matchesService = serviceFilter === 'All' || reservation.title === serviceFilter;
     const matchesSearch = reservation.reservee.toLowerCase().includes(searchQuery.toLowerCase()) || reservation.appointmentid.toString().includes(searchQuery);
