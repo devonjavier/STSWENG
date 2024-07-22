@@ -43,6 +43,7 @@ export interface pending_appointment {
   additionalreq: string;
   additionalPersonNames: string[];
   status: string;
+  trackingnumber: string;
 }
 
 export interface TimeSlot {

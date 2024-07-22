@@ -155,7 +155,7 @@ export async function fetchCalendarData(selectedDate: any) {
 
       const { data: appointments, error: appointmentsError } = await supabase
         .from('Appointment')
-        .select('serviceid, isparkingspotneeded, additionalrequest')
+        .select('serviceid, isparkingspotneeded, additionalrequest, trackingnumber')
         .eq('appointmentid', schedule.appointmentid);
 
       if (appointmentsError) {
@@ -232,7 +232,8 @@ export async function fetchCalendarData(selectedDate: any) {
         appointmentid: schedule.appointmentid,
         additionalreq: appointment.additionalrequest,
         additionalPersonNames: additionalCustomerNames.filter(name => name !== null),
-        status: schedule.status 
+        status: schedule.status,
+        trackingnumber: appointment.trackingnumber
       };
     })
   );

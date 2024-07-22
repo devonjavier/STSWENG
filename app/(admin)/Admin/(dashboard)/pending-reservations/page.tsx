@@ -45,13 +45,52 @@ const Page = () => {
     }
   }, [selectedAppointment]);
 
-  const handleAccept = useCallback(() => {
+  const sendEmail = async (appointment: pending_appointment, status: string) => {
+    const searchParams = {
+      emailaddress: appointment.emailaddress,
+      maincustomerfirstname: appointment.name.split(' ')[0],
+      maincustomerlastname: appointment.name.split(' ')[1] || '',
+      schedules: `Date: ${formatDate(new Date(appointment.date))}, Start Time: ${appointment.starttime}, End Time: ${appointment.endtime}`,
+      serviceType: appointment.title,
+      additionalrequests: appointment.additionalreq,
+      needsparking: appointment.isparkingspotneeded,
+    };
+    const trackingNumber = appointment.trackingnumber;
+  
+    try {
+      const response = await fetch('/api/sendEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ searchParams, trackingNumber, status }),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error sending email:', errorText);
+      } else {
+        console.log('Email sent successfully');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+    }
+  };
+  
+  const handleAccept = useCallback(async () => {
     if (selectedAppointment) {
-      acceptAppointment(selectedAppointment);
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 1500);
+      try {
+        await acceptAppointment(selectedAppointment);
+        setShowPopup(true);
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 1500);
+
+        // send email after accepting the appointment
+        await sendEmail(selectedAppointment, selectedAppointment.trackingnumber, 'accepted');
+      } catch (error) {
+        console.error('Error accepting appointment:', error);
+      }
     }
   }, [selectedAppointment]);
 
@@ -61,14 +100,21 @@ const Page = () => {
     }
   }, [selectedAppointment]);
 
-  const confirmReject = useCallback(() => {
+  const confirmReject = useCallback(async () => {
     if (selectedAppointment) {
-      rejectAppointment(selectedAppointment);
-      setShowConfirmReject(false);
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 1500);
+      try {
+        await rejectAppointment(selectedAppointment);
+        setShowConfirmReject(false);
+        setShowPopup(true);
+        setTimeout(() => {
+          setShowPopup(false);
+        }, 1500);
+
+        // send email after rejecting the appointment
+        await sendEmail(selectedAppointment, selectedAppointment.trackingnumber, 'rejected');
+      } catch (error) {
+        console.error('Error rejecting appointment:', error);
+      }
     }
   }, [selectedAppointment]);
 
