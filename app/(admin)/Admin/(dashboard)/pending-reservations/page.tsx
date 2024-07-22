@@ -14,6 +14,7 @@ const Page = () => {
   const [proofOfPayment, setProofOfPayment] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
   const [showConfirmReject, setShowConfirmReject] = useState(false);
+  const [showConfirmAccept, setShowConfirmAccept] = useState(false);
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -55,17 +56,16 @@ const Page = () => {
       additionalrequests: appointment.additionalreq,
       needsparking: appointment.isparkingspotneeded,
     };
-    const trackingNumber = appointment.trackingnumber;
-  
+    
     try {
       const response = await fetch('/api/sendEmail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ searchParams, trackingNumber, status }),
+        body: JSON.stringify({ searchParams, trackingNumber: appointment.trackingnumber, status }),
       });
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Error sending email:', errorText);
@@ -76,23 +76,35 @@ const Page = () => {
       console.error('Fetch error:', error);
     }
   };
-  
-  const handleAccept = useCallback(async () => {
+
+  const handleAccept = useCallback(() => {
+    if (selectedAppointment) {
+      setShowConfirmAccept(true);
+    }
+  }, [selectedAppointment]);
+
+  const confirmAccept = useCallback(async () => {
     if (selectedAppointment) {
       try {
         await acceptAppointment(selectedAppointment);
+        setShowConfirmAccept(false);
         setShowPopup(true);
         setTimeout(() => {
           setShowPopup(false);
         }, 1500);
 
-        // send email after accepting the appointment
-        await sendEmail(selectedAppointment, selectedAppointment.trackingnumber, 'accepted');
+        // Send email after accepting the appointment
+        await sendEmail(selectedAppointment, 'accepted');
+        window.location.reload();
       } catch (error) {
         console.error('Error accepting appointment:', error);
       }
     }
   }, [selectedAppointment]);
+
+  const cancelAccept = useCallback(() => {
+    setShowConfirmAccept(false);
+  }, []);
 
   const handleReject = useCallback(() => {
     if (selectedAppointment) {
@@ -110,8 +122,9 @@ const Page = () => {
           setShowPopup(false);
         }, 1500);
 
-        // send email after rejecting the appointment
-        await sendEmail(selectedAppointment, selectedAppointment.trackingnumber, 'rejected');
+        // Send email after rejecting the appointment
+        await sendEmail(selectedAppointment, 'rejected');
+        window.location.reload();
       } catch (error) {
         console.error('Error rejecting appointment:', error);
       }
@@ -162,7 +175,7 @@ const Page = () => {
                 <button
                   key={appointment.appointmentid}
                   className={`p-2 border border-gray-300 rounded-lg ${
-                    selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-cusBlue text-white' : 
+                    selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-cusBlue text-white font-bold' : 
                     appointment.status === 'Pending' ? 'bg-yellow-400 text-black' : 
                     appointment.status === 'Appointed' ? 'bg-green-700 text-black' : 'bg-white'
                   }`}
@@ -276,15 +289,32 @@ const Page = () => {
           <div className="flex justify-end mt-4">
             <button 
               className="bg-rose-700 text-white px-4 py-2 rounded mr-2"
-              onClick={confirmReject}
-            >
+              onClick={confirmReject}>
               Yes
             </button>
             <button 
               className="bg-gray-400 text-white px-4 py-2 rounded"
-              onClick={cancelReject}
-            >
+              onClick={cancelReject}>
               No
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showConfirmAccept && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+          <h3 className="text-lg font-bold text-black mb-4">Confirm Acceptance</h3>
+          <p className="text-black">Are you sure you want to accept this appointment?</p>
+          <div className="flex justify-end mt-4">
+            <button
+              className="bg-gray-400 text-white px-4 py-2 rounded mr-2"
+              onClick={cancelAccept}>
+              No
+            </button>
+            <button
+              className="bg-green-600 text-white px-4 py-2 rounded"
+              onClick={confirmAccept}>
+              Yes
             </button>
           </div>
         </div>
