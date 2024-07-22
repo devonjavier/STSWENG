@@ -106,8 +106,9 @@ const Page: React.FC = () => {
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="Pending">Pending</option>
             <option value="Done">Done</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Pending">Pending</option>
             <option value="Rejected">Rejected</option>
             <option value="Cancelled">Cancelled</option>
           </select>
