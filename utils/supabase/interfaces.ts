@@ -24,6 +24,7 @@ export interface reservation {
   appointmentid: number;
   date: string;
   starttime: string;
+  endtime: string;
   reservee: string;
   service: string;
   status: string;

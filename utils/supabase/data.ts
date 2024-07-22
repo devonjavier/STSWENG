@@ -17,7 +17,7 @@ export async function fetchAppointments() {
   const appointmentDetails = await Promise.all(appointments.map(async (appointment) => {
       const { data: schedule, error: scheduleError } = await supabase
           .from('Schedule')
-          .select('date, starttime')
+          .select('date, starttime, endtime')
           .eq('appointmentid', appointment.appointmentid);
 
       if (scheduleError) {
@@ -74,6 +74,7 @@ export async function fetchAppointments() {
               ...appointment,
               date: schedule[0].date,
               starttime: schedule[0].starttime,
+              endtime: schedule[0].endtime,
               title: service[0].title,
               reservee: `${person[0].firstname} ${person[0].middlename ? person[0].middlename + ' ' : ''}${person[0].lastname}`
           };
