@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { addOneAppointment, addCustomer, updateSchedule, fetchOneAdditionalServiceWithTitle, fetchtrackingnumber} from '@/utils/supabase/data'
 import Link from "next/link"
 import { tracingChannel } from "diagnostics_channel"
+import { useRouter } from "next/navigation"
 
 const Page = ({searchParams}:{
     searchParams: {
@@ -31,6 +32,10 @@ const Page = ({searchParams}:{
         additionalpackage:string
     }
 }) => {
+
+    const lastAppointmentTime = localStorage.getItem('lastAppointmentTime');
+    const router = useRouter();
+    
     const theService = JSON.parse(searchParams.service);
     const [trackingNumber, setTrackingNumber] = useState(10000);
 
@@ -38,6 +43,39 @@ const Page = ({searchParams}:{
     const [isProcessed, setIsProcessed] = useState(false);
 
     if(!isProcessed){
+        const currentTime = new Date().getTime();
+        
+        if (lastAppointmentTime && currentTime - parseInt(lastAppointmentTime) < 5 * 60 * 1000) {
+            const remainingtime = currentTime - parseInt(lastAppointmentTime);
+
+            const millisToMinutesAndSeconds = (millis: number) =>  {
+                const totalMillisFrom10Minutes = 5 * 60 * 1000;
+                const remainingMillis = totalMillisFrom10Minutes - millis;
+
+                // Calculate minutes and seconds from remaining milliseconds
+                const minutes = Math.floor(remainingMillis / 60000);
+                const seconds = Math.floor((remainingMillis % 60000) / 1000);
+
+                // Format the time as mm:ss
+                return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+              }
+            
+            return (
+                <>
+                <div className="flex flex-col p-6">
+                <span className="text-cusBlue text-4xl font-bold"> Please wait for another {millisToMinutesAndSeconds(remainingtime)} minute/s before setting another appointment. </span>
+                <span className="font-bold text-2xl text-black"> If you wish to change or set up another appointment, please go to <Link href = "/Service" className="text-cusBlue"> services </Link> </span>
+                        <Link 
+                        href={{
+                            pathname:"/",
+                        }}>  
+                        <button className="bg-cusBlue btn hover:bg-indigo-900 rounded-3xl w-56 mt-8 h-20 text-xl text-white font-bold"> Back to Home </button> </Link>
+                </div>
+                    
+                </>
+            );
+        }
+
         const addAppointment = async() =>{
             try {
                 const gettrackingnumber = await fetchtrackingnumber();
@@ -112,6 +150,8 @@ const Page = ({searchParams}:{
                         false
                     );
                 }
+
+                localStorage.setItem('lastAppointmentTime', currentTime.toString());
 
                 } catch (error) {
                 console.error('Error fetching services:', error);
