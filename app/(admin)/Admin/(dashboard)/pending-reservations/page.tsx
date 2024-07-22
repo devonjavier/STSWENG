@@ -127,7 +127,12 @@ const Page = () => {
       {selectedAppointment && (
         <div className="reservation-details mt-6 p-4 border border-gray-300 rounded-lg w-full h-shadow-lg bg-white text-black flex flex-col justify-between">
           <div>
-            <h2 className="text-xl font-bold mb-4 text-left">Details for Customer {selectedAppointment.name}</h2>
+            <h2 className="text-xl font-bold mb-4 text-left">
+              Details for Customer {selectedAppointment.name}
+              <p className="text-xs text-red-500 mt-2">* indicates a required field</p>
+            </h2>
+
+            
 
             <div className="flex justify-between mb-4">
               <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
@@ -178,7 +183,10 @@ const Page = () => {
               </div>
 
               <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
-                <p className="font-bold">Proof of Payment:</p>
+                <p className="font-bold">
+                  Proof of Payment:
+                  <span className="text-red-500"> *</span>
+                </p>
                 <div className="py-2">
                   <label className="flex items-center">
                     <input type="checkbox" checked={proofOfPayment} onChange={handleCheckboxChange} className="mr-2" />
@@ -188,9 +196,16 @@ const Page = () => {
               </div>
             </div>
           </div>
+
           <div className="flex justify-between mt-4">
             <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleReject}>Reject</button>
-            <button className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleAccept}>Accept</button>
+            <button 
+              className={`font-bold text-white px-4 py-2 rounded-3xl w-40 ${proofOfPayment ? 'bg-green-600' : 'bg-gray-400 cursor-not-allowed'}`}
+              onClick={handleAccept}
+              disabled={!proofOfPayment}
+            >
+              Accept
+            </button>
           </div>
         </div>
       )}
