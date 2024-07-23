@@ -21,7 +21,12 @@ const Page = () => {
     const getData = async () => {
       try {
         const data = await fetchCalendarData(selectedDate);
-        setAppointmentData(data);
+        if(data != null){
+          setAppointmentData(data);
+        } else {
+          console.error('Customer cannot be found', data);
+        }
+        
       } catch (error) { 
         console.error(error);
       }

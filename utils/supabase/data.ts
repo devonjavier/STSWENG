@@ -128,9 +128,17 @@ export async function fetchCalendarData(selectedDate : any){
         .select('firstname, middlename, lastname, emailaddress, contactnumber')
         .eq('personid', cust_id)
 
-    
-        const per = persons[0];
+      
+      if(personsError){
+        console.error('Error : ', personsError );
+        return null;
+      }
+      const per = persons.length > 0 ? persons[0] : null;
 
+      if(!per){
+        console.error('No person found for appointment: ' , schedule.appointmentid);
+        return null
+      }
 
       const { data: appointments, error: appointmentsError } = await supabase
         .from('Appointment')
