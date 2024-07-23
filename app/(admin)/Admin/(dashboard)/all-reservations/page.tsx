@@ -39,11 +39,7 @@ const Page: React.FC = () => {
         const data = await fetchServices();  // Fetch the list of services
 
         // Flatten the services data structure here
-<<<<<<< HEAD
         const flattenedServices = data.map((service : any) => service.service);
-=======
-        const flattenedServices = data.map((service: any) => service.service);
->>>>>>> 3e68948ee2c82f7a6abdd380a355924e4717a6c0
         setServices(flattenedServices);
       } catch (error) {
         console.error('Error fetching services:', error);
