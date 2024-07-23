@@ -48,27 +48,40 @@ const Page = () => {
 
   const sendEmail = async (appointment: pending_appointment, status: string) => {
     const searchParams = {
-      emailaddress: appointment.emailaddress,
+      schedules: JSON.stringify([{
+        date: appointment.date,
+        starttime: appointment.starttime,
+        endtime: appointment.endtime,
+      }]),
+
+      serviceType: appointment.title,
       maincustomerfirstname: appointment.name.split(' ')[0],
       maincustomerlastname: appointment.name.split(' ')[1] || '',
-      schedules: `Date: ${formatDate(new Date(appointment.date))}, Start Time: ${appointment.starttime}, End Time: ${appointment.endtime}`,
-      serviceType: appointment.title,
+
+      phonenumber: appointment.contactnumber,
+      emailaddress: appointment.emailaddress,
+      
+      needsparking: appointment.isparkingspotneeded ? 'true' : 'false',
       additionalrequests: appointment.additionalreq,
-      needsparking: appointment.isparkingspotneeded,
+      additionalpackage: JSON.stringify([]),
+
+      selectedServicetitle: appointment.title,
     };
     
+    console.log("SEE!:", searchParams)
+
     try {
       const response = await fetch('/api/sendEmail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ searchParams, trackingNumber: appointment.trackingnumber, status }),
+        body: JSON.stringify({ searchParams, trackingNumber: appointment.trackingnumber, status:status }),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error sending email:', errorText);
+        console.error('Error sending email:', response);
       } else {
         console.log('Email sent successfully');
       }
@@ -94,6 +107,7 @@ const Page = () => {
         }, 1500);
 
         // Send email after accepting the appointment
+        console.log("SENDING:", selectedAppointment)
         await sendEmail(selectedAppointment, 'accepted');
         window.location.reload();
       } catch (error) {

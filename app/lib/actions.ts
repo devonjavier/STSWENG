@@ -235,11 +235,11 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
   }
 }
 
-export async function acceptAppointment(appointmentData) {
+export async function acceptAppointment(appointmentData: any) {
   const supabase = createClient();
 
-  console.log("ARG", appointmentData[0]);
-  appointmentData = appointmentData[0];
+  console.log("ARG", appointmentData);
+  appointmentData = appointmentData;
 
   // schedule
   const { error: scheduleError } = await supabase
