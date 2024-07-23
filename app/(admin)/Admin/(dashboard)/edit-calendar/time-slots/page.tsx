@@ -25,7 +25,7 @@ const Page = () => {
       const newSelectedSlots: { [key: string]: boolean[] } = {};
 
       Object.keys(grouped_time_slots).forEach(date => {
-        const timeSlots = grouped_time_slots[date].map((slot: { starttime: any; endtime: any; status: any; }) => ({
+        const timeSlots = grouped_time_slots[date].map((slot: any) => ({
           time: `${slot.starttime} - ${slot.endtime}`,
           status: slot.status,
         }));
@@ -62,6 +62,8 @@ const Page = () => {
   useEffect(() => {
     handleDates();
   }, []);
+
+  
 
   const handleSelectAll = (date: string) => {
     const allSelected = selectedSlots[date].every(Boolean);
@@ -107,22 +109,22 @@ const Page = () => {
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   return (
-    <div className="p-4 max-h-[91.8vh] overflow-x-auto">
+    <div className="p-4 max-h-[91.8vh] overflow-x-auto ">
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {sortedDates.map((date) => (
-          <div key={date} className="p-2 border rounded shadow max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
+          <div key={date} className="p-2 border rounded drop-shadow-xl max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
             <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
             {timeSlotsData[date].map((slot, index) => (
               <div
-                key={index}
-                className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
-                  ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
-                    selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
-                onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
+              key={index}
+              className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
+                ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
+                  selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
+              onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
               >
-                {slot.time}
+              {slot.time}
               </div>
             ))}
             <div className="mt-2">

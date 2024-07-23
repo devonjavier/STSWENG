@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
 
 
   return (
-    <div className={`h-screen w-64 bg-cusBlue text-white p-5 font-medium relative ${rubik.className}`}>
+    <div className={`min-h-[100vh] w-64 bg-cusBlue text-white p-5 font-medium relative ${rubik.className}`}>
       <div className="flex flex-col items-center mb-10">
         <img src="/IndigoStudios.png" alt="Indigo Studios Logo" className="w-24 h-24 mb-4" />
       </div>
@@ -38,13 +38,13 @@ const Sidebar: React.FC = () => {
           </button>
           <div 
             className={`transition-all duration-300 ease-in-out overflow-hidden ${isDropdownOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-            <Link href="./edit-services" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">Services</Link>
-            <Link href="./edit-faqs" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">FAQs</Link>
+            <Link href="/Admin/edit-services" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">Services</Link>
+            <Link href="/Admin/edit-faqs" className="block px-4 py-2 text-base text-white hover:text-purple-300 transition duration-300 ease-in-out rounded-3xl">FAQs</Link>
           </div>
         </div>
       </nav>
 
-      <div className="absolute bottom-12 mb-6 ml-16">
+      <div className="absolute bottom-20 left-20">
         <Link href="/" onClick={logout} className="text-lg hover:text-purple-300 transition duration-300 ease-in-out">
           Log out
         </Link>

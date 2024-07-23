@@ -180,6 +180,7 @@ export const getCurrentStatus = async (dates: any, id: any) => {
   let statusData = {};
 
   for (const date of dateArray) {
+
     const { data, error } = await supabase
       .from('Schedule')
       .select('starttime, status')
@@ -190,7 +191,10 @@ export const getCurrentStatus = async (dates: any, id: any) => {
       return {};
     }
 
+
     if (data.length > 0) {
+      // sort data before updating statusData
+      data.sort((a, b) => new Date(`1970-01-01T${a.starttime}Z`).getTime() - new Date(`1970-01-01T${b.starttime}Z`).getTime());
       statusData[date] = data.map(entry => entry.status === 'Unavailable');
     }
   }
@@ -231,48 +235,68 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
   }
 }
 
-export async function acceptAppointment(appointmentData : pending_appointment){
+export async function acceptAppointment(appointmentData) {
   const supabase = createClient();
 
   console.log("ARG", appointmentData[0]);
   appointmentData = appointmentData[0];
 
-  const { error } = await supabase
-  .from('Schedule')
-  .update({status : 'Appointed'})
-  .match({
-    date : appointmentData.date, 
-    starttime : appointmentData.starttime, 
-    appointmentid : appointmentData.appointmentid
-  });
+  // schedule
+  const { error: scheduleError } = await supabase
+    .from('Schedule')
+    .update({ status: 'Appointed' })
+    .match({
+      date: appointmentData.date,
+      appointmentid: appointmentData.appointmentid
+    });
 
-  if(error){
-    console.error(error);
+  if (scheduleError) {
+    console.error(scheduleError);
   }
 
+  // appointment
+  const { error: appointmentError } = await supabase
+    .from('Appointment')
+    .update({ status: 'Accepted' })
+    .match({ appointmentid: appointmentData.appointmentid });
+
+  if (appointmentError) {
+    console.error(appointmentError);
+  }
 }
 
-export async function rejectAppointment(appointmentData : pending_appointment){
+
+export async function rejectAppointment(appointmentData) {
   const supabase = createClient();
 
   console.log(appointmentData);
 
-  const { error } = await supabase
-  .from('Schedule')
-  .update({status : 'Available'})
-  .match({
-    date : appointmentData.date, 
-    starttime : appointmentData.starttime, 
-    appointmentid : appointmentData.appointmentid
-  });
+  // schedule table
+  const { error: scheduleError } = await supabase
+    .from('Schedule')
+    .update({ status: 'Available' })
+    .match({
+      date: appointmentData.date,
+      starttime: appointmentData.starttime,
+      appointmentid: appointmentData.appointmentid
+    });
 
-  if(error){
-    console.error(error);
+  if (scheduleError) {
+    console.error(scheduleError);
+  }
+
+  // appointment table
+  const { error: appointmentError } = await supabase
+    .from('Appointment')
+    .update({ status: 'Rejected' })
+    .match({ appointmentid: appointmentData.appointmentid });
+
+  if (appointmentError) {
+    console.error(appointmentError);
   }
 }
 
 export async function editServices(services: Service[]) {
-  console.log('pasok?');
   const supabase = createClient();
   const { data: onetimeServices, error: onetimeError } = await supabase.from('OnetimeService').select();
   const { data: hourlyServices, error: hourlyError } = await supabase.from('HourlyService').select();
@@ -327,23 +351,44 @@ export async function editServices(services: Service[]) {
   }
 }
 
-export async function editFAQs(faqs : FAQ[]){
+export async function editFAQs(faqs : FAQ[]) {
   console.log(faqs);
-  const supabase = createClient();
+  const supabase = createClient(); 
 
-  for(const faq of faqs){
-    console.log(faq.id);
-
-    const {error} = await supabase
+    // delete all rows in FAQ
+    const { error: deleteError } = await supabase
     .from('FAQ')
-    .update({question : faq.question, answer : faq.answer})
-    .match({id : faq.id});
+    .delete()
+    .neq('id', 0);
 
-    if(error){
-      console.error('Error : ' + error);
-    }
+  if (deleteError) {
+    console.error('Error deleting all FAQs: ' + deleteError);
+    return;
   }
- 
+
+  const updatedFaqs = faqs.map((faq, index) => ({
+    ...faq,
+    id: (6001 + index)
+  }));
+
+  // insert everything in faq
+  const { error: insertError } = await supabase
+    .from('FAQ')
+    .insert(updatedFaqs);
+
+  if (insertError) {
+    console.error('Error inserting new FAQs: ' + insertError);
+  }
+}
+
+
+export async function checkCookie(){
+  const cookieStore = cookies();
+
+  const hasCookie = await cookieStore.has('token')
+  console.log(hasCookie);
+
+  return hasCookie;
 }
 
 // export async function handleSignup(formData : FormData){
