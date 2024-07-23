@@ -189,7 +189,11 @@ const Page = ({ searchParams }: {
                                         additionalCustomersmiddlenames: searchParams.additionalCustomersmiddlenames,
                                         additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
                                         hours: searchParams.hours, 
-                                        additionalpackage: searchParams.additionalpackage
+                                        additionalpackage: searchParams.additionalpackage,
+                                        
+                                        mainprice: priceMainService,
+                                        additionalprice: priceAdditionalService
+
                                     }
                                 }}>
                                 <button
@@ -200,7 +204,7 @@ const Page = ({ searchParams }: {
                         <div className='flex flex-col ml-20 border-2 border-indigo-800 rounded-lg p-4 h-fit'>
                             <span className='text-black font-bold mb-2 text-3xl'> Reservation Details: </span>
                             <span className='text-black mb-0 text-lg'> <span className='font-bold'> Package Selected: </span> {selectedService}   - Price {priceMainService} pesos </span>
-                        
+                            
                             {JSON.parse(searchParams.additionalpackage).length === 0 ? (
                                 <div>
                                     <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> NONE SELECTED </span>
@@ -208,6 +212,7 @@ const Page = ({ searchParams }: {
                             ):(<div> 
                                 <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> {JSON.parse(searchParams.additionalpackage)} - Price: {priceAdditionalService} pesos </span>
                                 </div>)}
+                                <span className='text-black mb-0 text-lg'> <span className='font-bold'>  Total Amount Due: </span> {priceMainService + priceAdditionalService} pesos </span>
                             
 
                             <span className='text-black font-bold mb-2 text-md'> Appointment schedules: </span>

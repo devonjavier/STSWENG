@@ -30,6 +30,8 @@ const Page = ({searchParams}:{
         additionalCustomerslastnames: string, // JSON
         hours:number,
         additionalpackage:string
+        mainprice:string,
+        additionalprice:string
     }
 }) => {
 
@@ -57,19 +59,19 @@ const Page = ({searchParams}:{
                 const seconds = Math.floor((remainingMillis % 60000) / 1000);
 
                 // Format the time as mm:ss
-                return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                return `${minutes} minutes and ${seconds} seconds`;
               }
             
             return (
                 <>
                 <div className="flex flex-col p-6">
-                <span className="text-cusBlue text-4xl font-bold"> Please wait for another {millisToMinutesAndSeconds(remainingtime)} minute/s before setting another appointment. </span>
-                <span className="font-bold text-2xl text-black"> If you wish to change or set up another appointment, please go to <Link href = "/Service" className="text-cusBlue"> services </Link> </span>
+                <span className="text-cusBlue text-4xl font-bold"> Please wait for another {millisToMinutesAndSeconds(remainingtime)} before setting another appointment. </span>
                         <Link 
                         href={{
                             pathname:"/",
                         }}>  
                         <button className="bg-cusBlue btn hover:bg-indigo-900 rounded-3xl w-56 mt-8 h-20 text-xl text-white font-bold"> Back to Home </button> </Link>
+                
                 </div>
                     
                 </>
@@ -206,7 +208,7 @@ const Page = ({searchParams}:{
                 </div>
                 <div className="flex flex-col border-2 border-black rounded-xl radius-md text-start mb-3 px-32 py-5 gap-6">
                     <span className="text-3xl text-black font-bold text-start"> Reminders: </span>
-                    <span className="ml-8 font-semibold text-xl text-black"> Please note that your reservation will only be approved once the down payment is made. Kindly send proof of payment through any of our social media channels. </span>
+                    <span className="ml-8 font-semibold text-xl text-black"> Please note that your reservation will only be approved once the down payment of {((parseFloat(searchParams.mainprice)) + parseFloat((searchParams.additionalprice))) * .1} pesos is made. Kindly send proof of payment through any of our social media channels. </span>
                     <span>
                         <div className="ml-8 font-semibold text-xl text-black">Instagram: @indigostudiosph</div>
                         <div className="ml-8 font-semibold text-xl text-black">Facebook: facebook.com/indigostudiosph</div>
