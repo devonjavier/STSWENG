@@ -13,10 +13,13 @@ import HearTheDifferences from '../components/Home/HearTheDifferences'
 export default async function Home() {
   return (
     <>
-    <div className="bg-cover bg-center h-screen flex flex-col justify-end relative pb-32 pl-16 mx-auto" style={{ backgroundImage: "url('/home_bg.jpg')" }}>
-      <div className="p-2 flex-grow flex flex-col justify-end pl-4 mt-[-2rem]">        
+    <div className='bg-[url(../public/home1.png)] w-[1300px] h-[800px] p-2  flex flex-col relative pb-10 mb-5 mx-auto'> 
+      <div className='relative pt-96 pl-20'>
         <IntroText />
       </div>
+    </div>
+    <div className='flex justify-center mb-20'>
+      <Images />
     </div>
 
     <div className='bg-cusBlue '> 

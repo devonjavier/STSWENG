@@ -6,8 +6,18 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
 import { create } from 'domain'
+import { serialize } from 'v8'
 
+export async function fetchOneAdditionalService(id:number) {
+    
+    const supabase = createClient();
+    const { data : service } = await supabase
+    .from('Service')
+    .select('title, serviceid')
+    .eq('serviceid', id);
 
+    return service;
+}
 
 export async function fetchAppointments() {
     // for all-reservations page
@@ -175,6 +185,48 @@ export async function fetchCalendarData(selectedDate : any){
   return calendarData.filter(item => item !== null);
 }
 
+export async function fetchOneAdditionalServiceWithTitle(title:string) {
+    
+    const supabase = createClient();
+
+    if (title === "")
+        return 0
+
+    const { data : additionalservice } = await supabase
+    .from('Service')
+    .select('serviceid')
+    .eq('title', title);
+
+    const { data : service } = await supabase
+    .from('AdditionalServices')
+    .select('rate, serviceid')
+    .eq('serviceid', additionalservice[0].serviceid);
+
+    return service;
+}
+
+export async function fetchOneMainServiceOnetime(serviceid:number) {
+    
+    const supabase = createClient();
+    const { data : onetime } = await supabase
+    .from('OnetimeService')
+    .select('rate, serviceid')
+    .eq('serviceid', serviceid);
+
+    return onetime;
+}
+
+export async function fetchOneMainServiceHourlyPrice(serviceid:number) {
+    
+    const supabase = createClient();
+    const { data : hourlyprice } = await supabase
+    .from('HourlyService')
+    .select('rate, hours, serviceid')
+    .eq('serviceid', serviceid);
+
+    return hourlyprice;
+}
+
 
 export async function fetchSelectedSchedule(appointmentid:number) {
     const supabase = createClient();
@@ -260,12 +312,13 @@ export async function fetchServices(){
     const { data: services } = await supabase.from('Service').select();
     const { data: onetimeServices } = await supabase.from('OnetimeService').select();
     const { data: hourlyServices } = await supabase.from('HourlyService').select();
-
+    const { data: additionalServices } = await supabase.from('AdditionalServices').select();
 
     const completeServices = services?.map((service : allService) => {
         
     const onetimeservice = onetimeServices?.find((ot : allService) => ot.serviceid === service.serviceid);
     const hourlyservice = hourlyServices?.find((h : allService) => h.serviceid === service.serviceid);
+    const additionalservice = additionalServices?.find((o : allService) => o.serviceid === service.serviceid);
 
         if(onetimeservice){
             return({
@@ -273,7 +326,7 @@ export async function fetchServices(){
                 onetimeservice,
                 serviceType: 'onetime'
             });
-        } else {
+        } else if (hourlyservice){
             return({
                 service,
                 hourlyservice,
@@ -284,7 +337,23 @@ export async function fetchServices(){
 
     return completeServices; 
 }
+export async function fetchAdditionalServices(serviceid:number){
 
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from('AdditionalServices').select('serviceid').eq('forwhichserviceid',serviceid);
+
+
+    return data
+
+    if(additionalservices){
+        return additionalservices
+    }
+    else    
+        return []
+
+    // this will return the {additionalservices} which will have the service id of the service
+}
 export async function fetchEditServices() {
 
 
@@ -432,38 +501,68 @@ export async function addCustomer(
     // get the last number in the schedule
 }
 
+export async function fetchtrackingnumber(){
+    const supabase = createClient();
+
+    const { data: appointment } = await supabase.from('Appointment').select().order('trackingnumber', {ascending:false});
+
+    if (!(appointment.length === 0))
+        return appointment[0].trackingnumber + 1
+    else
+        return 10000
+
+}
+
 export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
-    //status
     trackingnumber:number,
-    additionalrequest:string
+    //status
+    additionalrequest:string,
+    additionalpackage:string,
+    totalprice:number
 ){
     const supabase = createClient();
 
+    let additionalpack; // store here the service if for the additional package
+
+
+    if (additionalpackage === "") // if there is no additional package
+        additionalpack = null
+    else{
+        const { data : additionalservice } = await supabase
+        .from('Service')
+        .select('serviceid')
+        .eq('title', additionalpackage);
+
+        additionalpack = additionalservice[0].serviceid
+    }
+    
     // getting the largest id number from the table
-    let largestidnumber;
-    
-    const { data: appointment } = await supabase.from('Appointment').select('appointmentid').order('appointmentid', {ascending:false});
-    const appointmentArr = Object.keys(appointment);
-    
-    const targetAppointment = appointment[appointmentArr[0]] // just filter out the first one
+    let largestidnumber = 6000;
 
-    Object.values(targetAppointment).forEach((key)=>{
-        largestidnumber = key
-    })
-
+    const { data: appointment } = await supabase.from('Appointment').select().order('appointmentid', {ascending:false});
+    
+    if (!(appointment.length === 0))
+    {
+        largestidnumber = appointment[0].appointmentid// just filter out the first one
+    }
+        
     largestidnumber = largestidnumber + 1;
+    console.log("largest" + largestidnumber)
 
     const { error } = await supabase.from('Appointment').insert({
         appointmentid: largestidnumber,
-        serviceid:parseInt(serviceid),
+        serviceid: parseInt(serviceid),
         isparkingspotneeded:isparkingspotneeded,
         status:"Pending",
         trackingnumber: trackingnumber,
         discount:15.0,
-        additionalrequest:additionalrequest
+        additionalrequest:additionalrequest,
+        additionalserviceid:additionalpack,
+        totalamountdue:totalprice
     }) 
+    
     if(error)
         return error
 
@@ -524,7 +623,7 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
 
     const { error } = await supabase
         .from('Schedule')
-        .update({ appointmentid: appointmentid })
+        .update({ appointmentid: appointmentid, status:"Pending" })
         .eq('scheduleid', scheduleid)
 
     if (error)
