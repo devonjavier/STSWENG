@@ -25,7 +25,7 @@ const Page = () => {
       const newSelectedSlots: { [key: string]: boolean[] } = {};
 
       Object.keys(grouped_time_slots).forEach(date => {
-        const timeSlots = grouped_time_slots[date].map(slot => ({
+        const timeSlots = grouped_time_slots[date].map((slot: any) => ({
           time: `${slot.starttime} - ${slot.endtime}`,
           status: slot.status,
         }));

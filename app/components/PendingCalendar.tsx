@@ -10,14 +10,17 @@ interface PendingCalendarProps {
   setSelectedDate: React.Dispatch<React.SetStateAction<Date | null>>;
 }
 
-const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelectedDate }) => {
-  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
-  const [pendingData, setPendingData] = useState<{ scheduleid: number, date: string, starttime: string, endtime: string, status: string }[]>([]);
-  const [appointedData, setAppointedData] = useState<{ scheduleid: number, date: string, starttime: string, endtime: string, status: string }[]>([]);
+interface ReservationData {
+  scheduleid: number;
+  date: string;
+  starttime: string;
+  endtime: string;
+  status: string;
+}
 
-  useEffect(() => {
-    setArrFunc(selectedDates);
-  }, [selectedDates, setArrFunc]);
+const useFetchReservations = () => {
+  const [pendingData, setPendingData] = useState<ReservationData[]>([]);
+  const [appointedData, setAppointedData] = useState<ReservationData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,9 +30,6 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
 
         setPendingData(pendingReservations.data);
         setAppointedData(appointedReservations.data);
-
-        console.log('Pending Reservations:', pendingReservations.data);
-        console.log('Appointed Reservations:', appointedReservations.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -38,10 +38,32 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
     fetchData();
   }, []);
 
+  return { pendingData, appointedData };
+};
+
+const groupByDate = (data: ReservationData[]) => {
+  const grouped: { [key: string]: ReservationData[] } = {};
+  data.forEach(item => {
+    const dateStr = new Date(item.date).toDateString();
+    if (!grouped[dateStr]) {
+      grouped[dateStr] = [];
+    }
+    grouped[dateStr].push(item);
+  });
+  return grouped;
+};
+
+const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelectedDate }) => {
+  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const { pendingData, appointedData } = useFetchReservations();
+
+  useEffect(() => {
+    setArrFunc(selectedDates);
+  }, [selectedDates, setArrFunc]);
+
   const handleDateChange = (date: Date) => {
     setSelectedDate(date);
     const dateIndex = selectedDates.findIndex(selectedDate => selectedDate.toDateString() === date.toDateString());
-    
     if (dateIndex !== -1) {
       setSelectedDates(selectedDates.filter((_, index) => index !== dateIndex));
     } else {
@@ -49,12 +71,8 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
     }
   };
 
-  const convertToDateObjects = (data: { scheduleid: number, date: string, starttime: string, endtime: string, status: string }[]) => {
-    return data.map(item => new Date(item.date));
-  };
-
-  const pendingDates = convertToDateObjects(pendingData);
-  const reservedDates = convertToDateObjects(appointedData);
+  const pendingDates = groupByDate(pendingData);
+  const reservedDates = groupByDate(appointedData);
 
   return (
     <div className='app'>
@@ -64,10 +82,10 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
           onClickDay={handleDateChange}
           tileClassName={({ date, view }) => {
             if (view === 'month') {
-              if (pendingDates.some(d => d.toDateString() === date.toDateString())) {
+              if (pendingDates[date.toDateString()]) {
                 return 'highlight-pending';
               }
-              if (reservedDates.some(d => d.toDateString() === date.toDateString())) {
+              if (reservedDates[date.toDateString()]) {
                 return 'highlight-reserved';
               }
             }
@@ -75,20 +93,19 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
           }}
           tileDisabled={({ date, view }) => {
             if (view === 'month') {
-              return !(pendingDates.some(d => d.toDateString() === date.toDateString()) ||
-                      reservedDates.some(d => d.toDateString() === date.toDateString()));
+              return !(pendingDates[date.toDateString()] || reservedDates[date.toDateString()]);
             }
             return false;
           }}
         />
-        {pendingDates.map(date => (
-          <Link key={date.toDateString()} href={`/details?date=${date.toISOString()}`} legacyBehavior>
-            <a className="date-link" style={{ display: 'none' }}>Pending: {date.toDateString()}</a>
+        {Object.keys(pendingDates).map(dateStr => (
+          <Link key={`pending-${dateStr}`} href={`/details?date=${new Date(dateStr).toISOString()}`} legacyBehavior>
+            <a className="date-link" style={{ display: 'none' }}>Pending: {dateStr}</a>
           </Link>
         ))}
-        {reservedDates.map(date => (
-          <Link key={date.toDateString()} href={`/details?date=${date.toISOString()}`} legacyBehavior>
-            <a className="date-link" style={{ display: 'none' }}>Reserved: {date.toDateString()}</a>
+        {Object.keys(reservedDates).map(dateStr => (
+          <Link key={`reserved-${dateStr}`} href={`/details?date=${new Date(dateStr).toISOString()}`} legacyBehavior>
+            <a className="date-link" style={{ display: 'none' }}>Reserved: {dateStr}</a>
           </Link>
         ))}
       </div>
