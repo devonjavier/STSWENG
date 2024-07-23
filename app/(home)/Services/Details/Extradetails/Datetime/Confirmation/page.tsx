@@ -49,15 +49,12 @@ const Page = ({ searchParams }: {
 
         //console.log(searchParams.additionalpackage);
 
-        
-
         if(JSON.parse(searchParams.serviceType) === 'onetime'){
             const getPriceAdditional= async () =>{
                 const onetimeprice = await fetchOneMainServiceOnetime(JSON.parse(theService.serviceid));
                 console.log(typeof onetimeprice[0].serviceid);
                 setPriceMainService(onetimeprice[0].rate);
             }
-            
             getPriceAdditional();
         }
         else{
@@ -185,10 +182,10 @@ const Page = ({ searchParams }: {
                                         additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
                                         hours: searchParams.hours, 
                                         additionalpackage: searchParams.additionalpackage,
+                                        selectedServicetitle:selectedService,
                                         
                                         mainprice: priceMainService,
                                         additionalprice: priceAdditionalService
-
                                     }
                                 }}>
                                 <button

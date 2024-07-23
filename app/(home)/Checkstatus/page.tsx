@@ -1,8 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices, getSchedulePrice } from '@/utils/supabase/data'
-import { service } from '@/utils/supabase/interfaces'
+import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
 import { useDebouncedCallback } from 'use-debounce';
 import Image from "next/image"
 
@@ -27,7 +26,7 @@ export default function DisplayPage() {
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
     const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);// assume no addtional customer
     const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);// assume no addtional customer
-    const [listofschedules,setlistofschedules] = useState<[]>([])
+    const [listofschedules,setlistofschedules] = useState<number[]>([])
     const [status, setStatus] = useState<string>("/check_mark.png");
     const [statusMessage , setStatusMessage] = useState<string>(" ");
     const [isContentVisible, setIsContentVisible] = useState(false);
@@ -114,7 +113,7 @@ export default function DisplayPage() {
             newSchedules.push(one);
         });
 
-        setlistofschedules(newSchedules);
+        setlistofschedules((prevState:number[]) => newSchedules);
 
         setTimeout(() => {
             setIsContentVisible(true);

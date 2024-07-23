@@ -8,6 +8,10 @@ import Link from "next/link"
 import { tracingChannel } from "diagnostics_channel"
 import { useRouter } from "next/navigation"
 
+const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+};
 const Page = ({searchParams}:{
     searchParams: {
         schedules: string,
@@ -30,6 +34,8 @@ const Page = ({searchParams}:{
         additionalCustomerslastnames: string, // JSON
         hours:number,
         additionalpackage:string
+        selectedServicetitle: string
+
         mainprice:string,
         additionalprice:string
     }
@@ -193,7 +199,7 @@ const Page = ({searchParams}:{
             </div>
             </div>
             <div>
-                Services &gt; Date & Time &gt; Details  &gt; Confirmation &gt;<span className='text-cusBlue'> Booking Status</span> 
+                Services &gt; Date & Time &gt; Details &gt; ExtraDetails &gt; Confirmation &gt;<span className='text-cusBlue'> Booking Status</span> 
             </div>
         </div>
         <div className="flex flex-row items-center justify-center w-4/5 m-auto">
