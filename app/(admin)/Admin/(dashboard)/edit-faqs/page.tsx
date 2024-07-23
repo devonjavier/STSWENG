@@ -1,7 +1,6 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../scrollbarStyle.css';
-import { useEffect } from 'react';
 import { fetchFAQs } from '@/utils/supabase/data';
 import { checkCookie } from '@/app/lib/actions';
 import { editFAQs } from '@/app/lib/actions';
@@ -10,29 +9,34 @@ import { FAQ } from '@/utils/supabase/interfaces';
 export default function EditFAQs() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [showPopup, setShowPopup] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getFAQs = async () => {
-
       const authenticated = await checkCookie();
 
-      if(!authenticated){
-        window.location.href = '/'
+      if (!authenticated) {
+        window.location.href = '/';
       } else {
         try {
           const data = await fetchFAQs();
           setFaqs(data as FAQ[]);
-  
           console.log(data);
-        } catch(error) {
+        } catch (error) {
           console.error('Error fetching services:', error);
         }
       }
-    }
+    };
 
     getFAQs();
   }, []);
-  
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [faqs]);
+
   const handleInputChange = (index: number, field: keyof FAQ, value: string) => {
     const updatedFaqs = [...faqs];
     updatedFaqs[index][field] = value;
@@ -46,7 +50,7 @@ export default function EditFAQs() {
       setShowPopup(true);
       setTimeout(() => {
         setShowPopup(false);
-      }, 3000); 
+      }, 3000);
     } catch (error) {
       console.error('Error updating services:', error);
     }
@@ -76,7 +80,7 @@ export default function EditFAQs() {
       <p className="text-xs text-red-500 mt-1 ml-48">* indicates a required field</p>
       <div className="w-full flex flex-col items-center p-4">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
-          <div className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full  max-w-full space-y-6 custom-scrollbar">
+          <div ref={containerRef} className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full max-w-full space-y-6 custom-scrollbar">
             {faqs.map((faq, index) => (
               <div key={index} className="flex items-start space-x-12 mr-10">
                 <FAQCard
@@ -113,7 +117,7 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
     <div className="flex-1 w-max bg-white shadow-xl p-1 rounded-lg">
       <div className="flex justify-between items-center mb-4 p-4 pb-0">
         <div className="flex-1 mr-4">
-          <label className="block text-gray-700 font-bold text-black">Question<span className="text-red-500"> *</span></label> 
+          <label className="block text-gray-700 font-bold text-black">Question<span className="text-red-500"> *</span></label>
           <input
             type="text"
             value={faq.question}
