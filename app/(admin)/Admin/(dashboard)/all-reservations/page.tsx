@@ -125,7 +125,7 @@ const Page: React.FC = () => {
           </select>
         </div>
 
-        <div className="max-h-[72vh] overflow-y-auto rounded-3xl custom-scrollbar">
+        <div className="max-h-[72vh] overflow-y-auto rounded-3xl custom-scrollbar drop-shadow-2xl">
           <table className="max-h-[70vh] overflow-y-auto min-w-full bg-white border border-transparent shadow-lg" style={{ borderRadius: '20px', overflow: 'hidden' }}>
             <thead>
               <tr className="bg-cusBlue text-white text-left">
@@ -134,6 +134,7 @@ const Page: React.FC = () => {
                 <th className="border border-transparent px-4 py-2">Time</th>
                 <th className="border border-transparent px-4 py-2">Reservee</th>
                 <th className="border border-transparent px-4 py-2">Service</th>
+                <th className="border border-transparent px-4 py-2">Amount Due</th>
                 <th className="border border-transparent px-4 py-2">Status</th>
               </tr>
             </thead>
@@ -150,6 +151,9 @@ const Page: React.FC = () => {
                     <td className="border border-transparent px-4 py-2">{reservation.starttime} - {reservation.endtime}</td>
                     <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
                     <td className="border border-transparent px-4 py-2">{reservation.title}</td>
+                    <td className="border border-transparent px-4 py-2">
+                      ₱{reservation.totalamountdue ? Number(reservation.totalamountdue).toFixed(2) : '0.00'}
+                    </td>
                     <td className="border border-transparent px-4 py-2">{reservation.status}</td>
                   </tr>
                 )

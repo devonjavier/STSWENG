@@ -109,12 +109,12 @@ const Page = () => {
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   return (
-    <div className="p-4 max-h-[91.8vh] overflow-x-auto">
+    <div className="p-4 max-h-[91.8vh] overflow-x-auto ">
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {sortedDates.map((date) => (
-          <div key={date} className="p-2 border rounded shadow max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
+          <div key={date} className="p-2 border rounded drop-shadow-xl max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
             <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
             {timeSlotsData[date].map((slot, index) => (
               <div
