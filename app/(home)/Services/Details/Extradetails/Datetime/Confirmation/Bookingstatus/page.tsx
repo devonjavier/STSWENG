@@ -49,6 +49,7 @@ const Page = ({searchParams}:{
 
     let appointentid;
     const [isProcessed, setIsProcessed] = useState(false);
+    const [status, setStatus] = useState("pending");
 
     if(!isProcessed){
         const currentTime = new Date().getTime();
@@ -166,7 +167,7 @@ const Page = ({searchParams}:{
                                      headers: {
                                          'Content-Type': 'application/json'
                                      },
-                                     body: JSON.stringify({ searchParams, trackingNumber: gettrackingnumber })});
+                                     body: JSON.stringify({ searchParams, trackingNumber: gettrackingnumber, status:"pending"})});
                                      
                 localStorage.setItem('lastAppointmentTime', currentTime.toString());
 
