@@ -295,7 +295,6 @@ export async function rejectAppointment(appointmentData) {
 }
 
 export async function editServices(services: Service[]) {
-  console.log('pasok?');
   const supabase = createClient();
   const { data: onetimeServices, error: onetimeError } = await supabase.from('OnetimeService').select();
   const { data: hourlyServices, error: hourlyError } = await supabase.from('HourlyService').select();
@@ -349,6 +348,7 @@ export async function editServices(services: Service[]) {
     }
   }
 }
+
 
 export async function checkCookie(){
   const cookieStore = cookies();
