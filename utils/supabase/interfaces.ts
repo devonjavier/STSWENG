@@ -29,6 +29,7 @@ export interface reservation {
   service: string;
   status: string;
   title: string;
+  totalamountdue: string;
 }
 
 export interface pending_appointment {
@@ -45,6 +46,7 @@ export interface pending_appointment {
   additionalPersonNames: string[];
   status: string;
   trackingnumber: string;
+  totalamountdue: string;
 }
 
 export interface TimeSlot {

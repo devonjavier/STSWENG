@@ -134,6 +134,7 @@ const Page: React.FC = () => {
                 <th className="border border-transparent px-4 py-2">Time</th>
                 <th className="border border-transparent px-4 py-2">Reservee</th>
                 <th className="border border-transparent px-4 py-2">Service</th>
+                <th className="border border-transparent px-4 py-2">Amount Due</th>
                 <th className="border border-transparent px-4 py-2">Status</th>
               </tr>
             </thead>
@@ -150,6 +151,9 @@ const Page: React.FC = () => {
                     <td className="border border-transparent px-4 py-2">{reservation.starttime} - {reservation.endtime}</td>
                     <td className="border border-transparent px-4 py-2">{reservation.reservee}</td>
                     <td className="border border-transparent px-4 py-2">{reservation.title}</td>
+                    <td className="border border-transparent px-4 py-2">
+                      ₱{reservation.totalamountdue ? Number(reservation.totalamountdue).toFixed(2) : '0.00'}
+                    </td>
                     <td className="border border-transparent px-4 py-2">{reservation.status}</td>
                   </tr>
                 )

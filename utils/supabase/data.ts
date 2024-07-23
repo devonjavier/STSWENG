@@ -12,7 +12,7 @@ export async function fetchAppointments() {
   const supabase = createClient();
   const { data: appointments, error } = await supabase
       .from('Appointment')
-      .select('appointmentid, serviceid, status');
+      .select('appointmentid, serviceid, status, totalamountdue');
 
   const appointmentDetails = await Promise.all(appointments.map(async (appointment) => {
       const { data: schedule, error: scheduleError } = await supabase
@@ -76,7 +76,8 @@ export async function fetchAppointments() {
               starttime: schedule[0].starttime,
               endtime: schedule[0].endtime,
               title: service[0].title,
-              reservee: `${person[0].firstname} ${person[0].middlename ? person[0].middlename + ' ' : ''}${person[0].lastname}`
+              reservee: `${person[0].firstname} ${person[0].middlename ? person[0].middlename + ' ' : ''}${person[0].lastname}`,
+              totalamountdue: appointment.totalamountdue
           };
       }
 
@@ -155,7 +156,7 @@ export async function fetchCalendarData(selectedDate: any) {
 
       const { data: appointments, error: appointmentsError } = await supabase
         .from('Appointment')
-        .select('serviceid, isparkingspotneeded, additionalrequest, trackingnumber')
+        .select('serviceid, isparkingspotneeded, additionalrequest, trackingnumber, totalamountdue')
         .eq('appointmentid', schedule.appointmentid);
 
       if (appointmentsError) {
@@ -233,7 +234,8 @@ export async function fetchCalendarData(selectedDate: any) {
         additionalreq: appointment.additionalrequest,
         additionalPersonNames: additionalCustomerNames.filter(name => name !== null),
         status: schedule.status,
-        trackingnumber: appointment.trackingnumber
+        trackingnumber: appointment.trackingnumber,
+        totalamountdue: appointment.totalamountdue
       };
     })
   );

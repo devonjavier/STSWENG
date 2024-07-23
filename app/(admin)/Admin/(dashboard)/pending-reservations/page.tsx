@@ -233,9 +233,13 @@ const Page = () => {
                     <p>Start Time: {selectedAppointment.starttime}</p>
                     <p>End Time: {selectedAppointment.endtime}</p>
                   </div>
-                  <div className="flex items-start text-center w-1/2">
+                  <div className="w-1/2 flex flex-col items-start">
                     <p>Additional request/s: {selectedAppointment.additionalreq}</p>
+                    <div className="mt-2">
+                      <p className="font-semibold">Amount Due: ₱{selectedAppointment.totalamountdue ? Number(selectedAppointment.totalamountdue).toFixed(2) : '0.00'}</p>
+                    </div>
                   </div>
+                  
                 </div>
               </div>
             </div>
