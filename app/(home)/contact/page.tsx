@@ -1,6 +1,7 @@
 
 "use client";
-import { useState } from 'react';
+import { fetchFAQs } from '@/utils/supabase/data';
+import { useActionState, useEffect, useState } from 'react';
 import React from 'react';
 
 interface QuestionAnswer {
@@ -10,19 +11,23 @@ interface QuestionAnswer {
 
 const FAQPage: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [questionsAndAnswers,setquestionsAndAnswers] = useState([])
 
   const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   //fetch QandA from supabase
-  const questionsAndAnswers: QuestionAnswer[] = [
-    { question: "How much are your services?", answer: "Answer" },
-    { question: "Can we record RAW Audio only without mixing and mastering?", answer: "Answer 2" },
-    { question: "Can we shoot a video while recording?", answer: "Answer THR33" },
-    { question: "Where are you located?", answer: "Answer for" },
-    { question: "Will an engineer be assisting us?", answer: "Answer payb" },
-  ];
+  useEffect(()=>{
+    const getFAQs = async() => {
+      const data = await fetchFAQs();
+      setquestionsAndAnswers(data);
+    }
+    getFAQs();
+  },[]);
+  
+
+  
 
   return (
     <div className="bg-white max-h-full">

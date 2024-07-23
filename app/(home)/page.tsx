@@ -16,10 +16,6 @@ export default async function Home() {
         <IntroText />
       </div>
     </div>
-    <div className='flex justify-center mb-20'>
-      <Images />
-    </div>
-
     <div className='bg-cusBlue '> 
       <div className='relative'>
         <Services />
