@@ -42,7 +42,7 @@ export default function EditFAQs() {
 
     getFAQs();
   }, []);
-
+  
   const handleInputChange = (index: number, field: keyof FAQ, value: string) => {
     const updatedFaqs = [...faqs];
     updatedFaqs[index][field] = value;
