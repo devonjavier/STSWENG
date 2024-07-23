@@ -125,7 +125,7 @@ const Page: React.FC = () => {
           </select>
         </div>
 
-        <div className="max-h-[72vh] overflow-y-auto rounded-3xl custom-scrollbar">
+        <div className="max-h-[72vh] overflow-y-auto rounded-3xl custom-scrollbar drop-shadow-2xl">
           <table className="max-h-[70vh] overflow-y-auto min-w-full bg-white border border-transparent shadow-lg" style={{ borderRadius: '20px', overflow: 'hidden' }}>
             <thead>
               <tr className="bg-cusBlue text-white text-left">

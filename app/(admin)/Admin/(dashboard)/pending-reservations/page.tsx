@@ -168,7 +168,7 @@ const Page = () => {
         <PendingCalendar setArrFunc={setSelectedDates} setSelectedDate={setSelectedDate} />
         
         {selectedDate && (
-          <div className="ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 h-shadow-lg bg-white text-black flex flex-col overflow-h-auto">
+          <div className="ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 drop-shadow-2xl bg-white text-black flex flex-col overflow-h-auto">
             <h2 className="text-xl font-bold mb-4 text-left">Appointments on {formatDate(selectedDate)}</h2>
             <div className="flex flex-col gap-2">
               {combinedAppointments.map((appointment, index) => (
@@ -190,7 +190,7 @@ const Page = () => {
       </div>
 
       {selectedAppointment && (
-        <div className="reservation-details mt-6 p-4 border border-gray-300 rounded-lg w-full h-shadow-lg bg-white text-black flex flex-col justify-between">
+        <div className="reservation-details mt-6 p-4 border border-gray-300 rounded-lg w-full drop-shadow-2xl bg-white text-black flex flex-col justify-between">
           <div>
             <h2 className="text-xl font-bold mb-4 text-left">
               Details for Customer {selectedAppointment.name}
