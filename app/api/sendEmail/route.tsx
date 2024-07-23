@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
+
+
 export async function POST(request: NextRequest) {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
@@ -29,11 +36,76 @@ export async function POST(request: NextRequest) {
     secure: true,
   });
 
+  const schedules = JSON.parse(searchParams.schedules).map((schedule) => `
+  <div>
+      <span>Date: ${formatDate(schedule.date)}</span><br/>
+      <span>Time: ${schedule.starttime} - ${schedule.endtime}</span>
+  </div>
+  `).join('');
+
+  let additionalpackage;
+  
+  if (JSON.parse(searchParams.additionalpackage).length === 0){
+    additionalpackage = "NONE"
+  }
+  else{
+    additionalpackage = JSON.parse(searchParams.additionalpackage)
+  }
+
+
   let subject;
   let textBody;
   let htmlBody;
 
   switch (status) {
+    case 'pending':
+      subject = `Appointment Confirmation: ${trackingNumber}`;
+      textBody = `Dear ${searchParams.maincustomerfirstname} ${searchParams.maincustomerlastname},
+
+Your booking has been successfully submitted.
+
+Booking Reference Number: ${trackingNumber}
+Date & Time: ${JSON.stringify(searchParams.schedules)}
+Service: ${searchParams.serviceType}
+
+Additional Requests: ${searchParams.additionalrequests}
+Parking Required: ${searchParams.needsparking === 'true' ? 'Yes' : 'No'}
+
+Thank you for choosing our services!
+
+Best Regards,
+Indigo Studios`,
+      htmlBody = `
+<p>Dear ${searchParams.maincustomerfirstname} ${searchParams.maincustomerlastname},</p>
+
+<p>Greetings! This email is to inform you that your booking is still currently pending!</p>
+<p>
+To proceed with your booking, please complete the down payment. 
+You can make your payment through any of our electronic wallets: 
+GCash, PayMaya, or PayPal using the number (+63 969 647 5564).
+</p>
+<p>We will notify you as soon as your booking is confirmed.</p>
+<br/>
+<p> BOOKING DETAILS: </p>
+<p><b>Booking Reference Number:</b> ${trackingNumber}<br/>
+<p><b>Total Amount Due:</b> ${parseFloat(searchParams.mainprice) + parseFloat(searchParams.additionalprice)}<br/>
+<b>Date & Time:</b> ${schedules}
+<br/>
+<b>Service:</b> ${searchParams.selectedServicetitle}</p>
+<b>Additional service:</b> ${additionalpackage}</p>
+<br/>
+<p>
+If you have any questions or need to make changes to your booking, 
+please feel free to reply to this email or contact us via Facebook 
+(@IndigoStudiosPH) and Instagram (@indigostudiosph).
+</p>
+<p>
+Thank you for your patience and cooperation.
+</p>
+<p>Thank you for choosing our services!</p>
+<p>Best Regards,<br/>
+Indigo Studios</p>`
+      break;
     case 'accepted':
       subject = `Booking Status Confirmation for ${trackingNumber}`;
       textBody = `Dear ${searchParams.maincustomerfirstname},
@@ -101,6 +173,7 @@ Indigo Studios</p>`
       subject = `Booking Status Confirmation for ${trackingNumber}`;
       textBody = `Dear ${searchParams.maincustomerfirstname},
 
+
 Thank you for choosing Indigo Studios PH. We regret to inform you that your booking request has been declined.
 
 Unfortunately, we are unable to accommodate your booking at this time due to [reason, if appropriate to include, e.g., scheduling conflicts, capacity limits, etc.]. We apologize for any inconvenience this may cause.
@@ -148,7 +221,7 @@ Indigo Studios Ph</p>`;
   const mailData = {
     from: process.env.EMAIL!,
     to: searchParams.emailaddress,
-    subject,
+    subject: subject,
     text: textBody,
     html: htmlBody,
   };

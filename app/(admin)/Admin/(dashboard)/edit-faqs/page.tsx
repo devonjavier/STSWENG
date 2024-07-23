@@ -78,7 +78,7 @@ export default function EditFAQs() {
         </button>
       </div>
       <p className="text-xs text-red-500 mt-1 ml-48">* indicates a required field</p>
-      <div className="w-full flex flex-col items-center p-4">
+      <div className="w-full flex flex-col items-center p-3">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
           <div ref={containerRef} className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full max-w-full space-y-6 custom-scrollbar">
             {faqs.map((faq, index) => (
