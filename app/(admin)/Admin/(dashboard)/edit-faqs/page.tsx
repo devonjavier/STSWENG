@@ -20,7 +20,7 @@ export default function EditFAQs() {
       } else {
         try {
           const data = await fetchFAQs();
-          setFaqs(data);
+          setFaqs(data as FAQ[]);
   
           console.log(data);
         } catch(error) {
@@ -54,7 +54,21 @@ export default function EditFAQs() {
   };
 
   const handleAddQuestion = () => {
-    setFaqs([...faqs, { id: '', question: '', answer: '' }]);
+
+    let new_faq_id_string
+
+    if(faqs.length > 0){
+      const faq_length = faqs.length;
+      const latest_faq_id = faqs[faq_length-1].id;
+      const new_faq_id = Number(latest_faq_id) + 1;
+      new_faq_id_string = new_faq_id.toString();
+    } else {
+      new_faq_id_string = '6001';
+    }
+  
+    console.log(new_faq_id_string);
+
+    setFaqs([...faqs, { id: new_faq_id_string, question: '', answer: '' }]);
   };
 
   return (

@@ -349,23 +349,75 @@ export async function editServices(services: Service[]) {
   }
 }
 
-export async function editFAQs(faqs : FAQ[]){
+export async function editFAQs(faqs : FAQ[]) {
   console.log(faqs);
-  const supabase = createClient();
+  const supabase = createClient(); // Initialize your Supabase client
 
-  for(const faq of faqs){
-    console.log(faq.id);
-
-    const {error} = await supabase
+  // Fetch all current IDs from the database
+  const { data: existingFAQs, error: fetchError } = await supabase
     .from('FAQ')
-    .update({question : faq.question, answer : faq.answer})
-    .match({id : faq.id});
+    .select('id');
 
-    if(error){
-      console.error('Error : ' + error);
+  if (fetchError) {
+    console.error('Error fetching existing FAQs: ' + fetchError);
+    return;
+  }
+
+  const existingIDs = existingFAQs.map(faq => faq.id);
+  const newIDs = faqs.map(faq => faq.id);
+
+  // Identify IDs to delete
+  const idsToDelete = existingIDs.filter(id => !newIDs.includes(id));
+
+  // Delete records not present in the new FAQs
+  if (idsToDelete.length > 0) {
+    const { error: deleteError } = await supabase
+      .from('FAQ')
+      .delete()
+      .in('id', idsToDelete);
+
+    if (deleteError) {
+      console.error('Error deleting old FAQs: ' + deleteError);
     }
   }
 
+  // Process the new/updated FAQs
+  for (const faq of faqs) {
+    console.log(faq.id);
+
+    // Check if the ID exists
+    const { data, error: checkError } = await supabase
+      .from('FAQ')
+      .select('id')
+      .eq('id', faq.id)
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // Handle the specific error for not found
+      console.error('Error checking ID: ' + checkError);
+      continue;
+    }
+
+    if (data) {
+      // ID exists, update the record
+      const { error: updateError } = await supabase
+        .from('FAQ')
+        .update({ question: faq.question, answer: faq.answer })
+        .eq('id', faq.id);
+
+      if (updateError) {
+        console.error('Error updating FAQ: ' + updateError);
+      }
+    } else {
+      // ID does not exist, insert a new record
+      const { error: insertError } = await supabase
+        .from('FAQ')
+        .insert([{ id: faq.id, question: faq.question, answer: faq.answer }]);
+
+      if (insertError) {
+        console.error('Error inserting new FAQ: ' + insertError);
+      }
+    }
+  }
 }
 
 
