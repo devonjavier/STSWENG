@@ -70,11 +70,6 @@ const Page = ({ searchParams }: {
             getPriceAdditional();
         }
 
-        // get the price of the main package
-        //console.log(theService);
-        //console.log(theService.serviceid);
-
-        // get the price of the additional package
         const getPriceAdditional= async () => {
             try {
                 const additionalserviceid = await fetchOneAdditionalServiceWithTitle(JSON.parse(searchParams.additionalpackage));

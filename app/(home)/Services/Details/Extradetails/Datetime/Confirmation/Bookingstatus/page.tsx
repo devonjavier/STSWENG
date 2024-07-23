@@ -90,12 +90,15 @@ const Page = ({searchParams}:{
                 else
                     dotheyneedparking = false
 
+                let totalprice = parseFloat(searchParams.mainprice) + parseFloat(searchParams.additionalprice);
+
                 const addtheAppointment = await addOneAppointment(
                     theService.serviceid,
                     dotheyneedparking,
                     gettrackingnumber,
                     searchParams.additionalrequests,
-                    JSON.parse(searchParams.additionalpackage)
+                    JSON.parse(searchParams.additionalpackage),
+                    totalprice
                 );
 
                 appointentid = addtheAppointment;

@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
+import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices, getSchedulePrice } from '@/utils/supabase/data'
 import { service } from '@/utils/supabase/interfaces'
 import { useDebouncedCallback } from 'use-debounce';
 import Image from "next/image"
@@ -16,6 +16,8 @@ export default function DisplayPage() {
     const [trackingNumber, setTrackingNumber] = useState<number>(12) 
     const [isChecked, setIsChecked] = useState(false); // assume its false
     const [selectedService, setSelectedService] = useState("");
+    const [selectedAdditionalService, setSelectedAdditionalService] = useState("None selected");
+
     const [maincustomerfirstname, setmaincustomerfirstname] = useState(" "); // assume no customer
     const [maincustomermiddlename, setmaincustomermiddlename] = useState(" "); // assume no customer
     const [maincustomerlastname, setmaincustomerlastname] = useState(" "); // assume no customer
@@ -29,11 +31,13 @@ export default function DisplayPage() {
     const [status, setStatus] = useState<string>("/check_mark.png");
     const [statusMessage , setStatusMessage] = useState<string>(" ");
     const [isContentVisible, setIsContentVisible] = useState(false);
+    const [totalAmountDue, setTotalAmountDue] = useState(0)
 
     const trackingNumberChange = ((term:number) => {
         setTrackingNumber(term);
     });
 
+    
     const fetchStatus = async() =>{
 
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
@@ -49,11 +53,19 @@ export default function DisplayPage() {
             setStatus("/ekis_mark.png");
             setStatusMessage("Appointment Rejected");
         }
+
+        const getPrices = async ()=>{
+        }
+
+        getPrices();
+    
             
         const appid:number = getThatAppointment[0].appointmentid
 
         // main customer
         const mainCustomer = await fetchOneCustomer(appid, true);
+
+        setTotalAmountDue(getThatAppointment[0].totalamountdue);
         
         setadditionalRequests(getThatAppointment[0].additionalrequest);
         setIsChecked(getThatAppointment[0].isparkingspotneeded);
@@ -61,6 +73,15 @@ export default function DisplayPage() {
         const selectedservice = await fetchOneService(parseInt(getThatAppointment[0].serviceid));
         setSelectedService(selectedservice[0].title);
 
+        if(!(Object.is(getThatAppointment[0].additionalserviceid, null))) // if there is an additional service
+        {
+            const selectedservice = await fetchOneService(parseInt(getThatAppointment[0].additionalserviceid));
+            setSelectedAdditionalService(selectedservice[0].title)
+        }
+        else{
+            setSelectedAdditionalService("None Selected")
+        }
+        
         const mainCustomerDetails = await fetchOnePerson(mainCustomer[0].personid);
         setmaincustomerfirstname(mainCustomerDetails[0].firstname);
         setmaincustomermiddlename(mainCustomerDetails[0].middlename)
@@ -172,6 +193,9 @@ export default function DisplayPage() {
                             <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl ml-4 w-full'>
                                 <span className='text-black  font-bold mb-5  text-3xl'> Reservation Details: </span>
                                 <span className='text-black font-bold mb-5 ml-7  text-2xl'> Package Selection: {selectedService}  </span>
+                                <span className='text-black font-bold mb-5 ml-7  text-2xl'> Additional service: {selectedAdditionalService}  </span>
+                                
+                                <span className='text-black font-bold mb-5 ml-7  text-2xl'> Total Amount Due: {totalAmountDue}  </span>
                                 <span className='text-black font-bold mb-2 ml-7  text-2xl'> Appointment schedules: </span>
                                 <div className='flex flex-col mb-4'>
                                     {listofschedules.map((schedule) => (

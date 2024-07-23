@@ -6,6 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
 import { create } from 'domain'
+import { serialize } from 'v8'
 
 export async function fetchOneAdditionalService(id:number) {
     
@@ -503,13 +504,15 @@ export async function fetchtrackingnumber(){
         return 10000
 
 }
+
 export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
     trackingnumber:number,
     //status
     additionalrequest:string,
-    additionalpackage:string
+    additionalpackage:string,
+    totalprice:number
 ){
     const supabase = createClient();
 
@@ -548,7 +551,8 @@ export async function addOneAppointment(
         trackingnumber: trackingnumber,
         discount:15.0,
         additionalrequest:additionalrequest,
-        additionalserviceid:additionalpack
+        additionalserviceid:additionalpack,
+        totalamountdue:totalprice
     }) 
     
     if(error)
