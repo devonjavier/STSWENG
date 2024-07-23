@@ -26,6 +26,7 @@ export interface reservation {
   starttime: string;
   endtime: string;
   reservee: string;
+  title: string;
   service: string;
   status: string;
   title: string;
