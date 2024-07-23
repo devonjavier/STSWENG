@@ -29,7 +29,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
   
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-[100vh]">
       <AdminSidebar />
       <div className="flex-grow bg-white">
         <div className="bg-gray-200 p-4 flex justify-between items-center h-20">

@@ -89,7 +89,7 @@ const Page: React.FC = () => {
 
   return (
     <>
-      <div className="p-24 pt-20 pb-2">
+      <div className="p-24 pt-16 pb-2">
         <div className="flex mb-4 mb-10">
           <input
             type="text"

@@ -163,7 +163,7 @@ const Page = () => {
   const combinedAppointments = getCombinedAppointments();
 
   return (
-    <div className='px-32 flex flex-col gap-8 pt-20 pb-32 max-h-[91.8vh] overflow-y-auto custom-scrollbar'>
+    <div className='px-32 flex flex-col gap-8 pt-20 pb-[5vh] max-h-[91.8vh] overflow-y-auto custom-scrollbar'>
       <div className="flex">
         <PendingCalendar setArrFunc={setSelectedDates} setSelectedDate={setSelectedDate} />
         

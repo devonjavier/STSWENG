@@ -9,6 +9,7 @@ import { FAQ } from '@/utils/supabase/interfaces';
 
 export default function EditFAQs() {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const getFAQs = async () => {
@@ -42,6 +43,10 @@ export default function EditFAQs() {
     e.preventDefault();
     try {
       await editFAQs(faqs);
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000); 
     } catch (error) {
       console.error('Error updating services:', error);
     }
@@ -54,21 +59,7 @@ export default function EditFAQs() {
   };
 
   const handleAddQuestion = () => {
-
-    let new_faq_id_string
-
-    if(faqs.length > 0){
-      const faq_length = faqs.length;
-      const latest_faq_id = faqs[faq_length-1].id;
-      const new_faq_id = Number(latest_faq_id) + 1;
-      new_faq_id_string = new_faq_id.toString();
-    } else {
-      new_faq_id_string = '6001';
-    }
-  
-    console.log(new_faq_id_string);
-
-    setFaqs([...faqs, { id: new_faq_id_string, question: '', answer: '' }]);
+    setFaqs([...faqs, { id: '', question: '', answer: '' }]);
   };
 
   return (
@@ -78,11 +69,11 @@ export default function EditFAQs() {
         <button
           type="button"
           className="bg-cusBlue font-bold text-white px-4 py-2 rounded-3xl w-40 mr-20"
-          onClick={handleAddQuestion}
-        >
+          onClick={handleAddQuestion}>
           Add a question
         </button>
       </div>
+      <p className="text-xs text-red-500 mt-1 ml-48">* indicates a required field</p>
       <div className="w-full flex flex-col items-center p-4">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
           <div className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full  max-w-full space-y-6 custom-scrollbar">
@@ -102,6 +93,11 @@ export default function EditFAQs() {
           </div>
         </form>
       </div>
+      {showPopup && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
+          FAQs Updated Successfully!
+        </div>
+      )}
     </div>
   );
 }
@@ -117,21 +113,23 @@ const FAQCard: React.FC<FAQCardProps> = ({ faq, onInputChange, onDelete }) => {
     <div className="flex-1 w-max bg-white shadow-xl p-1 rounded-lg">
       <div className="flex justify-between items-center mb-4 p-4 pb-0">
         <div className="flex-1 mr-4">
-          <label className="block text-gray-700 font-bold text-black">Question</label>
+          <label className="block text-gray-700 font-bold text-black">Question<span className="text-red-500"> *</span></label> 
           <input
             type="text"
             value={faq.question}
             onChange={(e) => onInputChange('question', e.target.value)}
             className="h-10 text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full pl-3"
+            required
           />
         </div>
       </div>
       <div className="p-4">
-        <label className="block text-gray-700 font-bold text-black">Answer</label>
+        <label className="block text-gray-700 font-bold text-black">Answer<span className="text-red-500"> *</span></label>
         <textarea
           value={faq.answer}
           onChange={(e) => onInputChange('answer', e.target.value)}
           className="text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3 pt-2"
+          required
         />
       </div>
       <div className="p-4 flex justify-end">
