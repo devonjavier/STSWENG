@@ -68,35 +68,6 @@ const Services = () => {
             from ₱2,800
           </div>
         </div>
-             
-        <div className='relative flex gap-2 justify-around pb-8 border-b-2 w-[1184px] pt-8'>
-          <div className='absolute left-0'>
-            <img className = 'w-[105px] h-[105px] bg-zinc-300 rounded-[10px]'src="" alt="asa" />
-          </div>
-          <div className='flex flex-col justify-end pb-3 pr-56'>
-            <div className='text-white text-[32px] self-start text-2xl font-medium italic'>Original beat production/arrangement</div>
-            <div className='w-[682px] text-white text-lg font-light'>May increase by ₱2,000 - ₱3,000 depending on difficulty</div>
-            <div className='w-[682px] text-white text-lg font-light italic'>*requires the company’s collaboration agreement contract</div>
-          </div>
-          <div className='absolute right-0 text-white text-2xl font-semibold pt-2 text-right'>
-          from ₱12,000<br />per session
-          </div>
-        </div>
-
-
-        <div className='relative flex gap-2 justify-around pb-8 border-b-2 w-[1184px] pt-8'>
-          <div className='absolute left-0'>
-            <img className = 'w-[105px] h-[105px] bg-zinc-300 rounded-[10px]'src="" alt="asa" />
-          </div>
-          <div className='flex flex-col justify-end pb-3 pr-56'>
-            <div className='text-white text-[32px] self-start text-2xl font-medium italic'>Full song production</div>
-            <div className='w-[682px] text-white text-lg font-light'>Includes beat, lyric writing, and recording</div>
-            <div className='w-[682px] text-white text-lg font-light italic'>*requires the company’s collaboration agreement contract</div>
-          </div>
-          <div className='absolute right-0 text-white text-2xl font-semibold pt-2 text-right'>
-          from ₱20,000
-          </div>
-        </div>
        
       </div>
 
