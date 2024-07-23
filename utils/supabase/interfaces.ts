@@ -54,11 +54,10 @@ export interface TimeSlot {
 }
 
 export interface FAQ {
-  faq_id : string,
+  id : string,
   question: string;
   answer: string;
 }
-
 export interface Service {
   serviceid: number;
   title: string;

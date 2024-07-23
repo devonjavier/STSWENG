@@ -4,22 +4,11 @@ import '../scrollbarStyle.css';
 import { useEffect } from 'react';
 import { fetchFAQs } from '@/utils/supabase/data';
 import { checkCookie } from '@/app/lib/actions';
-interface FAQ {
-  question: string;
-  answer: string;
-}
+import { editFAQs } from '@/app/lib/actions';
+import { FAQ } from '@/utils/supabase/interfaces';
 
 export default function EditFAQs() {
-  const [faqs, setFaqs] = useState<FAQ[]>([
-    {
-      question: 'What are the payment methods?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
-    },
-    {
-      question: 'Is a parking spot provided?',
-      answer: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque felis est, porttitor vitae dignissim sed, viverra eu',
-    },
-  ]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
 
   useEffect(() => {
     const getFAQs = async () => {
@@ -49,8 +38,13 @@ export default function EditFAQs() {
     setFaqs(updatedFaqs);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      await editFAQs(faqs);
+    } catch (error) {
+      console.error('Error updating services:', error);
+    }
     console.log('FAQs:', faqs);
   };
 
@@ -60,7 +54,7 @@ export default function EditFAQs() {
   };
 
   const handleAddQuestion = () => {
-    setFaqs([...faqs, { question: '', answer: '' }]);
+    setFaqs([...faqs, { id: '', question: '', answer: '' }]);
   };
 
   return (

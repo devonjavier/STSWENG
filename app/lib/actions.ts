@@ -349,6 +349,25 @@ export async function editServices(services: Service[]) {
   }
 }
 
+export async function editFAQs(faqs : FAQ[]){
+  console.log(faqs);
+  const supabase = createClient();
+
+  for(const faq of faqs){
+    console.log(faq.id);
+
+    const {error} = await supabase
+    .from('FAQ')
+    .update({question : faq.question, answer : faq.answer})
+    .match({id : faq.id});
+
+    if(error){
+      console.error('Error : ' + error);
+    }
+  }
+
+}
+
 
 export async function checkCookie(){
   const cookieStore = cookies();
