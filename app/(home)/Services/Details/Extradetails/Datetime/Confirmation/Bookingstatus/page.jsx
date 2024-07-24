@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
     addOneAppointment,
     addCustomer,
@@ -18,7 +18,10 @@ const formatDate = (dateString) => {
 };
 
 const Page = ({ searchParams }) => {
-    lastAppointmentTime = localStorage.getItem('lastAppointmentTime');
+
+    useEffect(()=>{
+        lastAppointmentTime = localStorage.getItem('lastAppointmentTime');
+    },[]);
     const router = useRouter();
     const theService = JSON.parse(searchParams.service);
     const [trackingNumber, setTrackingNumber] = useState(10000);

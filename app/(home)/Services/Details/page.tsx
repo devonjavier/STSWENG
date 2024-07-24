@@ -81,7 +81,7 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
         if (!emailaddress.trim()) tempErrors.email = "Email Address is required";
         
         setErrors(tempErrors);
-        return Object.values(tempErrors).some(error => error== '');;
+        return Object.values(tempErrors).some(error => error== '');
     };
 
     const handleNextClick = (e:any) => {

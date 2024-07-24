@@ -32,71 +32,75 @@ export default function DisplayPage() {
     const [statusMessage , setStatusMessage] = useState<string>(" ");
     const [isContentVisible, setIsContentVisible] = useState(false);
     const [totalAmountDue, setTotalAmountDue] = useState(0)
-
+    const [isError, setIsError] = useState(false); 
     const trackingNumberChange = ((term:number) => {
         setTrackingNumber(term);
     });
 
     
-    const fetchStatus = async() =>{
-
+    const fetchStatus = async () => {
+    try {
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
-        const status = getThatAppointment[0].status
 
-        if(status === "Pending") {
+        if (!getThatAppointment || !getThatAppointment.length) {
+            setIsError(true);  
+            return;
+        } 
+
+        setIsError(false); 
+        const status = getThatAppointment[0].status;
+        
+        if (status === "Pending") {
             setStatus("/pending_mark.png");
             setStatusMessage("Appointment Pending");
-        } else if(status === "Accepted") {
+        } else if (status === "Accepted") {
             setStatus("/check_mark.png");
             setStatusMessage("Appointment Accepted");
-        } else if(status === "Rejected") {
+        } else if (status === "Rejected") {
             setStatus("/ekis_mark.png");
             setStatusMessage("Appointment Rejected");
         }
 
-        const getPrices = async ()=>{
+        const appid = getThatAppointment[0].appointmentid;
+        const mainCustomer = await fetchOneCustomer(appid, true);
+        if (!mainCustomer || !mainCustomer.length) {
+            setIsError(true);
+            throw new Error('Main customer not found'); 
         }
 
-        getPrices();
-    
-            
-        const appid:number = getThatAppointment[0].appointmentid
-
-        // main customer
-        const mainCustomer = await fetchOneCustomer(appid, true);
+        const mainCustomerDetails = await fetchOnePerson(mainCustomer[0].personid);
+        if (!mainCustomerDetails || !mainCustomerDetails.length) {
+            setIsError(true);
+            throw new Error('Main customer details not found'); 
+        }
 
         setTotalAmountDue(getThatAppointment[0].totalamountdue);
-        
         setadditionalRequests(getThatAppointment[0].additionalrequest);
         setIsChecked(getThatAppointment[0].isparkingspotneeded);
 
         const selectedservice = await fetchOneService(parseInt(getThatAppointment[0].serviceid));
         setSelectedService(selectedservice[0].title);
 
-        if(!(Object.is(getThatAppointment[0].additionalserviceid, null))) // if there is an additional service
-        {
-            const selectedservice = await fetchOneService(parseInt(getThatAppointment[0].additionalserviceid));
-            setSelectedAdditionalService(selectedservice[0].title)
+        if (!Object.is(getThatAppointment[0].additionalserviceid, null)) {
+            const additionalservice = await fetchOneService(parseInt(getThatAppointment[0].additionalserviceid));
+            setSelectedAdditionalService(additionalservice[0].title);
+        } else {
+            setSelectedAdditionalService("None Selected");
         }
-        else{
-            setSelectedAdditionalService("None Selected")
-        }
-        
-        const mainCustomerDetails = await fetchOnePerson(mainCustomer[0].personid);
+
         setmaincustomerfirstname(mainCustomerDetails[0].firstname);
-        setmaincustomermiddlename(mainCustomerDetails[0].middlename)
+        setmaincustomermiddlename(mainCustomerDetails[0].middlename);
         setmaincustomerlastname(mainCustomerDetails[0].lastname);
         setPhonenumber(mainCustomerDetails[0].contactnumber);
         setEmailaddress(mainCustomerDetails[0].emailaddress);
 
         const additionalCustomers = await fetchOneCustomer(appid, false);
-        
-        let additionalcust  = []
-        let additionalfirstnames = []
-        let additionalmiddlenames = []
-        let additionallastnames = []
+        let additionalcust = [];
+        let additionalfirstnames = [];
+        let additionalmiddlenames = [];
+        let additionallastnames = [];
 
-        for(let detail of additionalCustomers){
+        for (let detail of additionalCustomers) {
             additionalcust = await fetchOnePerson(detail.personid);
             additionalfirstnames.push(additionalcust[0].firstname);
             additionalmiddlenames.push(additionalcust[0].middlename);
@@ -107,19 +111,17 @@ export default function DisplayPage() {
         setadditionalCustomersMiddlename(additionalmiddlenames);
         setadditionalCustomersLastname(additionallastnames);
 
-        const newSchedules:schedule[] = [];
-        const getData = await fetchSelectedSchedule(appid);
-        
-        getData.forEach((one: schedule) => {
-            newSchedules.push(one);
-        });
-
+        const newSchedules = await fetchSelectedSchedule(appid);
         setlistofschedules(newSchedules);
 
         setTimeout(() => {
             setIsContentVisible(true);
-        }, 0); 
+        }, 0);
+    } catch (error) {
+        console.error(error);
+        setIsError(true);
     }
+};
 
     const getStatus = async() => {
         if (isContentVisible) {
@@ -138,11 +140,10 @@ export default function DisplayPage() {
                 <span className='text-cusBlue font-bold mb-2 mt-6  text-7xl'> Check Status </span>
                 <span className='text-gray-400 font-bold mb-6 text-xl'> Track your appointment here. </span>
                 <span className='text-black font-bold mb-2  text-xl'> Reference Number: </span>
-                <input placeholder = "Input reference number" 
-                    onChange={(e)=>{
-                        trackingNumberChange(parseInt(e.target.value));
-                    }}
-                    className='text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" />
+                <input placeholder="Input reference number" onChange={(e) => {trackingNumberChange(parseInt(e.target.value)); setIsError(false);  }}
+                className={`text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] 
+                border ${isError ? 'border-red-600' : 'border-indigo-800'} justify-between items-center inline-flex`} type="number" />
+                {isError && <span className="text-red-600 text-lg"></span>} 
                 <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
             </div>
             {isContentVisible && ( 
