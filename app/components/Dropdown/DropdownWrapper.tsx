@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
+
 interface Schedule {
   date: string;
   starttime: string;
@@ -58,6 +59,17 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
 
   const formatTime = (date: Date): string => {
     return date.toTimeString().split(' ')[0].substring(0, 5);
+  };
+
+  const formatTimeString = (timeString: string): string => {
+    const date = parseTimeString(timeString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const isPM = hours >= 12;
+    const adjustedHours = hours % 12 === 0 ? 12 : hours % 12; 
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const suffix = isPM ? 'PM' : 'AM';
+    return `${adjustedHours}:${formattedMinutes} ${suffix}`;
   };
 
   const calculateTimeDifferenceInHours = (startTime: string, endTime: string): number => {
@@ -136,35 +148,32 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
           <details className="dropdown" open={isStartOpen}>
             <summary
               className="dropdown-summary m-1 bg-white w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg shadow-sm transition duration-400 ease-in-out transform active:scale-110"
-              onClick={(e) => toggleDropdown('start', e)}
-            >
-              <span className="text-left">{selectedDates[dateIndex].selectedtime1 || 'Select Time'}</span>
+              onClick={(e) => toggleDropdown('start', e)}>
+              <span className="text-left">{selectedDates[dateIndex].selectedtime1? formatTimeString(selectedDates[dateIndex].selectedtime1) : 'Select Time'}</span>
               <span><FaChevronDown /></span>
             </summary>
-            {isStartOpen && (
-              <ul className="dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48">
-                {items.validStartTimes.map((item:any, index:number) => (
-                  <li
-                    key={index}
-                    className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelectTime('start', item)}
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
+              {isStartOpen && (
+                <ul className="dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48">
+                  {items.validStartTimes.map((item:any, index:number) => (
+                    <li
+                      key={index}
+                      className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleSelectTime('start', item)}>
+                      {formatTimeString(item)}
+                    </li>
+                  ))}
+                </ul>
+              )}
           </details>
         </div>
 
         <div className='flex flex-col w-full relative'>
           <span className='pl-1 text-sm font-bold text-black pt-6'>End</span>
           <details className="dropdown" open={isEndOpen}>
-            <summary
+          <summary
               className="dropdown-summary m-1 bg-white w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg shadow-sm transition duration-200 ease-in-out transform active:scale-95"
-              onClick={(e) => toggleDropdown('end', e)}
-            >
-              <span className="text-left">{selectedDates[dateIndex].selectedtime2 || 'Select Time'}</span>
+              onClick={(e) => toggleDropdown('end', e)}>
+              <span className="text-left">{selectedDates[dateIndex].selectedtime2? formatTimeString(selectedDates[dateIndex].selectedtime2) : 'Select Time'}</span>
               <span><FaChevronDown /></span>
             </summary>
             {isEndOpen && (
@@ -173,9 +182,8 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
                   <li
                     key={index}
                     className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelectTime('end', item)}
-                  >
-                    {item}
+                    onClick={() => handleSelectTime('end', item)}>
+                    {formatTimeString(item)}
                   </li>
                 ))}
               </ul>

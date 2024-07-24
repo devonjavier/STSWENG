@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(home)/Checkstatus/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(home)/Checkstatus/page.jsx", "app/(home)/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus/page.jsx", "app/components/GenerateDivsTime.jsx"],
   "exclude": ["node_modules"]
 }

@@ -100,7 +100,7 @@ const Page = ({ searchParams }: {
                             </Link>
                         </div>
                         <div className='flex flex-col'>
-                            <DropdownWrapper selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} hours={searchParams.hours} />
+                            <DropdownWrapper selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} hours={searchParams.hours} items={[]} />
                         </div>
                     </div>
                 </div>

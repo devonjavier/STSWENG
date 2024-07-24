@@ -64,9 +64,9 @@ const FAQPage: React.FC = () => {
                 style={{ backgroundImage: "url('/contact_bg.jpg')" }}
             >
                 <div className="flex flex-col pl-12 pt-16">
-                    <h1 className="text-white text-5xl font-bold self-start">Can’t find your question?</h1>
+                    <h1 className="text-white text-5xl font-bold self-start">Can&apos;t find your question?</h1>
                     <p className="w-1/2 text-white text-lg font-light pt-4">
-                    Don't hesitate to contact us through the following
+                    Don&apos;t hesitate to contact us through the following
                     </p>
                 </div>
 

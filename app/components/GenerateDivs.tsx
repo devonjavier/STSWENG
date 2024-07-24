@@ -10,12 +10,9 @@ interface GenerateDivsProps {
 }
 
 const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCustomersFirst, setadditionalCustomersMiddle, setadditionalCustomersLast, errors, submitted }) => {
-
     const div: JSX.Element[] = [];
-
     const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value;
-
         setadditionalCustomersFirst(prevCustomers => {
             const updatedCustomers = [...prevCustomers];
             updatedCustomers[index] = value;
@@ -25,7 +22,6 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
 
     const handleMiddlenameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value;
-
         setadditionalCustomersMiddle(prevCustomers => {
             const updatedCustomers = [...prevCustomers];
             updatedCustomers[index] = value;
@@ -35,7 +31,6 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
 
     const handleLastnameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const value = e.target.value;
-
         setadditionalCustomersLast(prevCustomers => {
             const updatedCustomers = [...prevCustomers];
             updatedCustomers[index] = value;
