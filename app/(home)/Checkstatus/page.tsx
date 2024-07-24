@@ -31,6 +31,8 @@ export default function DisplayPage() {
     const [status, setStatus] = useState<string>("/check_mark.png");
     const [statusMessage , setStatusMessage] = useState<string>(" ");
     const [isContentVisible, setIsContentVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const [totalAmountDue, setTotalAmountDue] = useState(0)
     const [isError, setIsError] = useState(false); 
     const trackingNumberChange = ((term:number) => {
@@ -120,14 +122,18 @@ export default function DisplayPage() {
     } catch (error) {
         console.error(error);
         setIsError(true);
+    }finally{
+        setLoading(false);
     }
 };
 
     const getStatus = async() => {
         if (isContentVisible) {
+            setLoading(true);
             setIsContentVisible(false);
             setTimeout(fetchStatus, 300); 
         } else {
+            setLoading(true);
             fetchStatus();
         }
     }
@@ -146,7 +152,16 @@ export default function DisplayPage() {
                 {isError && <span className="text-red-600 text-lg"></span>} 
                 <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
             </div>
-            {isContentVisible && ( 
+
+            {loading ? (
+                <>
+                    <div className='flex flex-col items-center'>
+                        <span className="font-semibold text-4xl text-black mt-14"> LOADING... </span>
+                    </div>
+                </>
+            ) : (
+                <>
+                {isContentVisible && ( 
                 <>
                     <div className='m-5'>
                         <hr />
@@ -216,6 +231,14 @@ export default function DisplayPage() {
                     </div>
                 </>
             )}
+                </>
+
+                
+
+            )
+                // if not loading
+            }
+            
         </>
     )
 }
