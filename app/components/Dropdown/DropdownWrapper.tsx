@@ -12,6 +12,8 @@ interface DropdownProps {
   items: {
     startTimes: string[];
     endTimes: string[];
+    validStartTimes:any,
+    validEndTimes:any
   };
   dateIndex: number;
   selectedDates: { date: string; selectedtime1?: string; selectedtime2?: string }[];
@@ -141,7 +143,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
             </summary>
             {isStartOpen && (
               <ul className="dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48">
-                {items.validStartTimes.map((item, index) => (
+                {items.validStartTimes.map((item:any, index:number) => (
                   <li
                     key={index}
                     className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"
@@ -167,7 +169,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
             </summary>
             {isEndOpen && (
               <ul className={`dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48 ${selectedDates[dateIndex].selectedtime1 ? '' : 'disabled'}`}>
-                {filteredEndTimes.map((item, index) => (
+                {filteredEndTimes.map((item:any, index:number) => (
                   <li
                     key={index}
                     className="dropdown-item p-2 hover:bg-gray-100 cursor-pointer"

@@ -86,7 +86,7 @@ export default function DisplayPage() {
                                     </div>
                                     <div className='text-black text-2xl md:text-3xl font-bold italic'>{service.title}</div>
                                     <div className='w-full text-cusBlue text-xl md:text-2xl font-light'>{service.description}</div>
-                                    {i}
+                             
                                 </Link>
                             );
                         })
