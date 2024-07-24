@@ -1,29 +1,27 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../scrollbarStyle.css';
-import { useEffect, useCallback } from 'react';
 import { fetchEditServices } from '@/utils/supabase/data';
 import { Service } from '@/utils/supabase/interfaces';
-import { checkCookie, editServices } from '@/app/lib/actions';
-
+import { checkCookie, editServices, uploadPhoto } from '@/app/lib/actions';
 
 export default function EditServiceDetails() {
   const [services, setServices] = useState<Service[]>([]);
-
+  const [originalServices, setOriginalServices] = useState<Service[]>([]);
 
   useEffect(() => {
     const getServices = async () => {
-
       const authenticated = await checkCookie();
 
-      if(!authenticated){
-        window.location.href = '/'
+      if (!authenticated) {
+        window.location.href = '/';
       } else {
         try {
           const data = await fetchEditServices();
           console.log(data);
           setServices(data);
-
+          setOriginalServices(data);
+          console.log("AAHHHH!", data[0].imageUrl.publicUrl);
         } catch (error) {
           console.error('Error fetching services:', error);
         }
@@ -34,7 +32,7 @@ export default function EditServiceDetails() {
   }, []);
 
   const handleInputChange = (index: number, field: keyof Service, value: string) => {
-    const updatedServices : any = [...services];
+    const updatedServices: any = [...services];
 
     if (field === 'price') {
       updatedServices[index][field] = Number(value); // Convert string to number for price
@@ -45,10 +43,31 @@ export default function EditServiceDetails() {
     setServices(updatedServices);
   };
 
+  const handlePhotoChange = async (index: number, file: File) => {
+    // Convert File object to plain object if necessary
+    const plainFile = {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      lastModified: file.lastModified,
+      data: await fileToData(file) // Convert file to base64 or Blob
+    };
+
+    const { success, photoUrl } = await uploadPhoto(plainFile);
+    if (success) {
+      const updatedServices = [...services];
+      updatedServices[index].imageName = file.name;
+      setServices(updatedServices);
+    } else {
+      console.error('Error uploading photo');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await editServices(services);
+      window.location.reload;
     } catch (error) {
       console.error('Error updating services:', error);
     }
@@ -63,8 +82,15 @@ export default function EditServiceDetails() {
             {services.map((service, index) => (
               <div key={index} className="flex items-start space-x-12 mr-16">
                 <div className="w-24 h-24 bg-gray-200 flex flex-col justify-center items-center">
-                  <img src="/random.png" alt="Service" className="w-24 h-24 object-cover mb-2" />
-                  <button className="bg-cusBlue text-white px-2 py-1 rounded">Change Photo</button>
+                  <img src={service.imageUrl.publicUrl} alt={service.title} className="w-24 h-24 object-cover mb-2" />
+                  <label className="bg-cusBlue text-white px-2 py-1 rounded cursor-pointer">
+                    Change Photo
+                    <input
+                      type="file"
+                      onChange={(e) => e.target.files && handlePhotoChange(index, e.target.files[0])}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
 
                 <ServiceCard
@@ -113,7 +139,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onInputChange }) => 
           />
         </div>
       </div>
-      <div className="p-4">
+      <div className="p-4"> 
         <label className="block text-gray-700">Description</label>
         <textarea
           value={service.description}
@@ -125,3 +151,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onInputChange }) => 
   );
 };
 
+const fileToData = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};

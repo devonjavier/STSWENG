@@ -315,7 +315,7 @@ export async function editServices(services: Service[]) {
     console.log(service.serviceid);
     const { error: services_error } = await supabase
       .from('Service')
-      .update({ title: service.title, description: service.description })
+      .update({ title: service.title, description: service.description, imageName: service.imageName })
       .match({ serviceid: service.serviceid });
 
     if (services_error) {
@@ -390,6 +390,47 @@ export async function checkCookie(){
 
   return hasCookie;
 }
+
+export async function uploadPhoto(file: { name: string; data: string }) {
+  const supabase = createClient();
+  const fileExt = file.name.split('.').pop(); // file type
+  const filePath = `serviceImages/${file.name}`;
+  const contentType = `image/${fileExt}`;
+
+  // base64 -> array buffer
+  const arrayBuffer = base64ToArrayBuffer(file.data);
+  const fileData = new Uint8Array(arrayBuffer);
+
+  // upload to storage bucket
+  const { data, error } = await supabase.storage
+    .from('images')
+    .upload(filePath, fileData, {
+      contentType: contentType,
+    });
+
+  if (error) {
+    console.error('Error uploading photo:', error);
+    return { success: false, message: 'Error uploading photo' };
+  }
+
+  const photoUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${filePath}`;
+  console.log("Uploaded photo URL:", photoUrl);
+  return { success: true, photoUrl };
+}
+
+
+function base64ToArrayBuffer(base64: any) {
+  const binaryString = Buffer.from(base64.split(',')[1], 'base64').toString('binary');
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  return bytes.buffer;
+}
+
 
 // export async function handleSignup(formData : FormData){
 //   const supabase = createClient();
