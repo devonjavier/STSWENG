@@ -25,7 +25,7 @@ export async function fetchAppointments() {
       .from('Appointment')
       .select('appointmentid, serviceid, status, totalamountdue');
 
-  const appointmentDetails = await Promise.all(appointments.map(async (appointment) => {
+  const appointmentDetails = await Promise.all(appointments.map(async (appointment : any) => {
       const { data: schedule, error: scheduleError } = await supabase
           .from('Schedule')
           .select('date, starttime, endtime')
@@ -95,7 +95,7 @@ export async function fetchAppointments() {
       return appointment;
   }));
 
-  const filteredAppointmentDetails = appointmentDetails.filter(detail => detail !== null);
+  const filteredAppointmentDetails = appointmentDetails.filter((detail : any) => detail !== null);
 
   console.log(filteredAppointmentDetails);
 
@@ -131,13 +131,13 @@ export async function fetchCalendarData(selectedDate: any) {
   }
 
   // filter: pending or appointed only
-  const filteredSchedules = schedules.filter(schedule => 
+  const filteredSchedules = schedules.filter((schedule : any) => 
     schedule.status === 'Pending' || schedule.status === 'Appointed'
   );
 
   // fetch appointment details for each filtered schedule
   const calendarData = await Promise.all(
-    filteredSchedules.map(async (schedule) => {
+    filteredSchedules.map(async (schedule : any) => {
       const { data: customerData, error: customerError } = await supabase
         .from('Customers')
         .select('*')
@@ -253,7 +253,7 @@ export async function fetchCalendarData(selectedDate: any) {
         endtime: schedule.endtime,
         appointmentid: schedule.appointmentid,
         additionalreq: appointment.additionalrequest,
-        additionalPersonNames: additionalCustomerNames.filter(name=> name !== null),
+        additionalPersonNames: additionalCustomerNames.filter((name : any) => name !== null),
         status: schedule.status,
         trackingnumber: appointment.trackingnumber,
         totalamountdue: appointment.totalamountdue
@@ -261,7 +261,7 @@ export async function fetchCalendarData(selectedDate: any) {
     })
   );
 
-  return calendarData.filter(data => data !== null); // remove null
+  return calendarData.filter((data : any) => data !== null); // remove null
 }
 
 export async function fetchSchedule() {
@@ -443,41 +443,43 @@ export async function fetchAdditionalServices(serviceid:number){
 }
 
 export async function fetchEditServices() {
-
-
     const supabase = createClient();
-  
+
     const { data: services, error: serviceError } = await supabase.from('Service').select();
     const { data: onetimeServices, error: onetimeError } = await supabase.from('OnetimeService').select();
     const { data: hourlyServices, error: hourlyError } = await supabase.from('HourlyService').select();
-  
-    if (serviceError || onetimeError || hourlyError) {
-      console.error('Error fetching data:', serviceError || onetimeError || hourlyError);
-      return [];
-    }
-  
-    const completeServices = services?.map((service: Service) => {
-      const onetimeService = onetimeServices?.find((ot: OnetimeService) => ot.serviceid === service.serviceid);
-      const hourlyService = hourlyServices?.find((hs: HourlyService) => hs.serviceid === service.serviceid);
-  
-      if (onetimeService) {
-        return {
-          ...service,
-          price: onetimeService.rate,
-        };
-      } else if (hourlyService) {
-        return {
-          ...service,
-          price: hourlyService.rate,
-        };
-      } else {
-        return service;
-      }
-    });
 
-  
+    if (serviceError || onetimeError || hourlyError) {
+        console.error('Error fetching data:', serviceError || onetimeError || hourlyError);
+        return [];
+    }
+
+    const completeServices = await Promise.all(services?.map(async (service: Service) => {
+        const onetimeService = onetimeServices?.find((ot: OnetimeService) => ot.serviceid === service.serviceid);
+        const hourlyService = hourlyServices?.find((hs: HourlyService) => hs.serviceid === service.serviceid);
+
+        // Fetch image URL
+        const imageUrl = await fetchImage(service.imageName);
+
+        if (onetimeService) {
+            return {
+                ...service,
+                price: onetimeService.rate,
+                imageUrl
+            };
+        } else if (hourlyService) {
+            return {
+                ...service,
+                price: hourlyService.rate,
+                imageUrl
+            };
+        } else {
+            return { ...service, imageUrl };
+        }
+    }));
+
     return completeServices;
-  }
+}
 
 
 export async function addPeople(

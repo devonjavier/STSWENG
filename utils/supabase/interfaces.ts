@@ -65,8 +65,9 @@ export interface Service {
   serviceid: number;
   title: string;
   description: string;
-  price?: number; // This will be added based on the type of service
-  // Other fields as needed
+  price?: number; 
+  imageName: string;
+  imageUrl: {publicUrl: string};
 }
 
 export interface OnetimeService {

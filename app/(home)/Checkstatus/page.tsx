@@ -3,10 +3,11 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
 import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
 import { useDebouncedCallback } from 'use-debounce';
+import { schedule } from '@/utils/supabase/interfaces';
 import Image from "next/image"
 
-const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+const formatDate = (dateString : any) => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
@@ -26,7 +27,7 @@ export default function DisplayPage() {
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);// assume no addtional customer
     const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);// assume no addtional customer
     const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);// assume no addtional customer
-    const [listofschedules,setlistofschedules] = useState<number[]>([])
+    const [listofschedules,setlistofschedules] = useState<schedule[]>([])
     const [status, setStatus] = useState<string>("/check_mark.png");
     const [statusMessage , setStatusMessage] = useState<string>(" ");
     const [isContentVisible, setIsContentVisible] = useState(false);
