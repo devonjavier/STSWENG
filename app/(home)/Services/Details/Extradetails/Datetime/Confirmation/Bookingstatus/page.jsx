@@ -1,7 +1,7 @@
 'use client'
 
 import Image from "next/image"
-import { useState, localStorage } from "react"
+import { useState } from "react"
 import {
     addOneAppointment,
     addCustomer,

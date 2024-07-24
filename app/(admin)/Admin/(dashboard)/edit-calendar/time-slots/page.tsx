@@ -1,13 +1,12 @@
-
 'use client'
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { findDates, getCurrentStatus } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
 import { changeCalendarStatus } from '@/app/lib/actions';
-import { TimeSlot } from '@/utils/supabase/interfaces'
+import { TimeSlot } from '@/utils/supabase/interfaces';
 
-const Page = () => {
+const PageContent = () => {
   const searchParams = useSearchParams();
   const dates_selected = searchParams.get('dates') || '';
   const id = searchParams.get('id') || '';
@@ -17,8 +16,10 @@ const Page = () => {
   const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: TimeSlot[] }>({});
   const [selectedSlots, setSelectedSlots] = useState<{ [key: string]: boolean[] }>({});
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(true);  // Added loading state
 
   const handleDates = useCallback(async () => {
+    setLoading(true);  // Start loading
     try {
       const grouped_time_slots = await findDates(parsed_dates, dates_selected);
 
@@ -36,9 +37,9 @@ const Page = () => {
 
       console.log('Grouped Time Slots:', grouped_time_slots);
 
-      const currentStatus:{[key: string]: boolean[]} = await getCurrentStatus(parsed_dates, id);
+      const currentStatus: { [key: string]: boolean[] } = await getCurrentStatus(parsed_dates, id);
       for (const date of Object.keys(currentStatus)) {
-        newSelectedSlots[date] = currentStatus[date as keyof {[key: string]: boolean[]}];
+        newSelectedSlots[date] = currentStatus[date as keyof { [key: string]: boolean[] }];
       }
 
       setTimeSlotsData((prevTimeSlotsData) => {
@@ -57,13 +58,14 @@ const Page = () => {
 
     } catch (error) {
       console.error('Error fetching services:', error);
+    } finally {
+      setLoading(false);  
     }
   }, [parsed_dates, dates_selected]);
 
   useEffect(() => {
     handleDates();
   }, []);
-  
 
   const handleSelectAll = (date: string) => {
     const allSelected = selectedSlots[date].every(Boolean);
@@ -103,7 +105,7 @@ const Page = () => {
     setShowPopup(true);
     setTimeout(() => {
       setShowPopup(false);
-    }, 3000); 
+    }, 3000);
   }, [selectedSlots, timeSlotsData]);
 
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
@@ -112,43 +114,53 @@ const Page = () => {
     <div className="p-4 max-h-[91.8vh] overflow-x-auto ">
       <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {sortedDates.map((date) => (
-          <div key={date} className="p-2 border rounded drop-shadow-xl max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
-            <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
-            {timeSlotsData[date].map((slot, index) => (
-              <div
-              key={index}
-              className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
-                ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
-                  selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
-              onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
-              >
-              {slot.time}
+      {loading ? (  // Show loading indicator while fetching data
+        <div>Loading...</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {sortedDates.map((date) => (
+            <div key={date} className="p-2 border rounded drop-shadow-xl max-h-[72vh] min-h-[72vh] w-80 overflow-y-auto custom-scrollbar">
+              <h3 className="text-xl text-cusBlue text-center font-bold mb-2">{date}</h3>
+              {timeSlotsData[date].map((slot, index) => (
+                <div
+                  key={index}
+                  className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
+                    ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
+                      selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
+                  onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
+                >
+                  {slot.time}
+                </div>
+              ))}
+              <div className="mt-2">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    checked={selectedSlots[date].every(Boolean)}
+                    onChange={() => handleSelectAll(date)}
+                  />
+                  Set all unavailable
+                </label>
               </div>
-            ))}
-            <div className="mt-2">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="mr-2"
-                  checked={selectedSlots[date].every(Boolean)}
-                  onChange={() => handleSelectAll(date)} 
-                />
-                Set all unavailable
-              </label>
-            </div>  
-          </div>
-        ))}
-        {showPopup && (
-        <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
-          Calendar Updated Successfully!
+            </div>
+          ))}
+          {showPopup && (
+            <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
+              Calendar Updated Successfully!
+            </div>
+          )}
         </div>
       )}
-      </div>
       <button onClick={confirm} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
     </div>
   );
 };
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <PageContent />
+  </Suspense>
+);
 
 export default Page;
