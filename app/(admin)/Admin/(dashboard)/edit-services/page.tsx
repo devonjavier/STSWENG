@@ -9,7 +9,7 @@ import { checkCookie, editServices } from '@/app/lib/actions';
 
 export default function EditServiceDetails() {
   const [services, setServices] = useState<Service[]>([]);
-  const [originalServices, setOriginalServices] = useState<Service[]>([]);
+
 
   useEffect(() => {
     const getServices = async () => {
@@ -23,7 +23,7 @@ export default function EditServiceDetails() {
           const data = await fetchEditServices();
           console.log(data);
           setServices(data);
-          setOriginalServices(data);
+
         } catch (error) {
           console.error('Error fetching services:', error);
         }
@@ -34,7 +34,7 @@ export default function EditServiceDetails() {
   }, []);
 
   const handleInputChange = (index: number, field: keyof Service, value: string) => {
-    const updatedServices = [...services];
+    const updatedServices : any = [...services];
 
     if (field === 'price') {
       updatedServices[index][field] = Number(value); // Convert string to number for price

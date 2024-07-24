@@ -1,3 +1,4 @@
+
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -35,9 +36,9 @@ const Page = () => {
 
       console.log('Grouped Time Slots:', grouped_time_slots);
 
-      const currentStatus = await getCurrentStatus(parsed_dates, id);
+      const currentStatus:{[key: string]: boolean[]} = await getCurrentStatus(parsed_dates, id);
       for (const date of Object.keys(currentStatus)) {
-        newSelectedSlots[date] = currentStatus[date];
+        newSelectedSlots[date] = currentStatus[date as keyof {[key: string]: boolean[]}];
       }
 
       setTimeSlotsData((prevTimeSlotsData) => {
@@ -62,7 +63,6 @@ const Page = () => {
   useEffect(() => {
     handleDates();
   }, []);
-
   
 
   const handleSelectAll = (date: string) => {
