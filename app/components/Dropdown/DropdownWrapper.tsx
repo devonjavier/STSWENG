@@ -13,6 +13,7 @@ interface DropdownProps {
     validStartTimes:string[];
     validEndTimes:(startTime?: string | undefined) => string[];
   };
+
   dateIndex: number;
   selectedDates: { date: string; selectedtime1?: string; selectedtime2?: string }[];
   setSelectedDates: React.Dispatch<React.SetStateAction<{ date: string; selectedtime1?: string; selectedtime2?: string }[]>>;
@@ -26,6 +27,7 @@ interface DropdownWrapperProps {
   setSelectedDates: React.Dispatch<React.SetStateAction<{ date: string; selectedtime1?: string; selectedtime2?: string }[]>>;
   schedules: Schedule[];
   hours: number;
+  items:string[]
 }
 
 const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSelectedDates, schedules, hours }) => {
