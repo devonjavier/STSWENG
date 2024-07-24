@@ -176,8 +176,8 @@ export async function findDates(dates : any, dates_selected : any){
 export const getCurrentStatus = async (dates: any, id: any) => {
   const supabase = await createClient();
 
-  const dateArray = dates.flat().map(obj => obj.date);
-  let statusData = {};
+  const dateArray = dates.flat().map((obj : any) => obj.date);
+  let statusData : any = {};
 
   for (const date of dateArray) {
 
@@ -194,8 +194,8 @@ export const getCurrentStatus = async (dates: any, id: any) => {
 
     if (data.length > 0) {
       // sort data before updating statusData
-      data.sort((a, b) => new Date(`1970-01-01T${a.starttime}Z`).getTime() - new Date(`1970-01-01T${b.starttime}Z`).getTime());
-      statusData[date] = data.map(entry => entry.status === 'Unavailable');
+      data.sort((a : any, b : any) => new Date(`1970-01-01T${a.starttime}Z`).getTime() - new Date(`1970-01-01T${b.starttime}Z`).getTime());
+      statusData[date] = data.map((entry : any) => entry.status === 'Unavailable');
     }
   }
 
@@ -211,7 +211,7 @@ export async function changeCalendarStatus(selectedSlots : any, timeSlots : any)
   for (const date in timeSlots) {
     console.log("Current Date:", date);
 
-    timeSlots[date].forEach(async (timeSlot, index) => {
+    timeSlots[date].forEach(async (timeSlot : any, index : number) => {
       console.log("Time Slot:", timeSlot.time);
       console.log("Selected Status:", selectedSlots[date][index]);
 
@@ -266,7 +266,7 @@ export async function acceptAppointment(appointmentData: any) {
 }
 
 
-export async function rejectAppointment(appointmentData) {
+export async function rejectAppointment(appointmentData : any) {
   const supabase = createClient();
 
   console.log(appointmentData);
