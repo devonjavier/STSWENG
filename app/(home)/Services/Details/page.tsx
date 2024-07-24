@@ -152,6 +152,7 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
                         <div className='flex gap-4 mt-5'> 
                             <span className='text-black drop-shadow-lg font-bold mb-2 text-lg'>Do you need parking?</span> 
                             <div onClick={() => setIsChecked(!isChecked)} className={`toggle-switch ${isChecked ? 'checked' : ''}`}> 
+                            <div className="slider"></div>
                             </div> 
                         </div> 
                         

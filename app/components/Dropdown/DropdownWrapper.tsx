@@ -10,10 +10,8 @@ interface Schedule {
 
 interface DropdownProps {
   items: {
-    startTimes: string[];
-    endTimes: string[];
-    validStartTimes:any,
-    validEndTimes:any
+    validStartTimes:string[];
+    validEndTimes:(startTime?: string | undefined) => string[];
   };
   dateIndex: number;
   selectedDates: { date: string; selectedtime1?: string; selectedtime2?: string }[];
