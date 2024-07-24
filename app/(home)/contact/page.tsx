@@ -30,8 +30,8 @@ const FAQPage: React.FC = () => {
     <div className="bg-white max-h-full">
       <div>
         <div className="flex flex-col px-20 bg-white py-16">
-          <h1 className="text-indigo-800 text-5xl font-bold self-start pb-5">FAQs</h1>
-          <p className="w-1/2 text-indigo-800 text-lg font-light pb-0">
+          <h1 className="text-indigo-800 text-5xl font-bold self-start pb-5 pl-3">FAQs</h1>
+          <p className="w-1/2 text-indigo-800 text-lg font-light pl-3">
             Have questions about our services or packages? Explore our FAQs for more information.
           </p>
         </div>

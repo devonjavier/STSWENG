@@ -6,9 +6,9 @@ const about = () => {
       <div> 
         <div
                 className="bg-cover bg-center h-screen flex flex-col justify-end relative pb-32 pl-16 mx-auto"
-                style={{ backgroundImage: "url('/about_bg.jpg')" }}
+                style={{ backgroundImage: "url('/about_bg.png')" }}
             >
-                <div className="flex-col text-white pb-64 pl-4">
+                <div className="flex-col text-white pb-72 pl-5">
                     <div className="font-bold text-5xl">
                         About Us
                     </div>
@@ -43,21 +43,21 @@ const about = () => {
             <div className='flex justify-center px-16 pb-5 pt-8'>
               <div className='border-b-2 w-[1200px] pb-5'>
                 <div className='flex items-center gap-2'>
-                  <img className='w-[180px] h-[180px] bg-zinc-300 rounded-[10px]' src="" alt="asa" />
+                  <img className='w-[180px] h-[180px] bg-zinc-300 rounded-[10px]' src="erik.png" alt="Erik Villanueva" />
                   <div className='flex flex-col justify-end pb-3 pl-5'>
                     <div className='text-cusBlue text-[32px] text-2xl font-bold'>Erik Villanueva</div>
                     <div className='w-[700px] text-cusBlue text-lg font-medium italic'>Founder/Owner/Manager, Head Recording Engineer/Mix and Mastering Engineer</div>
                     <div className='w-[900px] text-cusBlue text-lg font-light'>As the founder and owner, he manages Indigo Studios PH and also heads the recording and mix/mastering 
                       engineering. Aside from producing for other artists, he has found his footing as an individual artist.</div>
                     <div className='flex gap-2 mt-4'>  
-                      <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
-                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[10px]' src="" alt="facebook" />
+                      <a href="https://www.facebook.com/erikmcvillanueva" target="_blank" rel="noopener noreferrer">
+                        <img className='bg-white w-[30px] h-[30px] object-fill rounded-[5px]' src="indigo_fb.png" alt="facebook" />
                       </a>
-                      <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
-                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[10px]' src="" alt="facebook" />
+                      <a href="https://www.instagram.com/erikcvillanueva" target="_blank" rel="noopener noreferrer">
+                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[5px]' src="indigo_ig.png" alt="instagram" />
                       </a>
-                      <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
-                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[10px]' src="" alt="facebook" />
+                      <a href="https://open.spotify.com/artist/4cWuxVZWKH9jPX74eYip2E?si=iFxmXpWYRVi1f2WQ_m_W6A" target="_blank" rel="noopener noreferrer">
+                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[5px]' src="indigo_sp.png" alt="spotify" />
                       </a>
                     </div>
                   </div>
@@ -68,17 +68,20 @@ const about = () => {
             <div className='flex justify-center px-16 pb-5 pt-8'>
               <div className='border-b-2 w-[1200px] pb-5'>
                 <div className='flex items-center gap-2'>
-                  <img className='w-[180px] h-[180px] bg-zinc-300 rounded-[10px]' src="" alt="asa" />
+                  <img className='w-[180px] h-[180px] bg-zinc-300 rounded-[10px]' src="charles.jpg" alt="Charles Soriano" />
                   <div className='flex flex-col justify-end pb-3 pl-5'>
                     <div className='text-cusBlue text-[32px] text-2xl font-bold'>Charles Vincent Soriano</div>
                     <div className='w-[682px] text-cusBlue text-lg font-medium italic'>Senior Engineer/Producer</div>
                     <div className='w-[900px] text-cusBlue text-lg font-light'>The one that records and engineers for clients when the owner is not around, he is also the head in production department for clients. He has recorded and producer for big artists in the industry.</div>
                     <div className='flex gap-2 mt-4'> 
-                      <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
-                        <img className='bg-zinc-300 -[30px] h-[30px] object-fill rounded-[10px]' src="facebook.png" alt="facebook" />
+                      <a href="https://www.facebook.com/me.CharleSoriano" target="_blank" rel="noopener noreferrer">
+                        <img className='bg-white -[30px] h-[30px] object-fill rounded-[5px]' src="indigo_fb.png" alt="facebook" />
                       </a>
-                      <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
-                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[10px]' src="" alt="facebook" />
+                      <a href="https://www.instagram.com/lofidelxcharleebooy/" target="_blank" rel="noopener noreferrer">
+                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[5px]' src="indigo_ig.png" alt="instagram" />
+                      </a>
+                      <a href="https://www.facebook.com/lofidelmusics" target="_blank" rel="noopener noreferrer">
+                        <img className='bg-zinc-300 w-[30px] h-[30px] object-fill rounded-[5px]' src="indigo_lf.png" alt="lo fidel" />
                       </a>
                     </div>
                   </div>
