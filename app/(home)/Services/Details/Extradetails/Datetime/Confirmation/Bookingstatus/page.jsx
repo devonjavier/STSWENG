@@ -18,9 +18,11 @@ const formatDate = (dateString) => {
 };
 
 const Page = ({ searchParams }) => {
-
+    let lastAppointmentTime;
+    
     useEffect(()=>{
         lastAppointmentTime = localStorage.getItem('lastAppointmentTime');
+        
     },[]);
     const router = useRouter();
     const theService = JSON.parse(searchParams.service);
