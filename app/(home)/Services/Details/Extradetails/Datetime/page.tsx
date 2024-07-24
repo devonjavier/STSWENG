@@ -57,6 +57,8 @@ const Page = ({ searchParams }: {
     }, [selectedSchedules]);
 
     return (
+
+
         <>
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
                 <div>
@@ -70,6 +72,15 @@ const Page = ({ searchParams }: {
                 </div>
                 <div>
                     <div></div>
+                    {loading ? (
+                    <>
+                        <div className='flex flex-col items-center'>
+                            <span className="font-bold text-2xl text-gray mt-14"> LOADING AVAILABLE SCHEDULES... </span>
+                        </div>
+                    </>
+                    ) : (
+                    <>
+                    
                     <div className='flex flex-row'>
                         <div className='flex flex-col mr-4'>
                             <Calendar setArrFunc={setselectedSchedules} schedules={schedules} />
@@ -103,6 +114,8 @@ const Page = ({ searchParams }: {
                             <DropdownWrapper selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} hours={searchParams.hours} items={[]} />
                         </div>
                     </div>
+                    </>
+                )}
                 </div>
             </div>
         </>

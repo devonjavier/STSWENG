@@ -35,24 +35,18 @@ const Page = ({ searchParams }: {
 
     const [selectedService, setSelectedService] = useState<string>(" ");
     const [listofschedules, setlistofschedules] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
 
     const [priceAdditionalService, setPriceAdditionalService] = useState(0);
     const [priceMainService, setPriceMainService] = useState(0);
 
-    
-    
-    
-
     useEffect(() => {
         const theService = JSON.parse(searchParams.service);
-
-        //console.log(searchParams.additionalpackage);
 
         if(JSON.parse(searchParams.serviceType) === 'onetime'){
             const getPriceAdditional= async () =>{
                 const onetimeprice = await fetchOneMainServiceOnetime(JSON.parse(theService.serviceid));
-                console.log(typeof onetimeprice[0].serviceid);
                 setPriceMainService(onetimeprice[0].rate);
             }
             getPriceAdditional();
@@ -63,7 +57,6 @@ const Page = ({ searchParams }: {
                 
                 setPriceMainService(hourlyprice[0].rate * (searchParams.hours/hourlyprice[0].hours));
             }
-            
             getPriceAdditional();
         }
 
@@ -75,6 +68,8 @@ const Page = ({ searchParams }: {
 
             } catch (error) {
                 console.error('Error fetching services:', error);
+            }finally{
+                setLoading(false);
             }
         };
 
@@ -85,6 +80,8 @@ const Page = ({ searchParams }: {
 
             } catch (error) {
                 console.error('Error fetching services:', error);
+            }finally{
+                setLoading(false);
             }
         };
 
@@ -110,6 +107,7 @@ const Page = ({ searchParams }: {
         getService();
         getSelectedSchedules();
         getPriceAdditional();
+        
 
     }, []);
 
@@ -119,6 +117,29 @@ const Page = ({ searchParams }: {
     const listadditionalcustomersfirstnames = JSON.parse(searchParams.additionalCustomersfirstnames);
     const listadditionalcustomersmiddlenames = JSON.parse(searchParams.additionalCustomersmiddlenames);
     const listadditionalcustomerslastnames = JSON.parse(searchParams.additionalCustomerslastnames);
+    
+    const parseTimeString = (timeString: string): Date => {  // helper function
+        const [hours, minutes, seconds] = timeString.split(":").map(Number);
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        date.setSeconds(seconds || 0);
+        return date;
+      };
+
+    
+    const formatTimeString = (timeString: string): string => {
+        const date = parseTimeString(timeString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const isPM = hours >= 12;
+        const adjustedHours = hours % 12 === 0 ? 12 : hours % 12; 
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        const suffix = isPM ? 'PM' : 'AM';
+        return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
+      };
+    
+      
     return (
         <>
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -130,6 +151,14 @@ const Page = ({ searchParams }: {
                         Services &gt; Details &gt; ExtraDetails &gt; Date & Time &gt; <span className='text-cusBlue'>Confirmation</span> &gt; Booking Status
                     </div>
                 </div>
+                {loading ? (
+                    <>
+                        <div className='flex flex-col items-center'>
+                            <span className="font-bold text-2xl text-gray mt-14"> LOADING... </span>
+                        </div>
+                    </>
+                    ) : (
+                <>
                 <div className="flex flex-row">
                     <div className='flex flex-row'>
                         <div className='flex flex-col'>
@@ -190,39 +219,42 @@ const Page = ({ searchParams }: {
                                     className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold"> Confirm Details </button> </Link>
 
                         </div>
-
-                        <div className='flex flex-col ml-20 border-2 border-indigo-800 rounded-lg p-4 h-fit'>
+                        
+                        
+                        <div className='flex flex-col ml-20 border-2 border-indigo-800 rounded-lg p-4 h-fit pr-32'>
                             <span className='text-black font-bold mb-2 text-3xl'> Reservation Details: </span>
-                            <span className='text-black mb-0 text-lg'> <span className='font-bold'> Package Selected: </span> {selectedService}   - Price {priceMainService} pesos </span>
+                            <span className='text-black mb-0 text-xl'> <span className='font-bold'> Package Selected: </span> {selectedService}  - <span className='italic'> ₱{priceMainService}</span></span>
                             
                             {JSON.parse(searchParams.additionalpackage).length === 0 ? (
                                 <div>
-                                    <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> NONE SELECTED </span>
+                                    <span className='text-black mb-9 text-xl'> <span className='font-bold'> Additional Package Selected: </span> NONE SELECTED </span>
                                 </div>
                             ):(<div> 
-                                <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> {JSON.parse(searchParams.additionalpackage)} - Price: {priceAdditionalService} pesos </span>
+                                <span className='text-black mb-9 text-sm'> <span className='font-bold'> Additional Package Selected: </span> {JSON.parse(searchParams.additionalpackage)} - <span className='italic'>₱{priceAdditionalService} </span> </span>
                                 </div>)}
-                                <span className='text-black mb-0 text-lg'> <span className='font-bold'>  Total Amount Due: </span> {priceMainService + priceAdditionalService} pesos </span>
+                                <span className='text-black mb-7 text-lg'> <span className='font-bold'>  Total Amount Due: </span> ₱{priceMainService + priceAdditionalService} pesos </span>
                             
 
-                            <span className='text-black font-bold mb-2 text-md'> Appointment schedules: </span>
+                            <span className='text-black font-bold mb-2 text-xl'> Appointment schedules: </span>
                             <div className='flex flex-col'>
                                 {listofschedules.map((schedule: any) => (
                                     <span key={schedule.scheduleid}
-                                        className='text-black mb-5 text-md'> Date: {formatDate(schedule.date)}
+                                        className='text-black mb-5 text-md'> <span className='font-bold'>Date: </span>{formatDate(schedule.date)}
                                         <div>
-                                            Time: {schedule.starttime} - {schedule.endtime}
+                                            <span className='font-bold'> Time: </span> {formatTimeString(schedule.starttime)} - {formatTimeString(schedule.endtime)}
                                         </div>
                                     </span>
                                 ))}
                             </div>
-                            <span className='text-black font-bold mb-5 text-md'> Additional Requests:  </span>
+                            <span className='text-black font-bold mb-5 text-xl'> Additional Requests:  </span>
                             <div className="flex flex-col">
                                 <span className='text-black font-bold mb-5 text-md'> {searchParams.additionalrequests} </span>
                             </div>
                         </div>
                     </div>
                 </div>
+                </>
+                )}
             </div>
         </>
     )

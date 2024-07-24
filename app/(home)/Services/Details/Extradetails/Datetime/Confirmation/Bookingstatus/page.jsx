@@ -30,6 +30,7 @@ const Page = ({ searchParams }) => {
     let appointentid;
     const [isProcessed, setIsProcessed] = useState(false);
     const [status, setStatus] = useState("pending");
+    const [loading, setLoading] = useState(true);
 
     if (!isProcessed) {
         const currentTime = new Date().getTime();
@@ -119,6 +120,8 @@ const Page = ({ searchParams }) => {
 
             } catch (error) {
                 console.error('Error fetching services:', error);
+            }finally{
+                setLoading(false);
             }
         }
 
@@ -148,7 +151,15 @@ const Page = ({ searchParams }) => {
                         </div>
                         <div className="flex flex-col border-2 border-black rounded-xl radius-md text-center mb-3 px-32 py-5 gap-6 w-full">
                             <span className="text-2xl text-black font-bold"> Your Booking Reference Number is </span>
-                            <span className="font-bold text-5xl text-black"> {trackingNumber} </span>
+                            {loading ? (
+                            <>
+                                <span className="font-bold text-5xl text-black"> ... </span>
+                            </>
+                            )
+                             : (
+                            <><span className="font-bold text-5xl text-black"> {trackingNumber} </span>
+                            </> )}
+                            
                         </div>
                         <div className="flex flex-col border-2 border-black rounded-xl radius-md text-start mb-3 px-32 py-5 gap-6">
                             <span className="text-3xl text-black font-bold text-start"> Reminders: </span>

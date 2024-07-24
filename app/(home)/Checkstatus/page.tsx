@@ -77,7 +77,11 @@ export default function DisplayPage() {
         }
 
         setTotalAmountDue(getThatAppointment[0].totalamountdue);
+        if (getThatAppointment[0].additionalrequest == "")
+            setadditionalRequests("No requests");
+        else   
         setadditionalRequests(getThatAppointment[0].additionalrequest);
+
         setIsChecked(getThatAppointment[0].isparkingspotneeded);
 
         const selectedservice = await fetchOneService(parseInt(getThatAppointment[0].serviceid));
@@ -137,6 +141,26 @@ export default function DisplayPage() {
             fetchStatus();
         }
     }
+    const parseTimeString = (timeString: string): Date => {  // helper function
+        const [hours, minutes, seconds] = timeString.split(":").map(Number);
+        const date = new Date();
+        date.setHours(hours);
+        date.setMinutes(minutes);
+        date.setSeconds(seconds || 0);
+        return date;
+      };
+
+    
+    const formatTimeString = (timeString: string): string => {
+        const date = parseTimeString(timeString);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const isPM = hours >= 12;
+        const adjustedHours = hours % 12 === 0 ? 12 : hours % 12; 
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        const suffix = isPM ? 'PM' : 'AM';
+        return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
+      };
 
     useEffect(() => {}, [trackingNumber]); 
 
@@ -180,9 +204,9 @@ export default function DisplayPage() {
                                 <div className="flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl">
                                     <span className='text-black  font-bold mb-5  text-3xl'> Main Customer: </span>
                                     <div className='flex flex-col p-0 ml-12 my-0 mr-0'>
-                                        <span className='text-black font-bold mb-5  text-xl mar '> Name: {maincustomerfirstname} {maincustomermiddlename} {maincustomerlastname}</span>
-                                        <span className='text-black font-bold mb-5  text-xl'> Contact number: {phonenumber} </span>
-                                        <span className='text-black font-bold mb-5  text-xl'> Email address: {emailaddress} </span>
+                                        <span className='text-black mb-5  text-xl mar '> <span className='font-bold'> Name</span>: {maincustomerfirstname} {maincustomermiddlename} {maincustomerlastname}</span>
+                                        <span className='text-black mb-5  text-xl'> <span className='font-bold'> Contact number</span>: {phonenumber} </span>
+                                        <span className='text-black mb-5  text-xl'> <span className='font-bold'> Email address:</span> {emailaddress} </span>
                                     </div>
                                 </div>
 
@@ -193,8 +217,8 @@ export default function DisplayPage() {
                                             <span className='text-black text-xl font-semibold mb-5 ml-12 text-md'>None</span>
                                         ) : (
                                             additionalCustomersFirstname.map((firstName, i) => (
-                                                <span className='text-black text-xl font-semibold mb-5 ml-12 text-md' key={i}>
-                                                    Person {i+1}. {firstName} {additionalCustomersMiddlename[i]} {additionalCustomersLastname[i]}
+                                                <span className='text-black text-xl  mb-5 ml-12 text-md' key={i}>
+                                                    <span className='font-semibold'>Person {i+1}: </span> {firstName} {additionalCustomersMiddlename[i]} {additionalCustomersLastname[i]}
                                                 </span>
                                             ))
                                         )}
@@ -202,29 +226,30 @@ export default function DisplayPage() {
                                 </div>
 
                                 <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl'>
-                                    <span className='text-black  font-bold mb-5  text-3xl'> Parking Spot: {isChecked ? "Yes" : "No"} </span>
+                                    <span className='text-black mb-5  text-3xl'> <span className='font-bold'>Parking Spot: </span> {isChecked ? "Yes" : "No"} </span>
                                 </div>
                             </div>
                             
                             <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl ml-4 w-full'>
                                 <span className='text-black  font-bold mb-5  text-3xl'> Reservation Details: </span>
-                                <span className='text-black font-bold mb-5 ml-7  text-2xl'> Package Selection: {selectedService}  </span>
-                                <span className='text-black font-bold mb-5 ml-7  text-2xl'> Additional service: {selectedAdditionalService}  </span>
+                                <span className='text-black mb-5 ml-7  text-xl'> <span className='font-bold'> Package Selection:</span> {selectedService}  </span>
+                                <span className='text-black mb-5 ml-7  text-xl'> <span className='font-bold'> Additional Service:</span> {selectedAdditionalService}  </span>
                                 
-                                <span className='text-black font-bold mb-5 ml-7  text-2xl'> Total Amount Due: {totalAmountDue}  </span>
-                                <span className='text-black font-bold mb-2 ml-7  text-2xl'> Appointment schedules: </span>
+                                <span className='text-black mb-5 ml-7  text-xl'> <span className='font-bold'> Total Amount Due </span>: ₱{totalAmountDue}  </span>
+                                <span className='text-black font-bold mb-2 ml-7  text-xl'> Appointment schedules: </span>
                                 <div className='flex flex-col mb-4'>
                                     {listofschedules.map((schedule) => (
-                                        <span key={schedule.scheduleid} className='text-black font-bold  mb-5 ml-12  text-md'> Date: {formatDate(schedule.date)} 
+                                        <span key={schedule.scheduleid} className='text-black mb-5 ml-12  text-md'> <span className='font-bold'> Date: </span> {formatDate(schedule.date)} 
                                             <div>
-                                                Time: {schedule.starttime} - {schedule.endtime}
+                                                <span className='font-bold'>Time: </span> {formatTimeString(schedule.starttime)} - {formatTimeString(schedule.endtime)}
                                             </div>
                                         </span>
                                     ))}
                                 </div>
-                                <span className='text-black font-bold mb-5 ml-7  text-md'> Additional Requests:  </span>
+                                <span className='text-black font-bold mb-5 ml-7  text-xl'> Additional Requests:  </span>
+                                {}
                                 <div className="flex flex-col ml-16">
-                                    <span className='text-black font-bold mb-5 text-md'> {additionalRequests} </span>
+                                    <span className='text-black mb-5 text-md'> {additionalRequests} </span>
                                 </div>
                             </div>
                         </div>

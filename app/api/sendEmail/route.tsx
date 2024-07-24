@@ -6,6 +6,27 @@ const formatDate = (dateString:string) => {
     return new Date(dateString).toLocaleDateString(undefined);
 };
 
+const parseTimeString = (timeString: string): Date => {  // helper function
+  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(seconds || 0);
+  return date;
+};
+
+
+const formatTimeString = (timeString: string): string => {
+  const date = parseTimeString(timeString);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const isPM = hours >= 12;
+  const adjustedHours = hours % 12 === 0 ? 12 : hours % 12; 
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const suffix = isPM ? 'PM' : 'AM';
+  return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
+};
+
 
 
 export async function POST(request: NextRequest) {
@@ -39,7 +60,7 @@ export async function POST(request: NextRequest) {
   const schedules = JSON.parse(searchParams.schedules).map((schedule:any) => `
   <div>
       <span>Date: ${formatDate(schedule.date)}</span><br/>
-      <span>Time: ${schedule.starttime} - ${schedule.endtime}</span>
+      <span>Time: ${formatTimeString(schedule.starttime)} - ${formatTimeString(schedule.endtime)}</span>
   </div>
   `).join('');
 
