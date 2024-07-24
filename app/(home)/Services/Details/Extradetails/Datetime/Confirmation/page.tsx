@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react'
 import Link from "next/link";
 import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetime, fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
 
-const formatDate = (dateString) => {
+const formatDate = (dateString:string) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    return new Date(dateString).toLocaleDateString(undefined);
 };
 
 const Page = ({ searchParams }: {
@@ -34,7 +34,7 @@ const Page = ({ searchParams }: {
 }) => {
 
     const [selectedService, setSelectedService] = useState<string>(" ");
-    const [listofschedules, setlistofschedules] = useState<[]>([]);
+    const [listofschedules, setlistofschedules] = useState<any[]>([]);
 
 
     const [priceAdditionalService, setPriceAdditionalService] = useState(0);
@@ -95,15 +95,13 @@ const Page = ({ searchParams }: {
 
             for (const selectedsched of selectedschedules) {
 
-                const addSchedule = (newSchedule) => {
+                const addSchedule = (newSchedule: any) => {
                     setlistofschedules([...listofschedules, newSchedule]);
                 };
                 const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
 
-                getData.forEach((one) => {
-
+                getData.forEach((one: any) => {
                         newSchedules.push(one);
-                    
                 });
 
                 setlistofschedules(newSchedules);

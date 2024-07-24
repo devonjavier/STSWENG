@@ -1,19 +1,32 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchServices } from '@/utils/supabase/data'
+import { fetchImage, fetchServices } from '@/utils/supabase/data'
 import { allService } from '@/utils/supabase/interfaces'
 import { serialize } from 'v8';
 
 export default function DisplayPage() {
-    const [completeServices, setCompleteServices] = useState<service[] | null>(null);
+    const [completeServices, setCompleteServices] = useState([]);
     const [loading, setLoading] = useState(true)
+    const [image,setImage] = useState<string[]>([]);
 
     useEffect(() => {
         const getServices = async () => {
           try {
             const services = await fetchServices();
             setCompleteServices(services);
+
+            const image1 = await fetchImage('mixand_mastering.png');
+            setImage(image => [...image,image1.publicUrl]);
+            
+            const image2 = await fetchImage('beat.png');
+            setImage(image =>[...image,image2.publicUrl]);
+
+            const image3 = await fetchImage('recording_session.png');
+            setImage(image =>[...image,image3.publicUrl]);
+
+            const image4 = await fetchImage('raw_audio.png');
+            setImage(image =>[...image,image4.publicUrl]);
           } catch (error) {
             console.error('Error fetching services:', error);
           } finally {
@@ -23,10 +36,11 @@ export default function DisplayPage() {
 
         getServices();
         
+        
     }, []);
-
     if (loading) {
         return <p>Loading...</p>;
+
     }
 
     return (
@@ -43,7 +57,7 @@ export default function DisplayPage() {
                 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 gap-y-10'>
                     {completeServices ? (
-                        completeServices.map((object, i) => {
+                        completeServices.map((object:any, i:number) => {
                             const { service, serviceType } = object; // one object = service and serviceType
                             const serviceString = JSON.stringify(service);
                             const serviceTypeString = JSON.stringify(serviceType);
@@ -58,7 +72,7 @@ export default function DisplayPage() {
                                     <div>
                                         <img
                                             className="w-full h-48 md:h-64 rounded-3xl shadow mb-5"
-                                            src={service.imageURL}
+                                            src={image[i]}
                                             alt={service.title}
                                         />
                                     </div>

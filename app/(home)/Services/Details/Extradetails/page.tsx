@@ -47,7 +47,7 @@ const Page = ({ searchParams }: {
         return tempErrors.length === 0;
     };
 
-    const handleNextClick = (e) => {
+    const handleNextClick = (e:any) => {
         setSubmitted(true);
 
         if (!validateAdditionalCustomerNames()) {

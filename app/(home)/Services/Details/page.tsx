@@ -1,10 +1,11 @@
 'use client'; 
 import Link from 'next/link'; 
-import { useEffect, useState } from 'react'; 
-import { useDebouncedCallback } from 'use-debounce'; 
+import { MouseEvent, SetStateAction, useEffect, useState } from 'react'; 
 import './page.css'; 
+import { forTheErrors } from '@/utils/supabase/interfaces';
 import { FaChevronDown } from 'react-icons/fa'; 
 import { fetchAdditionalServices, fetchOneAdditionalService } from '@/utils/supabase/data'; 
+
 
 const Page = ({ searchParams }: { searchParams: { service: string , serviceType:string} }) => { 
     const [isChecked, setIsChecked] = useState(false); 
@@ -21,8 +22,14 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
     const theService = JSON.parse(searchParams.service); 
     const serviceTypeString = JSON.parse(searchParams.serviceType); 
     
-    const [packages,setPackages] = useState([]); 
-    const [errors, setErrors] = useState({}); // Object to hold error messages
+    const [packages,setPackages] = useState<any[]>([]); 
+    const [errors, setErrors] = useState<forTheErrors>({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: ''
+      }); // Object to hold error messages
+    
     const [submitted, setSubmitted] = useState(false); // Track if form was submitted 
 
     const getServices = async () => { 
@@ -40,17 +47,17 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
         } 
     }; 
 
-    const toggleDropdown = (e) => { 
+    const toggleDropdown = (e:any) => { 
         e.preventDefault(); 
         setIsOpen(!isOpen); 
     }; 
 
-    const handleSelectPackage = (item) => { 
+    const handleSelectPackage = (item: SetStateAction<string>) => { 
         setSelectedPackage(item); 
         setIsOpen(false); 
     };
 
-    const changeHours = (item) => { 
+    const changeHours = (item: number) => { 
         setHours(item); 
     };
 
@@ -59,7 +66,13 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
     }; 
 
     const validateForm = () => {
-        let tempErrors = {};
+        let tempErrors:forTheErrors = {
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            email: ''
+        };
+
         // Validate required fields
         if (!maincustomerfirstname.trim()) tempErrors.firstName = "First Name is required";
         if (!maincustomerlastname.trim()) tempErrors.lastName = "Last Name is required";
@@ -71,7 +84,7 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleNextClick = (e) => {
+    const handleNextClick = (e:any) => {
         setSubmitted(true);
         if (!validateForm()) {
             e.preventDefault();
@@ -139,7 +152,6 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
                         <div className='flex gap-4 mt-5'> 
                             <span className='text-black drop-shadow-lg font-bold mb-2 text-lg'>Do you need parking?</span> 
                             <div onClick={() => setIsChecked(!isChecked)} className={`toggle-switch ${isChecked ? 'checked' : ''}`}> 
-                                <span className="slider"></span> 
                             </div> 
                         </div> 
                         
@@ -168,7 +180,7 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
                             {serviceTypeString === "hourly" ? ( 
                                 <div> 
                                     <span className='text-black drop-shadow-lg font-bold mb-2 text-lg mr-5'>How many hours?:</span> 
-                                    <input id='hours' name='hours' onChange={(e) => { changeHours(e.target.value); }} placeholder="-" className='text-black text-center font-medium py-2.5 my-4 w-24 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" maxLength="1" onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) { e.preventDefault(); } }} /> 
+                                    <input id='hours' name='hours' onChange={(e) => { changeHours(parseInt(e.target.value)); }} placeholder="-" className='text-black text-center font-medium py-2.5 my-4 w-24 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" maxLength={1} onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) { e.preventDefault(); } }} /> 
                                 </div> 
                             ):(<div> </div>)} 
                         </div> 

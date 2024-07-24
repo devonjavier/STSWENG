@@ -102,7 +102,17 @@ export async function fetchAppointments() {
   return filteredAppointmentDetails;
 }
 
+export async function fetchImage(imageName:string){
+    const supabase = createClient();
+    const { data } = supabase
+        .storage
+        .from('images') 
+        .getPublicUrl(`serviceImages/${imageName}`)
+        
 
+    console.log(data);
+    return data
+}
 export async function fetchCalendarData(selectedDate: any) {
   const supabase = createClient();
   const offset = selectedDate.getTimezoneOffset();

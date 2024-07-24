@@ -29,7 +29,6 @@ export interface reservation {
   title: string;
   service: string;
   status: string;
-  title: string;
   totalamountdue: string;
 }
 
@@ -78,5 +77,12 @@ export interface OnetimeService {
 export interface HourlyService {
   serviceid: number;
   rate: number;
+}
+
+export interface forTheErrors {
+  firstName:string
+  lastName:string
+  phoneNumber:string
+  email:string
 }
 
