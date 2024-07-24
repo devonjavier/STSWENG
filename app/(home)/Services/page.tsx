@@ -14,19 +14,23 @@ export default function DisplayPage() {
         const getServices = async () => {
           try {
             const services = await fetchServices();
-            setCompleteServices(services);
+            setCompleteServices(services.filter((service:any) => service != undefined));
 
-            const image1 = await fetchImage('mixand_mastering.png');
-            setImage(image => [...image,image1.publicUrl]);
+            let images = []
+            services.map((data: any, i: any)=>{
+
+                images[i] = async () =>{
+                    let currentImage = await fetchImage((data.service).imageName);
+                    console.log(currentImage.publicUrl);
+                    setImage(image =>[...image,currentImage.publicUrl]);
+                }
+
+                images[i]();
+            })
             
-            const image2 = await fetchImage('beat.png');
-            setImage(image =>[...image,image2.publicUrl]);
 
-            const image3 = await fetchImage('recording_session.png');
-            setImage(image =>[...image,image3.publicUrl]);
-
-            const image4 = await fetchImage('raw_audio.png');
-            setImage(image =>[...image,image4.publicUrl]);
+            const image1 = await fetchImage('service.png');
+        
           } catch (error) {
             console.error('Error fetching services:', error);
           } finally {
@@ -43,6 +47,8 @@ export default function DisplayPage() {
 
     }
 
+    console.log(completeServices);
+
     return (
         <>
             <div className='px-4 md:px-32 flex flex-col gap-4 md:gap-8 mb-6 mt-10 md:mt-20'>
@@ -56,6 +62,7 @@ export default function DisplayPage() {
                 </div>
                 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 gap-y-10'>
+                    
                     {completeServices ? (
                         completeServices.map((object:any, i:number) => {
                             const { service, serviceType } = object; // one object = service and serviceType
@@ -69,6 +76,7 @@ export default function DisplayPage() {
                                     }}
                                     key={service.serviceid} 
                                 >
+                                    
                                     <div>
                                         <img
                                             className="w-full h-48 md:h-64 rounded-3xl shadow mb-5"
@@ -78,6 +86,7 @@ export default function DisplayPage() {
                                     </div>
                                     <div className='text-black text-2xl md:text-3xl font-bold italic'>{service.title}</div>
                                     <div className='w-full text-cusBlue text-xl md:text-2xl font-light'>{service.description}</div>
+                                    {i}
                                 </Link>
                             );
                         })
