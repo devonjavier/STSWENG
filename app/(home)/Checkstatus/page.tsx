@@ -107,14 +107,14 @@ export default function DisplayPage() {
         setadditionalCustomersMiddlename(additionalmiddlenames);
         setadditionalCustomersLastname(additionallastnames);
 
-        const newSchedules:number[] = [];
+        const newSchedules:schedule[] = [];
         const getData = await fetchSelectedSchedule(appid);
         
-        getData.forEach((one: number) => {
+        getData.forEach((one: schedule) => {
             newSchedules.push(one);
         });
 
-        setlistofschedules((prevState:number[]) => newSchedules);
+        setlistofschedules(newSchedules);
 
         setTimeout(() => {
             setIsContentVisible(true);
