@@ -212,7 +212,7 @@ export async function fetchCalendarData(selectedDate: any) {
       }
 
       const additionalCustomerNames = await Promise.all(
-        additionalCustomers.map(async (additionalCustomer) => {
+        additionalCustomers.map(async (additionalCustomer:any) => {
           const { data: additionalPerson, error: additionalPersonError } = await supabase
             .from('Person')
             .select('firstname, middlename, lastname')
@@ -243,7 +243,7 @@ export async function fetchCalendarData(selectedDate: any) {
         endtime: schedule.endtime,
         appointmentid: schedule.appointmentid,
         additionalreq: appointment.additionalrequest,
-        additionalPersonNames: additionalCustomerNames.filter(name => name !== null),
+        additionalPersonNames: additionalCustomerNames.filter(name=> name !== null),
         status: schedule.status,
         trackingnumber: appointment.trackingnumber,
         totalamountdue: appointment.totalamountdue
@@ -429,13 +429,6 @@ export async function fetchAdditionalServices(serviceid:number){
 
 
     return data
-
-    if(additionalservices){
-        return additionalservices
-    }
-    else    
-        return []
-
     // this will return the {additionalservices} which will have the service id of the service
 }
 
@@ -487,15 +480,17 @@ export async function addPeople(
     const supabase = createClient();
 
     // getting the largest id number from the table
-    let largestidnumber;
+    let largestidnumber = 7000;
     
     const { data: people } = await supabase.from('Person').select('personid').order('personid', {ascending:false});
     const peopleArr = Object.keys(people);
     
     const targetPerson = people[peopleArr[0]] // just filter out the first one
+    console.log("This are the people" + people)
 
     Object.values(targetPerson).forEach((key)=>{
-        largestidnumber = key
+        if (typeof key === 'number')
+            largestidnumber = key
     })
 
     largestidnumber = largestidnumber + 1;
@@ -528,7 +523,7 @@ export async function addCustomer(
 
     // PUTTING THE main customer TO Person
     // getting the largest id number from the table
-    let largestpersonidnumber;
+    let largestpersonidnumber = 7000;
     
     
     const { data: people } = await supabase.from('Person').select('personid').order('personid', {ascending:false});
@@ -537,7 +532,8 @@ export async function addCustomer(
     const targetPerson = people[peopleArr[0]] // just filter out the first one
 
     Object.values(targetPerson).forEach((key)=>{
-        largestpersonidnumber = key
+        if (typeof key === 'number')
+            largestpersonidnumber = key
     })
 
     largestpersonidnumber = largestpersonidnumber + 1;
@@ -551,7 +547,7 @@ export async function addCustomer(
         emailaddress: emailaddress,
     })
 
-    let largestcustomeridnumber;
+    let largestcustomeridnumber = 5000;
     let latestappointmentid;
 
     //gettng the next cutomer number
@@ -561,7 +557,8 @@ export async function addCustomer(
     const targetCustomer = customers[customerArr[0]] // just filter out the first one
 
     Object.values(targetCustomer).forEach((key)=>{
-        largestcustomeridnumber = key
+        if (typeof key === 'number')
+            largestcustomeridnumber = key
     })
 
     largestcustomeridnumber = largestcustomeridnumber + 1;

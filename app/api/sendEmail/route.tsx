@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-const formatDate = (dateString) => {
+const formatDate = (dateString:string) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    return new Date(dateString).toLocaleDateString(undefined);
 };
 
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     secure: true,
   });
 
-  const schedules = JSON.parse(searchParams.schedules).map((schedule) => `
+  const schedules = JSON.parse(searchParams.schedules).map((schedule:any) => `
   <div>
       <span>Date: ${formatDate(schedule.date)}</span><br/>
       <span>Time: ${schedule.starttime} - ${schedule.endtime}</span>
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
   `).join('');
 
   let additionalpackage;
-  
+
   if (JSON.parse(searchParams.additionalpackage).length === 0){
     additionalpackage = "NONE"
   }

@@ -2,15 +2,14 @@
 'use client'
 
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { addOneAppointment, addCustomer, updateSchedule, fetchOneAdditionalServiceWithTitle, fetchtrackingnumber} from '@/utils/supabase/data'
 import Link from "next/link"
-import { tracingChannel } from "diagnostics_channel"
 import { useRouter } from "next/navigation"
 
-const formatDate = (dateString) => {
+const formatDate = (dateString:any) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    return new Date(dateString).toLocaleDateString(undefined);
 };
 const Page = ({searchParams}:{
     searchParams: {

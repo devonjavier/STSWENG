@@ -1,7 +1,7 @@
 
 "use client";
 import { fetchFAQs } from '@/utils/supabase/data';
-import { useActionState, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import React from 'react';
 
 interface QuestionAnswer {
@@ -26,9 +26,6 @@ const FAQPage: React.FC = () => {
     getFAQs();
   },[]);
   
-
-  
-
   return (
     <div className="bg-white max-h-full">
       <div>
@@ -46,14 +43,14 @@ const FAQPage: React.FC = () => {
                   onClick={() => handleToggle(index)}
                   className="btn text-white text-2xl font-medium w-[990px] h-[68px] p-2.5 bg-indigo-900 rounded-[10px] justify-between items-center gap-2.5 inline-flex cursor-pointer hover:bg-purple-900"
                 >
-                  <span>{item.question}</span>
+                  <span>{item['question']}</span>
                   <span className={`transform transition-transform ${openIndex === index ? 'rotate-180' : ''} text-lg`}>
                     &#9660;
                   </span>
                 </div>
                 {openIndex === index && (
                   <div className="bg-gray-200 text-black w-[980px] p-5 rounded-[10px] mt-2">
-                    {item.answer}
+                    {item['answer']}
                   </div>
                 )}
               </div>
