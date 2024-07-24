@@ -8,7 +8,7 @@ const about = () => {
                 className="bg-cover bg-center h-screen flex flex-col justify-end relative pb-32 pl-16 mx-auto"
                 style={{ backgroundImage: "url('/about_bg.png')" }}
             >
-                <div className="flex-col text-white pb-64 pl-4">
+                <div className="flex-col text-white pb-72 pl-5">
                     <div className="font-bold text-5xl">
                         About Us
                     </div>
