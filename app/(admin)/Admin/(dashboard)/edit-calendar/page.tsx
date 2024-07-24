@@ -4,9 +4,12 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { checkCookie } from '@/app/lib/actions';
 import Calendar from '@/app/components/CustomCalendar';
+import { fetchSchedules } from '@/utils/supabase/data';
 
 const Page = ({ searchParams }: { searchParams: { id: string } }) => {
     const [selectedDates, setSelectedDates] = useState<{ date: Date }[]>([]);
+    const [schedules, setSchedules] = useState<[]>([]);
+    
     const datesString = JSON.stringify(selectedDates.map(obj => ({
         date: formatDateToLocal(obj.date)
     })));
@@ -41,6 +44,26 @@ const Page = ({ searchParams }: { searchParams: { id: string } }) => {
         return adjustedDate.toISOString().split('T')[0]; 
     }
 
+    const getSchedule = async () => {
+        try {
+            const fetchedSchedules = await fetchSchedules();
+            const newSelectedDates = fetchedSchedules.map((schedule: { scheduleid: any; date: any; starttime: any; endtime: any; status: any }) => ({
+                scheduleid: schedule.scheduleid,
+                date: schedule.date,
+                starttime: schedule.starttime,
+                endtime: schedule.endtime,
+                status: schedule.status
+            }));
+            setSchedules(newSelectedDates);
+        } catch (error) {
+            console.error('Error fetching services:', error);
+        }
+    };
+
+    useEffect(() => {
+        getSchedule();
+    }, []);
+
     return (
         <>
             {/* <ul>
@@ -63,7 +86,7 @@ const Page = ({ searchParams }: { searchParams: { id: string } }) => {
                 <div>
                     <div className='flex flex-row'>
                         <div className='flex flex-col mr-32'>
-                            <Calendar setArrFunc={setSelectedDates} schedules={[]} />
+                            <Calendar setArrFunc={setSelectedDates} schedules={schedules} />
 
                             <Link href={{
                                 pathname: "./edit-calendar/time-slots",

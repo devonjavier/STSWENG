@@ -58,56 +58,8 @@ export async function POST(request: NextRequest) {
   let htmlBody;
 
   switch (status) {
-    case 'pending':
-      subject = `Appointment Confirmation: ${trackingNumber}`;
-      textBody = `Dear ${searchParams.maincustomerfirstname} ${searchParams.maincustomerlastname},
-
-Your booking has been successfully submitted.
-
-Booking Reference Number: ${trackingNumber}
-Date & Time: ${JSON.stringify(searchParams.schedules)}
-Service: ${searchParams.serviceType}
-
-Additional Requests: ${searchParams.additionalrequests}
-Parking Required: ${searchParams.needsparking === 'true' ? 'Yes' : 'No'}
-
-Thank you for choosing our services!
-
-Best Regards,
-Indigo Studios`,
-      htmlBody = `
-<p>Dear ${searchParams.maincustomerfirstname} ${searchParams.maincustomerlastname},</p>
-
-<p>Greetings! This email is to inform you that your booking is still currently pending!</p>
-<p>
-To proceed with your booking, please complete the down payment. 
-You can make your payment through any of our electronic wallets: 
-GCash, PayMaya, or PayPal using the number (+63 969 647 5564).
-</p>
-<p>We will notify you as soon as your booking is confirmed.</p>
-<br/>
-<p> BOOKING DETAILS: </p>
-<p><b>Booking Reference Number:</b> ${trackingNumber}<br/>
-<p><b>Total Amount Due:</b> ${parseFloat(searchParams.mainprice) + parseFloat(searchParams.additionalprice)}<br/>
-<b>Date & Time:</b> ${schedules}
-<br/>
-<b>Service:</b> ${searchParams.selectedServicetitle}</p>
-<b>Additional service:</b> ${additionalpackage}</p>
-<br/>
-<p>
-If you have any questions or need to make changes to your booking, 
-please feel free to reply to this email or contact us via Facebook 
-(@IndigoStudiosPH) and Instagram (@indigostudiosph).
-</p>
-<p>
-Thank you for your patience and cooperation.
-</p>
-<p>Thank you for choosing our services!</p>
-<p>Best Regards,<br/>
-Indigo Studios</p>`
-      break;
     case 'accepted':
-      subject = `Booking Status Confirmation for ${trackingNumber}`;
+      subject = `Booking Status Confirmation for ${trackingNumber} (Accepted)`;
       textBody = `Dear ${searchParams.maincustomerfirstname},
 
 Greetings! This email is to inform you that your booking has been successfully accepted!
@@ -118,8 +70,7 @@ Please proceed to your appointment according to the date you booked.
 BOOKING DETAILS
 
 Package Selected: ${searchParams.serviceType}
-Date: ${searchParams.schedules}
-Time: ${searchParams.schedules}
+${schedules}
 Reference Number: ${trackingNumber}
 ---------------------------------------------------------------------------------------------------------------------
 
@@ -134,9 +85,8 @@ Indigo Studios Ph`;
 <p>Please proceed to your appointment according to the date you booked.</p>
 <hr>
 <p><b>BOOKING DETAILS</b></p>
-<p>Package Selected: ${searchParams.serviceType}<br>
-Date: ${searchParams.schedules}<br>
-Time: ${searchParams.schedules}<br>
+<p>Package Selected: ${searchParams.serviceType}
+${schedules}
 Reference Number: ${trackingNumber}</p>
 <hr>
 <p>If you have any questions or need to make changes to your booking, please feel free to reply to this email or contact us via Facebook (@IndigoStudiosPH) and Instagram (@indigostudiosph).</p>
@@ -182,8 +132,7 @@ Unfortunately, we are unable to accommodate your booking at this time due to [re
 BOOKING DETAILS
 
 Package Selected: ${searchParams.serviceType}
-Date: ${searchParams.schedules}
-Time: ${searchParams.schedules}
+${schedules}
 Reference Number: ${trackingNumber}
 ---------------------------------------------------------------------------------------------------------------------
 
@@ -198,9 +147,8 @@ Indigo Studios Ph`;
 <p>Unfortunately, we are unable to accommodate your booking at this time due to [reason, if appropriate to include, e.g., scheduling conflicts, capacity limits, etc.]. We apologize for any inconvenience this may cause.</p>
 <hr>
 <p><b>BOOKING DETAILS</b></p>
-<p>Package Selected: ${searchParams.serviceType}<br>
-Date: ${searchParams.schedules}<br>
-Time: ${searchParams.schedules}<br>
+<p>Package Selected: ${searchParams.serviceType}
+${schedules}
 Reference Number: ${trackingNumber}</p>
 <hr>
 <p>If you would like to reschedule or have any questions, please feel free to reply to this email or contact us via Facebook (@IndigoStudiosPH) and Instagram (@indigostudiosph).</p>
