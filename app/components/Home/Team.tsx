@@ -7,7 +7,7 @@ export const Team = () => {
       <div className='text-cusBlue text-5xl font-bold pb-8'>The Team</div>
       <div className='flex'>
         <img 
-          className='w-[1178px] h-[372px] bg-zinc-300 rounded-[10px]' src="" alt="Team photo" 
+          className='w-[1178px] h-[372px] bg-zinc-300 rounded-[10px]' src="team.png" alt="Team photo" 
         />
       </div>
       <div className='bg-cusBlue w-[1178px] h-[250px] p-8 rounded-[10px] py-10 my-14'>

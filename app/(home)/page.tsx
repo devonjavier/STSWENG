@@ -11,8 +11,8 @@ import { createClient } from '@/utils/supabase/server'
 export default async function Home() {
   return (
     <>
-    <div className='bg-[url(../public/home1.png)] w-[1300px] h-[800px] p-2  flex flex-col relative pb-10 mb-5 mx-auto'> 
-      <div className='relative pt-96 pl-20'>
+    <div className="bg-cover bg-center h-screen flex flex-col justify-end relative pb-32 pl-16 mx-auto" style={{ backgroundImage: "url('/home_bg.jpg')" }}> 
+      <div className='pt-96 pl-20'>  
         <IntroText />
       </div>
     </div>
