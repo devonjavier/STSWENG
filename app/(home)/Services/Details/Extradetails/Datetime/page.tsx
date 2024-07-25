@@ -56,9 +56,9 @@ const Page = ({ searchParams }: {
         setAbleButton(!allSelected);
     }, [selectedSchedules]);
 
+    console.log('Hours value before passing to DropdownWrapper:', searchParams.hours);
+
     return (
-
-
         <>
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
                 <div>
