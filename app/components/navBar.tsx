@@ -14,7 +14,7 @@ const navBar = () => {
         /><div className='hover:text-gray-400 transition duration-300 ease-in-out delay-300'>Home</div></Link>
         <Link href="/Services" className="mr-8 hover:text-gray-400 transition duration-300 ease-in-out delay-300">Services</Link>
         <Link href="/About" className="mr-8 hover:text-gray-400 transition duration-300 ease-in-out delay-300">About</Link>
-        <Link href="/contact" className="mr-8 hover:text-gray-400 transition duration-300 ease-in-out delay-300">Contact</Link>
+        <Link href="/FAQs" className="mr-8 hover:text-gray-400 transition duration-300 ease-in-out delay-300">FAQs</Link>
         <Link href="/Checkstatus" className="mr-8 hover:text-gray-400 transition duration-300 ease-in-out delay-300">Check Status</Link>
       </div>
       <div className="flex items-center">
