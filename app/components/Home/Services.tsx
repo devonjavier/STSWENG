@@ -10,10 +10,9 @@ const Services = () => {
           <div className="absolute left-0 w-[105px] h-[105px] bg-zinc-300 rounded-[10px] overflow-hidden">
             <img className="w-full h-full object-cover" src="service1.png" alt="service 1" />
           </div>
-          <div className='flex flex-col justify-end pb-6 pr-56'>
-            <div className='text-white text-[32px] self-start text-2xl font-medium italic'>In-person session</div>
-            <div className='w-[682px] text-white text-lg font-light'>Includes basic mix and mastering</div>
-            <div className='w-[682px] text-white text-lg font-light italic'>+ ₱2,500 for advanced mixing</div>
+          <div className='flex flex-col justify-end pb-12 pr-56'>
+            <div className='text-white text-[32px] self-start text-2xl font-medium italic'>Regular Hourly Rate</div>
+            <div className='w-[682px] text-white text-lg font-light italic'>+ ₱2,500 for Mix and Mastering</div>
           </div>
           <div className='absolute right-0 text-white text-2xl font-semibold pt-2 text-right'>
             ₱1,000 per <br />hour
@@ -54,7 +53,7 @@ const Services = () => {
             <img className="w-full h-full object-cover" src="service4.png" alt="service 1" />
           </div>
           <div className='flex flex-col justify-end pb-3 pr-56'>
-            <div className='text-white text-[32px] self-start text-2xl font-medium italic'>Online advanced mix and mastering</div>
+            <div className='text-white text-[32px] self-start text-2xl font-medium italic'>Online Advanced Mix and Mastering</div>
             <div className='w-[682px] text-white text-lg font-light'>Includes free minor revisions, discounts for 2 or more tracks (discounts <br />
             depends on the track’s difficulty)</div>
             <div className='w-[682px] text-white text-lg font-light italic'>+ ₱200 for major revisions of tracks</div>

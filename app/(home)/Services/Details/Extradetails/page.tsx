@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import GenerateDivs from '@/app/components/GenerateDivs';
 
+
 const Page = ({ searchParams }: {
     searchParams: {
         service: string,
@@ -19,7 +20,7 @@ const Page = ({ searchParams }: {
     }
 }) => {
     useEffect(() => {
-        console.log(JSON.parse(searchParams.additionalpackage));
+        console.log(searchParams.hours);
     });
 
     const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);

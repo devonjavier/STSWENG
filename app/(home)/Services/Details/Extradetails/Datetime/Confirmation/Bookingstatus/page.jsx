@@ -131,6 +131,15 @@ const Page = ({ searchParams }) => {
 
     return (
         <>
+        {loading ? (
+        <>
+            <div className='flex flex-col items-center'>
+                <span className="font-semibold text-4xl text-black mt-14"> Generating Appointment... </span>
+            </div>
+        </>
+        )
+            : (
+        <>
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
                 <div>
                     <div className='text-cusBlue text-6xl font-bold'>
@@ -151,15 +160,8 @@ const Page = ({ searchParams }) => {
                         </div>
                         <div className="flex flex-col border-2 border-black rounded-xl radius-md text-center mb-3 px-32 py-5 gap-6 w-full">
                             <span className="text-2xl text-black font-bold"> Your Booking Reference Number is </span>
-                            {loading ? (
-                            <>
-                                <span className="font-bold text-5xl text-black"> ... </span>
-                            </>
-                            )
-                             : (
-                            <><span className="font-bold text-5xl text-black"> {trackingNumber} </span>
-                            </> )}
-                            
+                            <span className="font-bold text-5xl text-black"> {trackingNumber} </span>
+
                         </div>
                         <div className="flex flex-col border-2 border-black rounded-xl radius-md text-start mb-3 px-32 py-5 gap-6">
                             <span className="text-3xl text-black font-bold text-start"> Reminders: </span>
@@ -175,6 +177,7 @@ const Page = ({ searchParams }) => {
                     </div>
                 </div>
             </div>
+            </> )}
         </>
     )
 }
