@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import Link from "next/link";
 import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetime, fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
+import Schedules from '@/app/components/Schedules';
+
 
 const formatDate = (dateString:string) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -68,8 +70,6 @@ const Page = ({ searchParams }: {
 
             } catch (error) {
                 console.error('Error fetching services:', error);
-            }finally{
-                setLoading(false);
             }
         };
 
@@ -80,29 +80,30 @@ const Page = ({ searchParams }: {
 
             } catch (error) {
                 console.error('Error fetching services:', error);
-            }finally{
-                setLoading(false);
             }
         };
 
         const selectedschedules = JSON.parse(searchParams.schedules);
         const getSelectedSchedules = async () => {
 
-            const newSchedules: number[] = [];
+            const newSchedules: any[] = [];
 
             for (const selectedsched of selectedschedules) {
 
-                const addSchedule = (newSchedule: any) => {
-                    setlistofschedules([...listofschedules, newSchedule]);
-                };
-                const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
-
-                getData.forEach((one: any) => {
-                        newSchedules.push(one);
-                });
-
-                setlistofschedules(newSchedules);
+                try {
+                    const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
+                    
+                    getData.forEach((one: any) => {
+                        setlistofschedules(listofschedules => [...listofschedules,one]);
+                    });
+                } catch (error) {
+                    console.error('Error fetching services:', error);
+                }finally{
+                    setLoading(false);
+                }
+                
             };
+            setLoading(false);
         }
         getService();
         getSelectedSchedules();
@@ -138,8 +139,9 @@ const Page = ({ searchParams }: {
         const suffix = isPM ? 'PM' : 'AM';
         return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
       };
+
+      console.log(searchParams.schedules)
     
-      
     return (
         <>
             <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
@@ -237,14 +239,7 @@ const Page = ({ searchParams }: {
 
                             <span className='text-black font-bold mb-2 text-xl'> Appointment schedules: </span>
                             <div className='flex flex-col'>
-                                {listofschedules.map((schedule: any) => (
-                                    <span key={schedule.scheduleid}
-                                        className='text-black mb-5 text-md'> <span className='font-bold'>Date: </span>{formatDate(schedule.date)}
-                                        <div>
-                                            <span className='font-bold'> Time: </span> {formatTimeString(schedule.starttime)} - {formatTimeString(schedule.endtime)}
-                                        </div>
-                                    </span>
-                                ))}
+                                <Schedules listofschedules={listofschedules}/>
                             </div>
                             <span className='text-black font-bold mb-5 text-xl'> Additional Requests:  </span>
                             <div className="flex flex-col">

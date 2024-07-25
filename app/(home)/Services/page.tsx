@@ -42,10 +42,6 @@ export default function DisplayPage() {
         
         
     }, []);
-    if (loading) {
-        return <p>Loading...</p>;
-
-    }
 
     console.log(completeServices);
 
@@ -61,7 +57,15 @@ export default function DisplayPage() {
                     </div>
                 </div>
                 
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 gap-y-10'>
+                {loading ? (
+                <>
+                    <div className='flex flex-col items-center'>
+                        <span className="font-semibold text-4xl text-gray mt-14"> LOADING SERVICES... </span>
+                    </div>
+                </>
+                ) : (
+                    <>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-20 gap-y-10'>
                     
                     {completeServices ? (
                         completeServices.map((object:any, i:number) => {
@@ -94,6 +98,10 @@ export default function DisplayPage() {
                         <p>No services available.</p>
                     )}
                 </div>
+                    </>
+                )
+                }
+                
             </div>
         </>
     )
