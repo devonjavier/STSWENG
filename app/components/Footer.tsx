@@ -12,14 +12,12 @@ const Footer = () => {
           </div> 
           
           <div className="flex mb-4 flex-col">
-            <Link href="" className="mr-4 hover:text-gray-200">Finasia Homes</Link>
-            <Link href="" className="mr-4 hover:text-gray-200">San Antonio Valley 1 Sucat</Link>
-            <Link href="" className="mr-4 hover:text-gray-200">PHILIPPINES</Link>
+            <Link href="https://www.google.com/maps/search/?api=1&query=Finasia+Homes+San+Antonio+Valley+1+Sucat+Parañaque+City" target="_blank" className="mr-4 hover:text-gray-200">Finasia Homes<br />San Antonio Valley 1 Sucat<br />Parañaque City</Link>
           </div>
           <div className="flex flex-col">
-            <Link href="/contact" className="mr-4 hover:text-gray-200">CONTACT US</Link>
-            <Link href="" className="mr-4 hover:text-gray-200">0969 647 5564</Link>
-            <Link href="" className="mr-4 hover:text-gray-200">indigostudiosph@gmail.com</Link>
+            <div className="mr-4">CONTACT US</div>
+            <Link href="sms:+639696475564" className="mr-4 hover:text-gray-200">0969 647 5564</Link>
+            <Link href="mailto:indigostudiosph@gmail.com" className="mr-4 hover:text-gray-200">indigostudiosph@gmail.com</Link>
           </div>
         </div>
       </footer>
