@@ -115,9 +115,9 @@ export async function fetchImage(imageName:string){
 }
 export async function fetchCalendarData(selectedDate: any) {
   const supabase = createClient();
-  const offset = selectedDate.getTimezoneOffset();
-  const adjustedDate = new Date(selectedDate.getTime() - (offset * 60 * 1000));
-  const formattedDate = adjustedDate.toISOString().split('T')[0];
+//   const offset = selectedDate.getTimezoneOffset();
+//   const adjustedDate = new Date(selectedDate.getTime() - (offset * 60 * 1000));
+  const formattedDate = selectedDate.toISOString().split('T')[0];
 
   // schedules given date
   const { data: schedules, error: schedulesError } = await supabase
