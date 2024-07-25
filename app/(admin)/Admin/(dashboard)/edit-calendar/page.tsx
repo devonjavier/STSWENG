@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { checkCookie } from '@/app/lib/actions';
-import Calendar from '@/app/components/CustomCalendar';
+import Calendar from '@/app/components/EditCalendar';
 import { fetchSchedules } from '@/utils/supabase/data';
 
 const Page = ({ searchParams }: { searchParams: { id: string } }) => {
