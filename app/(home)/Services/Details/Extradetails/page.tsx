@@ -32,28 +32,38 @@ const Page = ({ searchParams }: {
 
     const validateAdditionalCustomerNames = () => {
         let tempErrors: string[] = [];
-
+    
         for (let i = 0; i < countAdditionalCustomers; i++) {
+            tempErrors[i] = tempErrors[i] || ""; // Ensure array entry exists
+    
             if (!additionalCustomersFirstname[i] || !additionalCustomersFirstname[i].trim()) {
-                tempErrors[i] = tempErrors[i] || ""; // Ensure array entry exists
                 tempErrors[i] += "FirstNameRequired ";
+            } else if (!/^[a-zA-Z ]+$/.test(additionalCustomersFirstname[i])) {
+                tempErrors[i] += "FirstNameInvalid ";
             }
+            
+            if (additionalCustomersMiddlename[i] && !/^[a-zA-Z ]+$/.test(additionalCustomersMiddlename[i])) {
+                tempErrors[i] += "MiddleNameInvalid ";
+            }
+
             if (!additionalCustomersLastname[i] || !additionalCustomersLastname[i].trim()) {
-                tempErrors[i] = tempErrors[i] || ""; // Ensure array entry exists
                 tempErrors[i] += "LastNameRequired ";
+            } else if (!/^[a-zA-Z ]+$/.test(additionalCustomersLastname[i])) {
+                tempErrors[i] += "LastNameInvalid ";
             }
         }
-
+    
         setErrors(tempErrors);
-        return tempErrors.length === 0;
+        return tempErrors.every(error => error === "");
     };
+    
 
     const handleNextClick = (e:any) => {
         setSubmitted(true);
 
         if (!validateAdditionalCustomerNames()) {
             e.preventDefault();
-        }
+        } 
     };
 
     return (
@@ -73,9 +83,10 @@ const Page = ({ searchParams }: {
                             <div className='flex flex-col'>
                                 <div className="flex flex-row mt-5 mb-3 items-center gap-5">
                                     <span className='text-black drop-shadow-lg font-bold  text-lg mr-16'> Additional Persons Involved </span>
-                                    <button className='drop-shadow-2xl rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers - 1)}> - </button>
+                                    <button className='drop-shadow-2xl rounded-full bg-cusBlue  w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers => Math.max(0, countAdditionalCustomers - 1))}> - </button>
                                     <span className='text-cusBlue font-bold text-lg mx-4'> {countAdditionalCustomers} </span>
-                                    <button className='drop-shadow-2xl rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers + 1)} > + </button>
+                                    <button className='drop-shadow-2xl rounded-full bg-cusBlue w-[45px] h-[45px]' onClick={() => setcountAdditionalCustomers(countAdditionalCustomers => Math.min(9, countAdditionalCustomers + 1))} > + </button>
+                                    
                                 </div>
                                 <GenerateDivs
                                     counter={countAdditionalCustomers}

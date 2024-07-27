@@ -18,13 +18,14 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
     const [isOpen, setIsOpen] = useState(false); 
     const [selectedPackage, setSelectedPackage] = useState(""); 
     const [hours, setHours] = useState(4); 
-    
+
     const theService = JSON.parse(searchParams.service); 
     const serviceTypeString = JSON.parse(searchParams.serviceType); 
     
     const [packages,setPackages] = useState<any[]>([]); 
     const [errors, setErrors] = useState<forTheErrors>({
         firstName: '',
+        middleName: '',
         lastName: '',
         phoneNumber: '',
         email: ''
@@ -65,23 +66,57 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
         setIsChecked(e.target.checked); 
     }; 
 
+    const capitalizeFirstLetter = (e: string) => {
+        return e.replace(/\b\w+/g, (word) => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+    };
+    
+
     const validateForm = () => {
         let tempErrors:forTheErrors = {
             firstName: '',
+            middleName: '',
             lastName: '',
             phoneNumber: '',
             email: ''
         };
 
         // Validate required fields
-        if (!maincustomerfirstname.trim()) tempErrors.firstName = "First Name is required";
-        if (!maincustomerlastname.trim()) tempErrors.lastName = "Last Name is required";
-        if (!phonenumber.trim()) tempErrors.phoneNumber = "Phone Number is required";
-        if (!/^\d+$/.test(phonenumber)) tempErrors.phoneNumber = "Phone Number must be numeric";
-        if (!emailaddress.trim()) tempErrors.email = "Email Address is required";
+        if (!maincustomerfirstname.trim()) {
+            tempErrors.firstName = "First Name is required";
+        } else if (!/^[a-zA-Z ]+$/.test(maincustomerfirstname)) {
+            tempErrors.firstName = "First Name must contain only letters and spaces";
+        }
+
+        if (maincustomermiddlename.trim()){
+            if (!/^[a-zA-Z ]+$/.test(maincustomermiddlename)) {
+            tempErrors.middleName = "Middle Name must contain only letters and spaces";
+            }
+        }
+
+        if (!maincustomerlastname.trim()) {
+            tempErrors.lastName = "Last Name is required";
+        } else if (!/^[a-zA-Z ]+$/.test(maincustomerlastname)) {
+            tempErrors.lastName = "Last Name must contain only letters and spaces";
+        }
         
+        if (!phonenumber.trim()) {
+            tempErrors.phoneNumber = "Phone Number is required";
+        } else if (!/^\d+$/.test(phonenumber)) {
+            tempErrors.phoneNumber = "Phone Number must be numeric";
+        } else if (!/^09\d{9}$/.test(phonenumber)) { 
+            tempErrors.phoneNumber = "Phone Number must be 11 digits long and start with 09";
+        }
+
+        if (!emailaddress.trim()) {
+            tempErrors.email = "Email Address is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailaddress)) {
+            tempErrors.email = "Email Address is invalid";
+        }
+
         setErrors(tempErrors);
-        return Object.values(tempErrors).some(error => error== '');
+        return !Object.values(tempErrors).some(error => error!== '');
     };
 
     const handleNextClick = (e:any) => {
@@ -113,16 +148,17 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
                         <span className='text-black drop-shadow-lg font-bold mb-5 text-lg'>Main Customer</span> 
                         <div className='flex flex-col'> 
                             <div className={`relative mb-3`}>
-                                <input id='customerfirstname' name='customername' placeholder="First Name" onChange={(e) => { setmaincustomerfirstname(e.target.value); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.firstName ? 'border-red-500' : ''}`} type="text" />
+                                <input id='customerfirstname' name='customername' placeholder="First Name" onChange={(e) => { setmaincustomerfirstname(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.firstName ? 'border-red-500' : ''}`} type="text" />
                                 {submitted && errors.firstName && <span className="absolute right-3 top-2 text-red-500">*</span>}
                             </div>
 
                             <div className={`relative mb-3`}>
-                                <input id='customermiddlename' name='customername' placeholder="Middle Name" onChange={(e) => { setmaincustomermiddlename(e.target.value); }} className='text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800' type="text" /> 
+                                <input id='customermiddlename' name='customername' placeholder="Middle Name" onChange={(e) => { setmaincustomermiddlename(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.middleName ? 'border-red-500' : ''}`} type="text" />
+                                {submitted && errors.middleName && <span className="absolute right-3 top-2 text-red-500">*</span>}
                             </div>
 
                             <div className={`relative mb-3`}>
-                                <input id='customerlastname' name='customername' placeholder="Last Name" onChange={(e) => { setmaincustomerlastname(e.target.value); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.lastName ? 'border-red-500' : ''}`} type="text" />
+                                <input id='customerlastname' name='customername' placeholder="Last Name" onChange={(e) => { setmaincustomerlastname(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.lastName ? 'border-red-500' : ''}`} type="text" />
                                 {submitted && errors.lastName && <span className="absolute right-3 top-2 text-red-500">*</span>}
                             </div>
                         </div> 
@@ -191,6 +227,6 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
         </div> 
         </> 
     ); 
-} 
+}
 
 export default Page;

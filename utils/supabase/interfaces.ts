@@ -81,9 +81,11 @@ export interface HourlyService {
 }
 
 export interface forTheErrors {
-  firstName:string
-  lastName:string
-  phoneNumber:string
-  email:string
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
 }
+
 

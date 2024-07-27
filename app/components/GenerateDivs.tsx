@@ -11,8 +11,15 @@ interface GenerateDivsProps {
 
 const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCustomersFirst, setadditionalCustomersMiddle, setadditionalCustomersLast, errors, submitted }) => {
     const div: JSX.Element[] = [];
+
+    const capitalizeFirstLetter = (e: string) => {
+        return e.replace(/\b\w+/g, (word) => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        });
+    };
+    
     const handleFirstnameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const value = e.target.value;
+        const value = capitalizeFirstLetter(e.target.value);
         setadditionalCustomersFirst(prevCustomers => {
             const updatedCustomers = [...prevCustomers];
             updatedCustomers[index] = value;
@@ -21,7 +28,7 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
     };
 
     const handleMiddlenameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const value = e.target.value;
+        const value = capitalizeFirstLetter(e.target.value);
         setadditionalCustomersMiddle(prevCustomers => {
             const updatedCustomers = [...prevCustomers];
             updatedCustomers[index] = value;
@@ -30,7 +37,7 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
     };
 
     const handleLastnameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const value = e.target.value;
+        const value = capitalizeFirstLetter(e.target.value);
         setadditionalCustomersLast(prevCustomers => {
             const updatedCustomers = [...prevCustomers];
             updatedCustomers[index] = value;
@@ -47,26 +54,27 @@ const GenerateDivs: React.FC<GenerateDivsProps> = ({ counter, setadditionalCusto
                     <input
                         onChange={(e) => handleFirstnameChange(e, i)}
                         placeholder="First name"
-                        className={`text-black text-center text-lg md:text-xl font-medium w-full h-[50px] md:h-[68px] py-2.5 my-2 bg-white rounded-[20px] border ${submitted && errors[i]?.includes("FirstNameRequired") ? 'border-red-500' : 'border-indigo-800'} inline-flex justify-between items-center`}
+                        className={`text-black text-center text-lg md:text-xl font-medium w-full h-[50px] md:h-[68px] py-2.5 my-2 bg-white rounded-[20px] border ${submitted && (errors[i]?.includes("FirstNameRequired") || errors[i]?.includes("FirstNameInvalid")) ? 'border-red-500' : 'border-indigo-800'} inline-flex justify-between items-center`}
                         type="text" />
-                    {submitted && errors[i]?.includes("FirstNameRequired") && <span className="absolute right-3 top-2 text-red-500">*</span>}
+                        {submitted && (errors[i]?.includes("FirstNameRequired") || errors[i]?.includes("FirstNameInvalid")) && <span className="absolute right-3 top-2 text-red-500">*</span>}
                 </div>
 
                 <div className='relative w-full md:w-1/3 lg:w-1/4'>
                     <input
                         onChange={(e) => handleMiddlenameChange(e, i)}
                         placeholder="Middle name"
-                        className='text-black text-center text-lg md:text-xl font-medium w-full h-[50px] md:h-[68px] py-2.5 my-2 bg-white rounded-[20px] border border-indigo-800 inline-flex justify-between items-center'
+                        className={`text-black text-center text-lg md:text-xl font-medium w-full h-[50px] md:h-[68px] py-2.5 my-2 bg-white rounded-[20px] border ${submitted && errors[i]?.includes("MiddleNameInvalid") ? 'border-red-500' : 'border-indigo-800'} inline-flex justify-between items-center`}
                         type="text" />
+                        {submitted && errors[i]?.includes("MiddleNameInvalid") && <span className="absolute right-3 top-2 text-red-500">*</span>}
                 </div>
 
                 <div className='relative w-full md:w-1/3 lg:w-1/4'>
                     <input
                         onChange={(e) => handleLastnameChange(e, i)}
                         placeholder="Last name"
-                        className={`text-black text-center text-lg md:text-xl font-medium w-full h-[50px] md:h-[68px] py-2.5 my-2 bg-white rounded-[20px] border ${submitted && errors[i]?.includes("LastNameRequired") ? 'border-red-500' : 'border-indigo-800'} inline-flex justify-between items-center`}
+                        className={`text-black text-center text-lg md:text-xl font-medium w-full h-[50px] md:h-[68px] py-2.5 my-2 bg-white rounded-[20px] border ${submitted && (errors[i]?.includes("LastNameRequired") || errors[i]?.includes("LastNameInvalid")) ? 'border-red-500' : 'border-indigo-800'} inline-flex justify-between items-center`}
                         type="text" />
-                    {submitted && errors[i]?.includes("LastNameRequired") && <span className="absolute right-3 top-2 text-red-500">*</span>}
+                        {submitted && (errors[i]?.includes("LastNameRequired") || errors[i]?.includes("LastNameInvalid")) && <span className="absolute right-3 top-2 text-red-500">*</span>}
                 </div>
             </div>
         );
