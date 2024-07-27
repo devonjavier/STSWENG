@@ -112,7 +112,7 @@ const PageContent = () => {
 
   return (
     <div className="p-4 max-h-[91.8vh] overflow-x-auto">
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-1">
         <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
         <div className="flex ml-6 mt-4 space-x-4">
           <div className="legend-item flex items-center">
