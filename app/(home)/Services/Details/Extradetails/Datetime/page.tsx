@@ -75,7 +75,7 @@ const Page = ({ searchParams }: {
                     {loading ? (
                     <>
                         <div className='flex flex-col items-center'>
-                            <span className="font-bold text-2xl text-gray mt-14"> LOADING AVAILABLE SCHEDULES... </span>
+                            <span className="text-gray-500 font-medium italic text-3xl"> Loading Available Schedules... </span>
                         </div>
                     </>
                     ) : (

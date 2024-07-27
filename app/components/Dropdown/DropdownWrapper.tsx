@@ -143,11 +143,11 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
     return (
       <div className='flex flex-row space-x-8 mt-4'>
         <div className='flex flex-col w-full relative'>
-          <span className={`font-semibold w-full text-neutral-400 ${!selectedDates[dateIndex].selectedtime1 ? '' : ''}`}>{formatDate(selectedDates[dateIndex].date)}</span>
+          <span className={`font-semibold w-full text-cusBlue text-md ${!selectedDates[dateIndex].selectedtime1 ? '' : ''}`}>{formatDate(selectedDates[dateIndex].date)}</span>
           <span className='pl-1 text-sm w-full font-bold text-black'>Start</span>
           <details className="dropdown" open={isStartOpen}>
             <summary
-              className="dropdown-summary m-1 bg-white w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg shadow-sm transition duration-400 ease-in-out transform active:scale-110"
+              className="dropdown-summary m-1 bg-white w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg transition duration-400 ease-in-out transform active:scale-110"
               onClick={(e) => toggleDropdown('start', e)}>
               <span className="text-left">{selectedDates[dateIndex].selectedtime1? formatTimeString(selectedDates[dateIndex].selectedtime1) : 'Select Time'}</span>
               <span><FaChevronDown /></span>

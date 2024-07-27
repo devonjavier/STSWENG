@@ -179,9 +179,9 @@ export default function DisplayPage() {
 
             {loading ? (
                 <>
-                    <div className='flex flex-col items-center'>
-                        <span className="font-semibold text-4xl text-black mt-14"> LOADING... </span>
-                    </div>
+                    <div className="flex items-center justify-center min-h-screen">
+                        <p className="text-gray-500 font-medium italic text-3xl">Loading...</p>
+                    </div>;
                 </>
             ) : (
                 <>

@@ -137,7 +137,7 @@ const Page = ({ searchParams }: {
         const adjustedHours = hours % 12 === 0 ? 12 : hours % 12; 
         const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
         const suffix = isPM ? 'PM' : 'AM';
-        return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
+        return `${adjustedHours}:${formattedMinutes} ${suffix}`; //end
       };
 
       console.log(searchParams.schedules)
@@ -156,7 +156,7 @@ const Page = ({ searchParams }: {
                 {loading ? (
                     <>
                         <div className='flex flex-col items-center'>
-                            <span className="font-bold text-2xl text-gray mt-14"> LOADING... </span>
+                            <span className="text-gray-500 font-medium italic text-3xl"> Loading... </span>
                         </div>
                     </>
                     ) : (

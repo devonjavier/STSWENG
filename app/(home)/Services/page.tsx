@@ -42,6 +42,12 @@ export default function DisplayPage() {
         
         
     }, []);
+    if (loading) {
+        return <div className="flex items-center justify-center min-h-screen">
+                    <p className="text-gray-500 font-medium italic text-3xl">Loading...</p>
+                </div>;
+
+    }
 
     console.log(completeServices);
 
@@ -97,6 +103,7 @@ export default function DisplayPage() {
                     ) : (
                         <p>No services available.</p>
                     )}
+                
                 </div>
                     </>
                 )
