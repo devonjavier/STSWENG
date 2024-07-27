@@ -20,11 +20,9 @@ const Page: React.FC = () => {
         console.log('Authentication status:', authenticated);
 
         if (!authenticated) {
-          console.log('pasokkkk');
           window.location.href = '/';
         } else {
           const data = await fetchAppointments();
-          console.log("RESERVATIONS:", data);
           setReservations(data);
         }
       } catch (error) {
@@ -36,10 +34,10 @@ const Page: React.FC = () => {
 
     async function getServices() {
       try {
-        const data = await fetchServices();  // Fetch the list of services
+        const data = await fetchServices(); 
 
-        // Flatten the services data structure here
-        const flattenedServices = data.map((service : any) => service.service);
+        // flatten
+        const flattenedServices = data.map((service: any) => service.service);
         setServices(flattenedServices);
       } catch (error) {
         console.error('Error fetching services:', error);
@@ -84,7 +82,11 @@ const Page: React.FC = () => {
   });
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center pb-32 h-screen">
+        <p className="text-3xl font-bold text-gray-700">Loading...</p>
+      </div>
+    );
   }
 
   return (
@@ -139,9 +141,8 @@ const Page: React.FC = () => {
               </tr>
             </thead>
             <tbody className="text-cusBlue font-medium">
-              {filteredReservations.map((reservation, index) => {
-                console.log("HERE", reservation);
-                return (
+              {filteredReservations.length > 0 ? (
+                filteredReservations.map((reservation, index) => (
                   <tr
                     key={index}
                     className={`${reservation.status === 'Pending' ? 'bg-purple-100' : ''}`}
@@ -156,8 +157,12 @@ const Page: React.FC = () => {
                     </td>
                     <td className="border border-transparent px-4 py-2">{reservation.status}</td>
                   </tr>
-                )
-              })}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="border border-transparent px-4 py-2 text-center">No reservations found</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -167,3 +172,4 @@ const Page: React.FC = () => {
 };
 
 export default Page;
+

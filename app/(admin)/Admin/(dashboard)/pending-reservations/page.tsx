@@ -15,6 +15,15 @@ const Page = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [showConfirmReject, setShowConfirmReject] = useState(false);
   const [showConfirmAccept, setShowConfirmAccept] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false); 
+
+  const formatTimeToAMPM = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes);
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+  };
+  
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -22,6 +31,7 @@ const Page = () => {
 
   useEffect(() => {
     const getData = async () => {
+      setLoading(true); // Set loading state to true
       const authenticated = await checkCookie();
       if (!authenticated) {
         window.location.href = '/';
@@ -29,11 +39,17 @@ const Page = () => {
         try {
           if (selectedDate) {
             const data = await fetchCalendarData(selectedDate);
-            setAppointments(data);
-            setSelectedAppointment(null);
+
+            // Simulate a delay before setting the appointments
+            setTimeout(() => {
+              setAppointments(data);
+              setSelectedAppointment(null);
+              setLoading(false); // Set loading state to false
+            }, 500); // Adjust delay as needed (e.g., 500ms)
           }
         } catch (error) {
           console.error(error);
+          setLoading(false); // Ensure loading state is turned off on error
         }
       }
     };
@@ -183,26 +199,34 @@ const Page = () => {
         
         {selectedDate && (
           <div className="ml-8 mt-6 p-4 border border-gray-300 rounded-lg w-2/3 drop-shadow-2xl bg-white text-black flex flex-col overflow-h-auto">
-            <h2 className="text-xl font-bold mb-4 text-left">Appointments on {formatDate(selectedDate)}</h2>
-            <div className="flex flex-col gap-2">
-              {combinedAppointments.map((appointment, index) => (
-                <button
-                  key={`${appointment.appointmentid}-${index}`} // Ensure keys are unique
-                  className={`p-2 border border-gray-300 rounded-lg ${
-                    selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-cusBlue text-white font-bold' : 
-                    appointment.status === 'Pending' ? 'bg-yellow-400 text-black' : 
-                    appointment.status === 'Appointed' ? 'bg-green-700 text-black' : 'bg-white'
-                  }`}
-                  onClick={() => setSelectedAppointment(appointment)}
-                >
-                  {appointment.name}
-                </button>
-              ))}
-            </div>
+            <h2 className="text-xl font-bold mb-4 text-left">
+              Appointments on {formatDate(selectedDate)}
+            </h2>
+            {loading ? (
+              <div className="flex items-center justify-center pb-12 h-full">
+                <p className="text-xl font-bold">Loading...</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {combinedAppointments.map((appointment, index) => (
+                  <button
+                    key={`${appointment.appointmentid}-${index}`} // Ensure keys are unique
+                    className={`p-2 border border-gray-300 rounded-lg ${
+                      selectedAppointment?.appointmentid === appointment.appointmentid ? 'bg-cusBlue text-white font-bold' : 
+                      appointment.status === 'Pending' ? 'bg-yellow-400 text-black' : 
+                      appointment.status === 'Appointed' ? 'bg-green-700 text-black' : 'bg-white'
+                    }`}
+                    onClick={() => setSelectedAppointment(appointment)}
+                  >
+                    {appointment.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
-
+  
       {selectedAppointment && (
         <div className="reservation-details mt-6 p-4 border border-gray-300 rounded-lg w-full drop-shadow-2xl bg-white text-black flex flex-col justify-between">
           <div>
@@ -210,7 +234,7 @@ const Page = () => {
               Details for Customer {selectedAppointment.name}
               <p className="text-xs text-red-500 mt-2">* indicates a required field</p>
             </h2>
-
+  
             <div className="flex justify-between mb-4">
               <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                 <p className="font-bold">Main customer:</p>
@@ -222,7 +246,7 @@ const Page = () => {
                   <p>{selectedAppointment.contactnumber}</p>
                 </div>
               </div>
-
+  
               <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
                 <p className="font-bold">Additional persons involved:</p>
                 <div className="pl-4">
@@ -236,7 +260,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-
+  
             <div className="flex justify-between mb-4">
               <div className="details p-2 border border-cusBlue rounded w-full">
                 <p className="font-bold">Reservation Details:</p>
@@ -244,8 +268,8 @@ const Page = () => {
                   <div className="w-1/2">
                     <p>Package Selected: {selectedAppointment.title}</p>
                     <p>Date/s: {selectedDate ? formatDate(selectedDate) : 'No date selected'}</p>
-                    <p>Start Time: {selectedAppointment.starttime}</p>
-                    <p>End Time: {selectedAppointment.endtime}</p>
+                    <p>Start Time: {formatTimeToAMPM(selectedAppointment.starttime)}</p>
+                    <p>End Time: {formatTimeToAMPM(selectedAppointment.endtime)}</p>
                   </div>
                   <div className="w-1/2 flex flex-col items-start">
                     <p>Additional request/s: {selectedAppointment.additionalreq}</p>
@@ -253,11 +277,10 @@ const Page = () => {
                       <p className="font-semibold">Amount Due: ₱{selectedAppointment.totalamountdue ? Number(selectedAppointment.totalamountdue).toFixed(2) : '0.00'}</p>
                     </div>
                   </div>
-                  
                 </div>
               </div>
             </div>
-
+  
             <div className="flex justify-between mb-4">
               <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
                 <p className="font-bold">Parking</p>
@@ -265,8 +288,8 @@ const Page = () => {
                   <p>Parking Needed: {selectedAppointment.isparkingspotneeded ? "Yes" : "No"}</p>
                 </div>
               </div>
-
-              <div className="details p-2 border border-cusBlue rounded w-1/2 mr-2">
+  
+              <div className="details p-2 border border-cusBlue rounded w-1/2 ml-2">
                 <p className="font-bold">
                   Proof of Payment:
                   <span className="text-red-500"> *</span>
@@ -280,7 +303,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-
+  
           <div className="flex justify-between mt-4">
             <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleReject}>Reject</button>
             <button 
@@ -293,13 +316,13 @@ const Page = () => {
           </div>
         </div>
       )}
-
+  
       {showPopup && (
         <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
           Calendar Updated Successfully!
         </div>
       )}
-
+  
       {showConfirmReject && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="text-lg font-bold text-black mb-4">Confirm Rejection</h3>
@@ -318,7 +341,7 @@ const Page = () => {
           </div>
         </div>
       )}
-
+  
       {showConfirmAccept && (
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
           <h3 className="text-lg font-bold text-black mb-4">Confirm Acceptance</h3>
@@ -337,19 +360,26 @@ const Page = () => {
           </div>
         </div>
       )}
-
-      <div className="legend flex mt-0">
-        <div className="legend-item flex items-center mr-4">
+  
+      <div className="legend flex mt-0 relative">
+        <div className="legend-item flex items-center mr-4 group relative">
           <span className="bg-yellow-400 inline-block w-4 h-4 mr-2"></span>
           <span className="font-bold text-black">Pending</span>
         </div>
-        <div className="legend-item flex items-center">
+        <div className="legend-item flex items-center group relative">
           <span className="bg-green-700 inline-block w-4 h-4 mr-2"></span>
           <span className="font-bold text-black">Reserved</span>
+          <span className="ml-2 cursor-pointer relative">
+            ?
+            <div className="tooltip absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 p-2 bg-gray-800 text-white text-sm rounded shadow-lg w-max max-w-xs hidden group-hover:block z-10">
+              Cells on the calendar will only turn green once ALL appointments within that day are appointed.
+            </div>
+          </span>
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default Page;

@@ -8,6 +8,9 @@ import { checkCookie, editServices, uploadPhoto } from '@/app/lib/actions';
 export default function EditServiceDetails() {
   const [services, setServices] = useState<Service[]>([]);
   const [originalServices, setOriginalServices] = useState<Service[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [popupColor, setPopupColor] = useState('bg-green-500');
 
   useEffect(() => {
     const getServices = async () => {
@@ -35,22 +38,22 @@ export default function EditServiceDetails() {
     const updatedServices: any = [...services];
 
     if (field === 'price') {
-      updatedServices[index][field] = Number(value); // Convert string to number for price
+      updatedServices[index][field] = parseInt(value, 10); // Parse as an integer
     } else {
-      updatedServices[index][field] = value; // Assign string value to other fields
+      updatedServices[index][field] = value;
     }
 
     setServices(updatedServices);
   };
 
   const handlePhotoChange = async (index: number, file: File) => {
-    // Convert File object to plain object if necessary
+    // file -> plain obj
     const plainFile = {
       name: file.name,
       type: file.type,
       size: file.size,
       lastModified: file.lastModified,
-      data: await fileToData(file) // Convert file to base64 or Blob
+      data: await fileToData(file) 
     };
 
     const { success, photoUrl } = await uploadPhoto(plainFile);
@@ -67,16 +70,33 @@ export default function EditServiceDetails() {
     e.preventDefault();
     try {
       await editServices(services);
-      window.location.reload;
+      setPopupMessage('Services updated successfully!');
+      setPopupColor('bg-green-500');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        window.location.reload();
+      }, 3000); 
     } catch (error) {
       console.error('Error updating services:', error);
     }
   };
 
+  const handleCancel = () => {
+    setPopupMessage('Cancelling changes');
+    setPopupColor('bg-rose-700');
+    setShowPopup(true);
+    setTimeout(() => {
+      setShowPopup(false);
+      window.location.reload();
+    }, 3000); 
+  };
+
   return (
     <div className='bg-gray-100'>
       <h1 className="text-4xl font-bold text-black mb-1.5 text-left ml-48 pt-8">Edit service details</h1>
-      <div className="w-full flex flex-col items-center p-4">
+      <span className="text-red-500 text-sm ml-48">*</span><span> indicates a required field.</span>
+      <div className="w-full flex flex-col items-center p-4 pb-0 pt-2">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
           <div className="max-h-[73vh] min-h-[73vh] overflow-y-auto max-w-full space-y-6 custom-scrollbar">
             {services.map((service, index) => (
@@ -102,11 +122,16 @@ export default function EditServiceDetails() {
           </div>
 
           <div className="flex justify-end mt-6">
-            <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40">Cancel</button>
+            <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick={handleCancel}>Cancel</button>
             <button type="submit" className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
           </div>
         </form>
       </div>
+      {showPopup && (
+        <div className={`fixed top-4 right-4 ${popupColor} text-white font-bold py-2 px-4 rounded shadow-lg`}>
+          {popupMessage}
+        </div>
+      )}
     </div>
   );
 }
@@ -121,30 +146,40 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onInputChange }) => 
     <div className="flex-1 w-max bg-white shadow p-1 rounded-lg">
       <div className="flex justify-between items-center mb-4 p-4 pb-0">
         <div className="flex-1 mr-4">
-          <label className="block text-gray-700">Title</label>
+          <label className="block text-gray-700 flex items-center">
+            Title <span className="text-red-500 text-sm ml-1">*</span>
+          </label>
           <input
             type="text"
             value={service.title}
             onChange={(e) => onInputChange('title', e.target.value)}
             className="h-10 text-black border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-96 pl-3"
+            required
           />
         </div>
         <div className="flex-1 ml-4">
-          <label className="block text-gray-700">Price per hour</label>
+          <label className="block text-gray-700 flex items-center">
+            Price per hour <span className="text-red-500 text-sm ml-1">*</span>
+          </label>
           <input
-            type="text"
-            value={String(service.price)} // Ensure price is a string for input
+            type="number"
+            step="1" 
+            value={service.price}
             onChange={(e) => onInputChange('price', e.target.value)}
             className="h-10 border border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-72 pl-3"
+            required
           />
         </div>
       </div>
       <div className="p-4"> 
-        <label className="block text-gray-700">Description</label>
+        <label className="block text-gray-700 flex items-center">
+          Description <span className="text-red-500 text-sm ml-1">*</span>
+        </label>
         <textarea
           value={service.description}
           onChange={(e) => onInputChange('description', e.target.value)}
           className="border text-black border-cusBlue bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 w-full h-48 pl-3"
+          required
         />
       </div>
     </div>

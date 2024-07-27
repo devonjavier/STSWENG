@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
 
   switch (status) {
     case 'accepted':
-      subject = `Booking Status Confirmation for ${trackingNumber} (Accepted)`;
+      subject = `Appointment Status Update: ${trackingNumber} (Accepted)`;
       textBody = `Dear ${searchParams.maincustomerfirstname},
 
 Greetings! This email is to inform you that your booking has been successfully accepted!
@@ -165,7 +165,7 @@ Indigo Studios</p>`
       break;
 
     case 'rejected':
-      subject = `Booking Status Confirmation for ${trackingNumber}`;
+      subject = `Appointment Status Update: ${trackingNumber} (Rejected)`;
       textBody = `Dear ${searchParams.maincustomerfirstname},
 
 

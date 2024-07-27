@@ -59,7 +59,7 @@ const PageContent = () => {
     } catch (error) {
       console.error('Error fetching services:', error);
     } finally {
-      setLoading(false);  
+      setLoading(false);  // End loading
     }
   }, [parsed_dates, dates_selected]);
 
@@ -111,11 +111,29 @@ const PageContent = () => {
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   return (
-    <div className="p-4 max-h-[91.8vh] overflow-x-auto ">
-      <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
+    <div className="p-4 max-h-[91.8vh] overflow-x-auto">
+      <div className="flex items-center mb-4">
+        <h2 className="text-4xl font-bold text-black">Edit Calendar</h2>
+        <div className="flex ml-6 mt-4 space-x-4">
+          <div className="legend-item flex items-center">
+            <span className="bg-green-600 inline-block w-4 h-4 mr-2"></span>
+            <span className="font-bold text-black">Available</span>
+          </div>
+          <div className="legend-item flex items-center">
+            <span className="bg-rose-700 inline-block w-4 h-4 mr-2"></span>
+            <span className="font-bold text-black">Unavailable</span>
+          </div>
+          <div className="legend-item flex items-center mr-4">
+            <span className="bg-gray-400 inline-block w-4 h-4 mr-2"></span>
+            <span className="font-bold text-black">Pending/Appointed</span>
+          </div>
+        </div>
+      </div>
       <p className="mb-4">Select Dates &gt; Select Timeslots</p>
       {loading ? (  // Show loading indicator while fetching data
-        <div>Loading...</div>
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-3xl font-bold text-gray-700">Loading...</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {sortedDates.map((date) => (
@@ -147,7 +165,7 @@ const PageContent = () => {
           ))}
           {showPopup && (
             <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
-              Calendar Updated Successfully!
+              Timeslots Updated Successfully!
             </div>
           )}
         </div>
