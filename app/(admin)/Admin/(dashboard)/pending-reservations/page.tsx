@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useCallback, useState, useEffect } from 'react';
 import PendingCalendar from '@/app/components/PendingCalendar';
 import { fetchCalendarData } from '@/utils/supabase/data';
@@ -24,7 +24,6 @@ const Page = () => {
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
   };
   
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
@@ -107,7 +106,7 @@ const Page = () => {
   };
 
   const handleAccept = useCallback(() => {
-    if (selectedAppointment) {
+    if (selectedAppointment && selectedAppointment.status !== 'Appointed') {
       setShowConfirmAccept(true);
     }
   }, [selectedAppointment]);
@@ -307,9 +306,9 @@ const Page = () => {
           <div className="flex justify-between mt-4">
             <button className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl w-40" onClick={handleReject}>Reject</button>
             <button 
-              className={`font-bold text-white px-4 py-2 rounded-3xl w-40 ${proofOfPayment ? 'bg-green-600' : 'bg-gray-400 cursor-not-allowed'}`}
+              className={`font-bold text-white px-4 py-2 rounded-3xl w-40 ${selectedAppointment.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : proofOfPayment ? 'bg-green-600' : 'bg-gray-400 cursor-not-allowed'}`}
               onClick={handleAccept}
-              disabled={!proofOfPayment}
+              disabled={selectedAppointment.status === 'Appointed' || !proofOfPayment}
             >
               Accept
             </button>
@@ -379,7 +378,6 @@ const Page = () => {
       </div>
     </div>
   );
-  
 };
 
 export default Page;
