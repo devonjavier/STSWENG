@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchAppointments, fetchServices } from '@/utils/supabase/data';
 import { reservation } from '@/utils/supabase/interfaces';
 import { checkCookie } from '@/app/lib/actions';
+import resetIcon from '@/public/reset.png'; 
 import '../scrollbarStyle.css';
 
 const Page: React.FC = () => {
@@ -81,6 +82,12 @@ const Page: React.FC = () => {
     return matchesStatus && matchesService && matchesSearch;
   });
 
+  const clearFilters = () => {
+    setSearchQuery('');
+    setFilter('All');
+    setServiceFilter('All');
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center pb-32 h-screen">
@@ -108,7 +115,6 @@ const Page: React.FC = () => {
             onChange={(e) => setFilter(e.target.value)}
           >
             <option value="All">All</option>
-            <option value="Done">Done</option>
             <option value="Accepted">Accepted</option>
             <option value="Pending">Pending</option>
             <option value="Rejected">Rejected</option>
@@ -125,6 +131,13 @@ const Page: React.FC = () => {
               <option key={index} value={service.title}>{service.title}</option>
             ))}
           </select>
+          <button
+            className="h-10 border border-cusBlue bg-cusBlue rounded-full focus:outline-none focus:ring-2 focus:ring-purple-600 pl-2 pr-2 ml-2 flex items-center justify-center"
+            style={{ borderRadius: '15px' }}
+            onClick={clearFilters}
+          >
+            <img src={resetIcon.src} alt="Reset Filters" className="h-6 w-6"/>
+          </button>
         </div>
 
         <div className="max-h-[72vh] overflow-y-auto rounded-3xl custom-scrollbar drop-shadow-2xl">
@@ -172,4 +185,3 @@ const Page: React.FC = () => {
 };
 
 export default Page;
-
