@@ -11,6 +11,7 @@ export default function EditFAQs() {
   const [popupMessage, setPopupMessage] = useState('');
   const [popupColor, setPopupColor] = useState('bg-green-500');
   const containerRef = useRef<HTMLDivElement>(null);
+  const prevFaqsLength = useRef(faqs.length);
 
   useEffect(() => {
     const getFAQs = async () => {
@@ -27,9 +28,10 @@ export default function EditFAQs() {
   }, []);
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && faqs.length > prevFaqsLength.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
+    prevFaqsLength.current = faqs.length;
   }, [faqs]);
 
   const handleInputChange = (index: number, field: keyof FAQ, value: string) => {
@@ -96,7 +98,7 @@ export default function EditFAQs() {
       <span className="text-red-500 text-sm ml-48">*</span><span> indicates a required field.</span>
       <div className="w-full flex flex-col items-center p-4 pb-0 pt-2">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
-          <div ref={containerRef} className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full max-w-full space-y-6 custom-scrollbar">
+          <div ref={containerRef} className="custom-scrollbar max-h-[73vh] min-h-[73vh] overflow-y-auto w-full max-w-full space-y-6">
             {faqs.map((faq, index) => (
               <div key={index} className="flex items-start space-x-12 mr-10">
                 <FAQCard
