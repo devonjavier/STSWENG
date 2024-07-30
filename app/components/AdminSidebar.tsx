@@ -26,7 +26,7 @@ const Sidebar: React.FC = () => {
       </div>
       
       <nav className="flex flex-col ml-16">
-        <Link href="/Admin/pending-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Pending Reservations</Link>
+        <Link href="/Admin/pending-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Calendar Reservations</Link>
         <Link href="/Admin/all-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">View all Reservations</Link>
         <Link href="/Admin/edit-calendar" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Edit Calendar</Link>
 

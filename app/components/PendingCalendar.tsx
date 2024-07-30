@@ -82,6 +82,11 @@ const PendingCalendar: React.FC<PendingCalendarProps> = ({ setArrFunc, setSelect
           onClickDay={handleDateChange}
           tileClassName={({ date, view }) => {
             if (view === 'month') {
+              const today = new Date();
+              today.setHours(0, 0, 0, 0); // Normalize the current date to remove the time component
+              if (date < today) {
+                return null; // Do not highlight past dates
+              }
               if (pendingDates[date.toDateString()]) {
                 return 'highlight-pending';
               }

@@ -122,7 +122,7 @@ export default function EditServiceDetails() {
           </div>
 
           <div className="flex justify-end mt-6">
-            <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick={handleCancel}>Cancel</button>
+            <button type="button" className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40" onClick={handleCancel}>Undo Changes</button>
             <button type="submit" className="bg-green-600 font-bold text-white px-4 py-2 rounded-3xl w-40">Save Changes</button>
           </div>
         </form>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../scrollbarStyle.css';
 import { fetchFAQs } from '@/utils/supabase/data';
 import { FAQ } from '@/utils/supabase/interfaces';
@@ -10,6 +10,7 @@ export default function EditFAQs() {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [popupColor, setPopupColor] = useState('bg-green-500');
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const getFAQs = async () => {
@@ -25,6 +26,12 @@ export default function EditFAQs() {
     getFAQs();
   }, []);
 
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [faqs]);
+
   const handleInputChange = (index: number, field: keyof FAQ, value: string) => {
     const updatedFaqs = [...faqs];
     updatedFaqs[index][field] = value;
@@ -34,7 +41,8 @@ export default function EditFAQs() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await editFAQs(faqs);
+      const combinedFaqs = combineDuplicates(faqs);
+      await editFAQs(combinedFaqs);
       setPopupMessage('FAQs Updated Successfully!');
       setPopupColor('bg-green-500');
       setShowPopup(true);
@@ -42,6 +50,16 @@ export default function EditFAQs() {
     } catch (error) {
       console.error('Error updating services:', error);
     }
+  };
+
+  const combineDuplicates = (faqs: FAQ[]): FAQ[] => {
+    const uniqueFaqs = faqs.reduce<FAQ[]>((acc, faq) => {
+      if (!acc.some(item => item.question === faq.question)) {
+        acc.push({ ...faq });
+      }
+      return acc;
+    }, []);
+    return uniqueFaqs;
   };
 
   const handleCancel = () => {
@@ -78,7 +96,7 @@ export default function EditFAQs() {
       <span className="text-red-500 text-sm ml-48">*</span><span> indicates a required field.</span>
       <div className="w-full flex flex-col items-center p-4 pb-0 pt-2">
         <form onSubmit={handleSubmit} className="w-full max-w-screen space-y-6 pl-44 pr-64">
-          <div className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full max-w-full space-y-6 custom-scrollbar">
+          <div ref={containerRef} className="max-h-[73vh] min-h-[73vh] overflow-y-auto w-full max-w-full space-y-6 custom-scrollbar">
             {faqs.map((faq, index) => (
               <div key={index} className="flex items-start space-x-12 mr-10">
                 <FAQCard
@@ -95,7 +113,7 @@ export default function EditFAQs() {
               className="bg-rose-700 font-bold text-white px-4 py-2 rounded-3xl mr-2 w-40"
               onClick={handleCancel}
             >
-              Cancel
+              Undo Changes
             </button>
             <button
               type="submit"
