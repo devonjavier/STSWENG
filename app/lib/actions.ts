@@ -432,6 +432,98 @@ function base64ToArrayBuffer(base64: any) {
 }
 
 
+export async function addTimeSlots(date: string) {
+  const supabase = createClient();
+
+  try {
+    // Find the current maximum scheduleid
+    const { data: maxIdData, error: maxIdError } = await supabase
+      .from('Schedule')
+      .select('scheduleid')
+      .order('scheduleid', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (maxIdError && maxIdError.code !== 'PGRST116') {
+      console.error('Error fetching max scheduleid:', maxIdError);
+      return { success: false, message: 'Error fetching max scheduleid' };
+    }
+
+    // Increment scheduleid by 1, starting from 1000 if no rows are found
+    let nextScheduleId = maxIdData ? maxIdData.scheduleid + 1 : 1000;
+
+    // Generate time slots from 08:00 to 22:00
+    const startHour = 8;
+    const endHour = 22;
+
+    const timeSlots = [];
+    for (let hour = startHour; hour < endHour; hour++) {
+      const starttime = `${hour.toString().padStart(2, '0')}:00:00`;
+      const endtime = `${(hour + 1).toString().padStart(2, '0')}:00:00`;
+      timeSlots.push({ scheduleid: nextScheduleId, starttime, endtime });
+      nextScheduleId++;
+    }
+
+    // Function to check if a time slot already exists
+    const timeSlotExists = async (starttime: any, endtime: any) => {
+      const { data, error } = await supabase
+        .from('Schedule')
+        .select('scheduleid')
+        .eq('date', date)
+        .eq('starttime', starttime)
+        .eq('endtime', endtime)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking for existing time slot:', error);
+        return false;
+      }
+
+      return data ? true : false;
+    };
+
+    // Insert each time slot into the Schedule table
+    const insertPromises = timeSlots.map(async ({ scheduleid, starttime, endtime }) => {
+      const exists = await timeSlotExists(starttime, endtime);
+
+      if (exists) {
+        console.log(`Time slot ${starttime} - ${endtime} already exists for date ${date}`);
+        return { success: false, message: `Time slot ${starttime} - ${endtime} already exists` };
+      }
+
+      const { data, error } = await supabase
+        .from('Schedule')
+        .insert({
+          scheduleid: scheduleid,
+          date: date,
+          starttime: starttime,
+          endtime: endtime,
+          status: 'Available',
+          appointmentid: null
+        });
+
+      if (error) {
+        console.error('Error inserting time slot:', starttime, "-", endtime, error);
+        return { success: false, message: 'Error inserting time slot' + starttime };
+      }
+
+      return { success: true, message: 'Time slot added successfully' };
+    });
+
+    console.log("DATE:", date);
+
+    // Wait for all insertions to complete
+    const results = await Promise.all(insertPromises);
+    console.log('Time slots added:', results);
+
+    return { success: true, message: 'All time slots added successfully' };
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return { success: false, message: 'Unexpected error occurred' };
+  }
+}
+
+
 // export async function handleSignup(formData : FormData){
 //   const supabase = createClient();
 

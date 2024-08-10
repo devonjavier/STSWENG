@@ -30,21 +30,13 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
     setArrFunc(selectedDates);
   }, [selectedDates, setArrFunc]);
 
-  const isDateAvailable = (date: Date) => {
-    for(const schedule of schedules){
-      console.log(schedule.date);
-        if (new Date(schedule.date).toDateString() === date.toDateString())
-        {
-          console.log("hi" + schedule.status);
-          console.log("hello" + schedule.status === "Unavailable");
-          if(schedule.status === "Available" || schedule.status === "Unavailable")
-          {
-            return false
-          }
-        }  
-    }
-    return true
+  // Function to disable dates before today
+  const isPastDate = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to midnight to accurately compare dates
+    return date < today;
   };
+
   return (
     <div className='app'>
       <div className='calendar-container'>
@@ -52,7 +44,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ setArrFunc, schedules }
         <Calendar
           minDate={new Date()}
           onClickDay={handleDateChange}
-          tileDisabled={({ date, view }) => view === 'month' && isDateAvailable(date)}
+          tileDisabled={({ date, view }) => view === 'month' && isPastDate(date)}
           tileClassName={({ date, view }) => {
             const isSelected = selectedDates.some(selectedDate => selectedDate.date.toDateString() === date.toDateString());
             return isSelected && view === 'month' ? 'highlight' : null;

@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { findDates, getCurrentStatus } from '@/app/lib/actions';
+import { findDates, getCurrentStatus, addTimeSlots } from '@/app/lib/actions';
 import '../../scrollbarStyle.css'; 
 import { changeCalendarStatus } from '@/app/lib/actions';
 import { TimeSlot } from '@/utils/supabase/interfaces';
@@ -16,8 +16,16 @@ const PageContent = () => {
   const [timeSlotsData, setTimeSlotsData] = useState<{ [key: string]: TimeSlot[] }>({});
   const [selectedSlots, setSelectedSlots] = useState<{ [key: string]: boolean[] }>({});
   const [showPopup, setShowPopup] = useState(false);
-  const [loading, setLoading] = useState(true);  // Added loading state
+  const [loading, setLoading] = useState(true);  
 
+  const formatTime = (timeString: any) => {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes);
+  
+    return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }).format(date);
+  };
+  
   const handleDates = useCallback(async () => {
     setLoading(true);  // Start loading
     try {
@@ -26,13 +34,14 @@ const PageContent = () => {
       const newTimeSlotsData: { [key: string]: TimeSlot[] } = {};
       const newSelectedSlots: { [key: string]: boolean[] } = {};
 
-      Object.keys(grouped_time_slots).forEach(date => {
-        const timeSlots = grouped_time_slots[date].map((slot: any) => ({
-          time: `${slot.starttime} - ${slot.endtime}`,
-          status: slot.status,
+      parsed_dates.forEach((dateObj : any) => {
+        const date = dateObj.date;
+        const slots = grouped_time_slots[date] || [];
+        newTimeSlotsData[date] = slots.map((slot: any) => ({
+          ...slot,
+          time: `${formatTime(slot.starttime)} - ${formatTime(slot.endtime)}`
         }));
-        newTimeSlotsData[date] = timeSlots;
-        newSelectedSlots[date] = new Array(timeSlots.length).fill(false);
+        newSelectedSlots[date] = new Array(slots.length).fill(false);
       });
 
       console.log('Grouped Time Slots:', grouped_time_slots);
@@ -110,6 +119,22 @@ const PageContent = () => {
 
   const sortedDates = Object.keys(timeSlotsData).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+  console.log('Sorted Dates:', sortedDates); 
+  console.log('Time Slots Data:', timeSlotsData);
+
+  const hasTimeSlots = (date: string) => {
+    return (timeSlotsData[date] && timeSlotsData[date].length > 0);
+  };
+
+  const addTimeSlotsAndRefresh = async (date: string) => {
+    try {
+      await addTimeSlots(date);
+      window.location.reload(); // Reload the page after adding time slots
+    } catch (error) {
+      console.error('Error adding time slots:', error);
+    }
+  };
+
   return (
     <div className="p-4 max-h-[91.8vh] overflow-x-auto">
       <div className="flex items-center mb-1">
@@ -145,40 +170,37 @@ const PageContent = () => {
                   className={`p-2 mb-1 border rounded-3xl pl-5 text-white text-bold 
                     ${slot.status === 'Pending' || slot.status === 'Appointed' ? 'bg-gray-400 cursor-not-allowed' : 
                       selectedSlots[date][index] ? 'bg-rose-700 cursor-pointer' : 'bg-green-600 cursor-pointer'}`}
-                  onClick={() => (slot.status !== 'Pending' && slot.status !== 'Appointed') && handleSelectSlot(date, index)}
+                  onClick={() => handleSelectSlot(date, index)}
                 >
                   {slot.time}
                 </div>
               ))}
-              <div className="mt-2">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="mr-2"
-                    checked={selectedSlots[date].every(Boolean)}
-                    onChange={() => handleSelectAll(date)}
-                  />
-                  Set all unavailable
-                </label>
-              </div>
+              <button
+                onClick={() => addTimeSlotsAndRefresh(date)}
+                className={`bg-cusBlue rounded-3xl w-full h-10 mt-2 text-white font-bold ${hasTimeSlots(date) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={hasTimeSlots(date)}
+              >
+                Populate Time Slots
+              </button>
             </div>
           ))}
-          {showPopup && (
-            <div className="fixed top-4 right-4 bg-green-500 text-white font-bold py-2 px-4 rounded shadow-lg">
-              Timeslots Updated Successfully!
-            </div>
-          )}
         </div>
       )}
-      <button onClick={confirm} className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold">Confirm</button>
+      <div className="flex justify-between mt-4">
+        <button
+          onClick={confirm}
+          className="bg-cusBlue text-white px-4 py-2 rounded font-bold"
+        >
+          Confirm
+        </button>
+      </div>
+      {showPopup && (
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-white px-4 py-2 rounded shadow-lg">
+          Time slots updated successfully!
+        </div>
+      )}
     </div>
   );
 };
 
-const Page = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <PageContent />
-  </Suspense>
-);
-
-export default Page;
+export default PageContent;
