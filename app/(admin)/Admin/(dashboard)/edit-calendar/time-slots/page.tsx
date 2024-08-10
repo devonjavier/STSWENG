@@ -202,5 +202,10 @@ const PageContent = () => {
     </div>
   );
 };
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <PageContent />
+  </Suspense>
+);
 
 export default PageContent;
