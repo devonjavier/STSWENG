@@ -208,4 +208,4 @@ const Page = () => (
   </Suspense>
 );
 
-export default PageContent;
+export default Page;
