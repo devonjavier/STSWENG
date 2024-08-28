@@ -26,7 +26,7 @@ export default async function Home() {
       <Team />
     </div>
 
-    <div className='flex justify-center lg:pb-20'>
+    <div className='hidden lg:block flex justify-center lg:pb-20'>
       <Reviews />
     </div>
     <div className="bg-cover bg-center h-screen flex justify-center items-center" style={{ backgroundImage: "url('/home_collage.png')"}}>

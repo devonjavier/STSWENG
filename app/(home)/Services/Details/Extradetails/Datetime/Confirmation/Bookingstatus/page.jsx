@@ -133,7 +133,7 @@ const Page = ({ searchParams }) => {
         <>
         {loading ? (
         <>
-            <div className='flex flex-col items-center'>
+            <div className='flex flex-col items-center mt-5'>
                 <span className="text-gray-500 font-medium italic text-3xl"> Generating Appointment... </span>
             </div>
         </>
