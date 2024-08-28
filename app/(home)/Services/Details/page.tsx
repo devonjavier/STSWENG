@@ -133,57 +133,58 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
 
     return ( 
         <> 
-        <div className='px-32 flex flex-col gap-8 mb-6 mt-20'> 
-            <div> 
-                <div className='text-cusBlue text-6xl font-bold'> 
-                    Book an Appointment 
-                </div> 
-                <div> 
-                    Services &gt; <span className='text-cusBlue'>Details</span> &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Booking Status 
-                </div> 
-            </div> 
+        <div className='px-4 lg:px-32 flex flex-col gap-8 mt-10 lg:mb-6 lg:mt-20'> 
+            <div>
+                <div className='text-cusBlue text-4xl lg:text-6xl font-bold'>
+                    Book an Appointment
+                </div>
+                <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
+                    <span className='text-cusBlue'>Services </span>&gt; Details &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Booking Status
+                </div>
+            </div>
+                
             <div className="flex flex-row"> 
-                <div className='flex flex-row'> 
+                <div className='flex flex-col lg:flex-row'> 
                     <div className='flex flex-col'> 
                         <span className='text-black drop-shadow-lg font-bold mb-5 text-lg'>Main Customer</span> 
                         <div className='flex flex-col'> 
                             <div className={`relative mb-3`}>
-                                <input id='customerfirstname' name='customername' placeholder="First Name" onChange={(e) => { setmaincustomerfirstname(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.firstName ? 'border-red-500' : ''}`} type="text" />
+                                <input id='customerfirstname' name='customername' placeholder="First Name" onChange={(e) => { setmaincustomerfirstname(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[320px] h-[50px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.firstName ? 'border-red-500' : ''}`} type="text" />
                                 {submitted && errors.firstName && <span className="absolute right-3 top-2 text-red-500">*</span>}
                             </div>
 
                             <div className={`relative mb-3`}>
-                                <input id='customermiddlename' name='customername' placeholder="Middle Name" onChange={(e) => { setmaincustomermiddlename(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.middleName ? 'border-red-500' : ''}`} type="text" />
+                                <input id='customermiddlename' name='customername' placeholder="Middle Name" onChange={(e) => { setmaincustomermiddlename(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[320px] h-[50px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.middleName ? 'border-red-500' : ''}`} type="text" />
                                 {submitted && errors.middleName && <span className="absolute right-3 top-2 text-red-500">*</span>}
                             </div>
 
                             <div className={`relative mb-3`}>
-                                <input id='customerlastname' name='customername' placeholder="Last Name" onChange={(e) => { setmaincustomerlastname(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.lastName ? 'border-red-500' : ''}`} type="text" />
+                                <input id='customerlastname' name='customername' placeholder="Last Name" onChange={(e) => { setmaincustomerlastname(capitalizeFirstLetter(e.target.value)); }} className={`text-black text-center text-2xl font-medium w-[320px] h-[50px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.lastName ? 'border-red-500' : ''}`} type="text" />
                                 {submitted && errors.lastName && <span className="absolute right-3 top-2 text-red-500">*</span>}
                             </div>
                         </div> 
 
                         <span className='text-black drop-shadow-lg font-bold mb-2 mt-6 text-lg'>Phone Number</span> 
                         <div className={`relative mb-3`}>
-                            <input placeholder="09XXXXXXXXX" onChange={(e) => { setPhonenumber(e.target.value); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.phoneNumber ? 'border-red-500' : ''}`} type="text" /> 
+                            <input placeholder="09XXXXXXXXX" onChange={(e) => { setPhonenumber(e.target.value); }} className={`text-black text-center text-2xl font-medium w-[320px] h-[50px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.phoneNumber ? 'border-red-500' : ''}`} type="text" /> 
                             {submitted && errors.phoneNumber && <span className="absolute right-3 top-2 text-red-500">*</span>}
                         </div> 
                         
                         <span className='text-black drop-shadow-lg font-bold mb-2 mt-6 text-lg'>Email Address</span> 
                         <div className={`relative mb-3`}>
-                            <input placeholder="@gmail.com" onChange={(e) => { setEmailaddress(e.target.value); }} className={`text-black text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.email ? 'border-red-500' : ''}`} type="text" /> 
+                            <input placeholder="@gmail.com" onChange={(e) => { setEmailaddress(e.target.value); }} className={`text-black text-center text-2xl font-medium w-[320px] h-[50px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 ${submitted && errors.email ? 'border-red-500' : ''}`} type="text" /> 
                             {submitted && errors.email && <span className="absolute right-3 top-2 text-red-500">*</span>}
                         </div> 
 
                         <Link href={{ pathname: "/Services/Details/Extradetails", query: { service: searchParams.service, serviceType:searchParams.serviceType, maincustomerfirstname: maincustomerfirstname, maincustomermiddlename: maincustomermiddlename, maincustomerlastname: maincustomerlastname, phonenumber: phonenumber, emailaddress: emailaddress, needsparking: isChecked, additionalrequests: additionalRequests, hours: hours, additionalpackage: JSON.stringify(selectedPackage)} }} passHref>
-                            <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={handleNextClick}>Next</button> 
+                            <button className="hidden lg:block bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={handleNextClick}>Next</button> 
                         </Link> 
                     </div> 
                     
-                    <div className='flex flex-col ml-28'> 
+                    <div className='flex flex-col lg:ml-28 lg:mt-0 mt-6'> 
                         <div className='flex flex-col'> 
                             <span className='text-black drop-shadow-lg font-bold mb-2 text-lg'>Additional Request/s</span> 
-                            <input id='additionalreq' name='additionalreq' onChange={(e) => { setadditionalRequests(e.target.value); }} placeholder=" " className='text-black text-center text-2xl font-medium w-[480px] h-[250px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" /> 
+                            <input id='additionalreq' name='additionalreq' onChange={(e) => { setadditionalRequests(e.target.value); }} placeholder=" " className='text-black text-center text-2xl font-medium w-[320px] h-[50px] lg:w-[480px] lg:h-[68px] py-2.5 my-4 bg-white rounded-[20px] border border-indigo-800 justify-between items-center inline-flex' type="text" /> 
                         </div> 
                         <div className='flex gap-4 mt-5'> 
                             <span className='text-black drop-shadow-lg font-bold mb-2 text-lg'>Do you need parking?</span> 
@@ -221,6 +222,10 @@ const Page = ({ searchParams }: { searchParams: { service: string , serviceType:
                                 </div> 
                             ):(<div> </div>)} 
                         </div> 
+
+                        <Link href={{ pathname: "/Services/Details/Extradetails", query: { service: searchParams.service, serviceType:searchParams.serviceType, maincustomerfirstname: maincustomerfirstname, maincustomermiddlename: maincustomermiddlename, maincustomerlastname: maincustomerlastname, phonenumber: phonenumber, emailaddress: emailaddress, needsparking: isChecked, additionalrequests: additionalRequests, hours: hours, additionalpackage: JSON.stringify(selectedPackage)} }} passHref>
+                            <button className="lg:hidden bg-cusBlue my-5 rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={handleNextClick}>Next</button> 
+                        </Link> 
                     </div> 
                 </div> 
             </div> 

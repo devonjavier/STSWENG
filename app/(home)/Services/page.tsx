@@ -55,10 +55,10 @@ export default function DisplayPage() {
         <>
             <div className='px-4 md:px-32 flex flex-col gap-4 md:gap-8 mb-6 mt-10 md:mt-20'>
                 <div>
-                    <div className='text-cusBlue text-4xl md:text-6xl font-bold'>
+                    <div className='text-cusBlue text-4xl lg:text-6xl font-bold'>
                         Book an Appointment
                     </div>
-                    <div>
+                    <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
                         <span className='text-cusBlue'>Services </span>&gt; Details &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Booking Status
                     </div>
                 </div>

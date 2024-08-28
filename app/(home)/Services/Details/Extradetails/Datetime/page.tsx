@@ -60,14 +60,13 @@ const Page = ({ searchParams }: {
 
     return (
         <>
-            <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
-                <div>
-                    <div className='text-cusBlue text-6xl font-bold'>
+            <div className='px-4 lg:px-32 flex flex-col gap-8 mt-10 lg:mb-6 lg:mt-20'>
+            <div>
+                    <div className='text-cusBlue text-4xl lg:text-6xl font-bold'>
                         Book an Appointment
-                        <div></div>
                     </div>
-                    <div>
-                        Services &gt; Details &gt; ExtraDetails &gt; <span className='text-cusBlue'>Date & Time </span> &gt; Confirmation &gt; Booking Status
+                    <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
+                        Services&gt;  Details  &gt; ExtraDetails &gt; <span className='text-cusBlue'> Date & Time</span> &gt; Confirmation &gt; Booking Status
                     </div>
                 </div>
                 <div>
@@ -81,7 +80,7 @@ const Page = ({ searchParams }: {
                     ) : (
                     <>
                     
-                    <div className='flex flex-row'>
+                    <div className='flex flex-col lg:flex-row'>
                         <div className='flex flex-col mr-4'>
                             <Calendar setArrFunc={setselectedSchedules} schedules={schedules} />
                             <Link href={{
@@ -105,7 +104,7 @@ const Page = ({ searchParams }: {
                                     additionalpackage: searchParams.additionalpackage
                                 }
                             }}>
-                                <button disabled={ablebutton} className={`rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold ${ablebutton ? 'bg-gray-400' : 'bg-cusBlue'}`}>
+                                <button disabled={ablebutton} className={`hidden lg:block rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold ${ablebutton ? 'bg-gray-400' : 'bg-cusBlue'}`}>
                                     Proceed to Confirmation
                                 </button>
                             </Link>
@@ -113,6 +112,32 @@ const Page = ({ searchParams }: {
                         <div className='flex flex-col'>
                             <DropdownWrapper selectedDates={selectedSchedules} setSelectedDates={setselectedSchedules} schedules={schedules} hours={searchParams.hours} items={[]} />
                         </div>
+
+                        <Link href={{
+                                pathname: "/Services/Details/Extradetails/Datetime/Confirmation",
+                                query: {
+                                    service: searchParams.service,
+                                    serviceType: searchParams.serviceType,
+                                    maincustomerfirstname: searchParams.maincustomerfirstname,
+                                    maincustomermiddlename: searchParams.maincustomermiddlename,
+                                    maincustomerlastname: searchParams.maincustomerlastname,
+                                    phonenumber: searchParams.phonenumber,
+                                    emailaddress: searchParams.emailaddress,
+                                    needsparking: searchParams.needsparking,
+                                    additionalrequests: searchParams.additionalrequests,
+                                    countAdditionalCustomers: searchParams.countAdditionalCustomers,
+                                    additionalCustomersfirstnames: searchParams.additionalCustomersfirstnames,
+                                    additionalCustomersmiddlenames: searchParams.additionalCustomersmiddlenames,
+                                    additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
+                                    schedules: JSON.stringify(selectedSchedules),
+                                    hours: searchParams.hours,
+                                    additionalpackage: searchParams.additionalpackage
+                                }
+                            }}>
+                                <button disabled={ablebutton} className={`lg:hidden my-5 rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold ${ablebutton ? 'bg-gray-400' : 'bg-cusBlue'}`}>
+                                    Proceed to Confirmation
+                                </button>
+                            </Link>
                     </div>
                     </>
                 )}

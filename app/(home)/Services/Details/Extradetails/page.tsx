@@ -68,13 +68,13 @@ const Page = ({ searchParams }: {
 
     return (
         <>
-            <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
+            <div className='px-4 lg:px-32 flex flex-col gap-8 mt-10 lg:mb-6 lg:mt-20'>
                 <div>
-                    <div className='text-cusBlue text-6xl font-bold'>
+                    <div className='text-cusBlue text-4xl lg:text-6xl font-bold'>
                         Book an Appointment
                     </div>
-                    <div>
-                        Services &gt; Details &gt; <span className='text-cusBlue'>ExtraDetails </span> &gt; Date & Time &gt; Confirmation &gt; Booking Status
+                    <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
+                        Services&gt;  Details  &gt; <span className='text-cusBlue'>ExtraDetails</span> &gt; Date & Time &gt; Confirmation &gt; Booking Status
                     </div>
                 </div>
                 <div className="flex flex-row">
@@ -118,7 +118,7 @@ const Page = ({ searchParams }: {
                                         additionalpackage: searchParams.additionalpackage
                                     }
                                 }}>
-                                <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={handleNextClick}> Proceed to Date & Time </button>
+                                <button className="bg-cusBlue my-5 rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={handleNextClick}> Proceed to Date & Time </button>
                             </Link>
                         </div>
                     </div>

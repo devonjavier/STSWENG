@@ -4,7 +4,7 @@ import React from 'react';
 const Footer = () => {
     return (
       <footer className="bg-cusBlue p-6">
-        <div className="flex flex-row justify-around text-white text-xl font-medium">
+        <div className="flex flex-col lg:flex-row justify-around text-white text-xl font-medium">
           <div className="flex mb-4 flex-col">
             <Link href="https://www.facebook.com/indigostudiosph" target="_blank" className="mr-4 hover:text-gray-200 ">FACEBOOK</Link>
             <Link href="https://www.instagram.com/IndigoStudiosPH" target="_blank" className="mr-4 hover:text-gray-200">INSTAGRAM</Link>

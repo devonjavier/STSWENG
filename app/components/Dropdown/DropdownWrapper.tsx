@@ -147,13 +147,13 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
           <span className='pl-1 text-sm w-full font-bold text-black'>Start</span>
           <details className="dropdown" open={isStartOpen}>
             <summary
-              className="dropdown-summary m-1 bg-white w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg transition duration-400 ease-in-out transform active:scale-110"
+              className="dropdown-summary m-1 bg-white w-42 lg:w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg transition duration-400 ease-in-out transform active:scale-110"
               onClick={(e) => toggleDropdown('start', e)}>
               <span className="text-left">{selectedDates[dateIndex].selectedtime1? formatTimeString(selectedDates[dateIndex].selectedtime1) : 'Select Time'}</span>
               <span><FaChevronDown /></span>
             </summary>
               {isStartOpen && (
-                <ul className="dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48">
+                <ul className="dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-42 lg:w-48">
                   {items.validStartTimes.map((item:any, index:number) => (
                     <li
                       key={index}
@@ -171,13 +171,13 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
           <span className='pl-1 text-sm font-bold text-black pt-6'>End</span>
           <details className="dropdown" open={isEndOpen}>
           <summary
-              className="dropdown-summary m-1 bg-white w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg shadow-sm transition duration-200 ease-in-out transform active:scale-95"
+              className="dropdown-summary m-1 bg-white w-42 lg:w-48 flex items-center justify-between cursor-pointer p-3 border rounded-lg shadow-sm transition duration-200 ease-in-out transform active:scale-95"
               onClick={(e) => toggleDropdown('end', e)}>
               <span className="text-left">{selectedDates[dateIndex].selectedtime2? formatTimeString(selectedDates[dateIndex].selectedtime2) : 'Select Time'}</span>
               <span><FaChevronDown /></span>
             </summary>
             {isEndOpen && (
-              <ul className={`dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-48 ${selectedDates[dateIndex].selectedtime1 ? '' : 'disabled'}`}>
+              <ul className={`dropdown-menu2 p-2 shadow menu z-[1] bg-white rounded-lg w-42 lg:w-48 ${selectedDates[dateIndex].selectedtime1 ? '' : 'disabled'}`}>
                 {filteredEndTimes.map((item:any, index:number) => (
                   <li
                     key={index}
@@ -198,7 +198,7 @@ const DropdownWrapper: React.FC<DropdownWrapperProps> = ({ selectedDates, setSel
 
   return (
     <div>
-      <div ref={containerRef} className={`border-4 rounded-3xl p-8 drop-shadow-md ${containerClass} min-w-[500px]`}>
+      <div ref={containerRef} className={`border-4 rounded-3xl p-8 drop-shadow-md ${containerClass} min-w-[250px] lg:min-w-[500px]`}>
         <span className="text-black text-xl font-semibold mb-4 block">Select a time</span>
         {selectedDates.map((dateObj, index) => (
           <Dropdown

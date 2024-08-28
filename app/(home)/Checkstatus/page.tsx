@@ -166,15 +166,15 @@ export default function DisplayPage() {
 
     return (
         <>
-            <div className='flex flex-col mt-16 ml-48'>
-                <span className='text-cusBlue font-bold mb-2 mt-6  text-7xl'> Check Status </span>
-                <span className='text-gray-400 font-bold mb-6 text-xl'> Track your appointment here. </span>
-                <span className='text-black font-bold mb-2  text-xl'> Reference Number: </span>
+            <div className='flex flex-col items-center lg:items-baseline lg:mt-16 lg:ml-48'>
+                <span className='text-cusBlue font-bold mb-2 mt-6 text-4xl lg:text-7xl ml-3'> Check Status </span>
+                <span className='text-gray-400 font-bold mb-6 text-md lg:text-xl ml-3'> Track your appointment here. </span>
+                <span className='text-black font-bold mb-2 text-md lg:text-xl ml-3'> Reference Number: </span>
                 <input placeholder="Input reference number" onChange={(e) => {trackingNumberChange(parseInt(e.target.value)); setIsError(false);  }}
-                className={`text-cusBlue text-center text-2xl font-medium w-[480px] h-[68px] py-2.5 bg-white rounded-[20px] 
+                className={`text-cusBlue text-center ml-3 text-md lg:text-2xl font-medium w-[280px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] 
                 border ${isError ? 'border-red-600' : 'border-indigo-800'} justify-between items-center inline-flex`} type="number" />
                 {isError && <span className="text-red-600 text-lg"></span>} 
-                <button className="bg-cusBlue rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
+                <button className="bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
             </div>
 
             {loading ? (
@@ -195,29 +195,29 @@ export default function DisplayPage() {
 
                     <div className='flex flex-col items-center'>
                         <Image src={status} alt=" " width={80} height={80}/>
-                        <span className="font-bold text-4xl text-black"> {statusMessage} </span>
+                        <span className="font-bold text-2xl lg:text-4xl text-black"> {statusMessage} </span>
                     </div>
                     
-                    <div className="flex flex-row justify-center mb-6 p-5 w-2/3 m-auto">
-                        <div className='flex flex-row w-full'>
+                    <div className="flex flex-row justify-center mb-6 p-5 lg:w-2/3 m-auto">
+                        <div className='flex flex-col lg:flex-row w-full'>
                             <div className='flex flex-col w-full'>
                                 <div className="flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl">
-                                    <span className='text-black  font-bold mb-5  text-3xl'> Main Customer: </span>
+                                    <span className='text-black  font-bold mb-5 text-2xl lg:text-3xl'> Main Customer: </span>
                                     <div className='flex flex-col p-0 ml-12 my-0 mr-0'>
-                                        <span className='text-black mb-5  text-xl mar '> <span className='font-bold'> Name</span>: {maincustomerfirstname} {maincustomermiddlename} {maincustomerlastname}</span>
-                                        <span className='text-black mb-5  text-xl'> <span className='font-bold'> Contact number</span>: {phonenumber} </span>
-                                        <span className='text-black mb-5  text-xl'> <span className='font-bold'> Email address:</span> {emailaddress} </span>
+                                        <span className='text-black mb-5 text-md lg:text-xl mar '> <span className='font-bold'> Name</span>: {maincustomerfirstname} {maincustomermiddlename} {maincustomerlastname}</span>
+                                        <span className='text-black mb-5 text-md lg:text-xl'> <span className='font-bold'> Contact number</span>: {phonenumber} </span>
+                                        <span className='text-black mb-5 text-md lg:text-xl'> <span className='font-bold'> Email address:</span> {emailaddress} </span>
                                     </div>
                                 </div>
 
                                 <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl'>
-                                    <span className='text-black font-bold text-3xl mr-16 my-6'> Additional Persons Involved: </span>
+                                    <span className='text-black font-bold text-2xl lg:text-3xl mr-16 my-6'> Additional Persons Involved: </span>
                                     <div className='flex flex-col p-0 my-0 mr-0'>
                                         {additionalCustomersFirstname.length === 0 ? (
-                                            <span className='text-black text-xl font-semibold mb-5 ml-12 text-md'>None</span>
+                                            <span className='text-black text-md lg:text-xl font-semibold mb-5 ml-12 text-md'>None</span>
                                         ) : (
                                             additionalCustomersFirstname.map((firstName, i) => (
-                                                <span className='text-black text-xl  mb-5 ml-12 text-md' key={i}>
+                                                <span className='text-black text-md lg:text-xl  mb-5 ml-12 text-md' key={i}>
                                                     <span className='font-semibold'>Person {i+1}: </span> {firstName} {additionalCustomersMiddlename[i]} {additionalCustomersLastname[i]}
                                                 </span>
                                             ))
@@ -226,17 +226,17 @@ export default function DisplayPage() {
                                 </div>
 
                                 <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl'>
-                                    <span className='text-black mb-5  text-3xl'> <span className='font-bold'>Parking Spot: </span> {isChecked ? "Yes" : "No"} </span>
+                                    <span className='text-black mb-5 text-2xl lg:text-3xl'> <span className='font-bold'>Parking Spot: </span> {isChecked ? "Yes" : "No"} </span>
                                 </div>
                             </div>
                             
-                            <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl ml-4 w-full'>
-                                <span className='text-black  font-bold mb-5  text-3xl'> Reservation Details: </span>
-                                <span className='text-black mb-5 ml-7  text-xl'> <span className='font-bold'> Package Selection:</span> {selectedService}  </span>
-                                <span className='text-black mb-5 ml-7  text-xl'> <span className='font-bold'> Additional Service:</span> {selectedAdditionalService}  </span>
+                            <div className='flex flex-col border-2 border-indigo-800 mt-5 rounded-lg p-4 drop-shadow-2xl lg:ml-4 w-full'>
+                                <span className='text-black  font-bold mb-5 text-2xl lg:text-3xl'> Reservation Details: </span>
+                                <span className='text-black mb-5 ml-7 text-md lg:text-xl'> <span className='font-bold'> Package Selection:</span> {selectedService}  </span>
+                                <span className='text-black mb-5 ml-7 text-md lg:text-xl'> <span className='font-bold'> Additional Service:</span> {selectedAdditionalService}  </span>
                                 
-                                <span className='text-black mb-5 ml-7  text-xl'> <span className='font-bold'> Total Amount Due </span>: ₱{totalAmountDue}  </span>
-                                <span className='text-black font-bold mb-2 ml-7  text-xl'> Appointment schedules: </span>
+                                <span className='text-black mb-5 ml-7 text-md lg:text-xl'> <span className='font-bold'> Total Amount Due </span>: ₱{totalAmountDue}  </span>
+                                <span className='text-black font-bold mb-2 ml-7 text-md lg:text-xl'> Appointment schedules: </span>
                                 <div className='flex flex-col mb-4'>
                                     {listofschedules.map((schedule) => (
                                         <span key={schedule.scheduleid} className='text-black mb-5 ml-12  text-md'> <span className='font-bold'> Date: </span> {formatDate(schedule.date)} 

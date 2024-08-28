@@ -539,14 +539,11 @@ export async function addCustomer(
     
     
     const { data: people } = await supabase.from('Person').select('personid').order('personid', {ascending:false});
-    const peopleArr = Object.keys(people);
     
-    const targetPerson = people[peopleArr[0]] // just filter out the first one
-
-    Object.values(targetPerson).forEach((key)=>{
-        if (typeof key === 'number')
-            largestpersonidnumber = key
-    })
+    if (!(people.length === 0))
+    {
+        largestpersonidnumber = people[0].personid// just filter out the first one
+    }
 
     largestpersonidnumber = largestpersonidnumber + 1;
 
@@ -564,14 +561,11 @@ export async function addCustomer(
 
     //gettng the next cutomer number
     const { data: customers } = await supabase.from('Customers').select('customerid').order('customerid', {ascending:false});
-    const customerArr = Object.keys(customers);
     
-    const targetCustomer = customers[customerArr[0]] // just filter out the first one
-
-    Object.values(targetCustomer).forEach((key)=>{
-        if (typeof key === 'number')
-            largestcustomeridnumber = key
-    })
+    if (!(customers.length === 0))
+    {
+        largestcustomeridnumber = customers[0].customerid// just filter out the first one
+    }
 
     largestcustomeridnumber = largestcustomeridnumber + 1;
 

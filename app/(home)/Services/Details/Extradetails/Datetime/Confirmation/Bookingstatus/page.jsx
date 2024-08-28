@@ -134,45 +134,48 @@ const Page = ({ searchParams }) => {
         {loading ? (
         <>
             <div className='flex flex-col items-center'>
-                <span className="font-semibold text-4xl text-black mt-14"> Generating Appointment... </span>
+                <span className="text-gray-500 font-medium italic text-3xl"> Generating Appointment... </span>
             </div>
         </>
         )
             : (
         <>
-            <div className='px-32 flex flex-col gap-8 mb-6 mt-20'>
+            <div className='px-4 lg:px-32 flex flex-col gap-8 mt-10 lg:mb-6 lg:mt-20'>
                 <div>
-                    <div className='text-cusBlue text-6xl font-bold'>
+                    <div className='text-cusBlue text-4xl lg:text-6xl font-bold'>
                         Book an Appointment
                     </div>
-                    <div>
-                        Services &gt; Date & Time &gt; Details &gt; ExtraDetails &gt; Confirmation &gt;<span className='text-cusBlue'> Booking Status</span>
+                    <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
+                        Services &gt; Details &gt; ExtraDetails &gt; Date & Time &gt;  Confirmation &gt; <span className='text-cusBlue'> Booking Status </span>
                     </div>
                 </div>
-                <div className="flex flex-row items-center justify-center w-4/5 m-auto">
+
+                <div className="flex flex-col lg:flex-row items-center justify-center w-1/2 lg:w-4/5 m-auto space-y-4">
                     <div className="self-start">
                         <Image src="/check_mark.png" alt="check-mark" width={500} height={220}/>
                     </div>
-                    <div className="flex flex-col items-center">
-                        <div className="flex flex-col items-start self-start mb-5">
-                            <span className="font-bold text-6xl text-black self-start "> Submission Successful </span>
-                            <span className="font-bold text-2xl text-black"> Please <Link href="/Checkstatus" className="text-cusBlue"> check status </Link> after a few hours for any updates </span>
+
+                    <div className="flex flex-col items-center ">
+                        <div className="flex flex-col items-start lg:self-start text-center mb-5 mx-2  w-full">
+                            <span className="font-bold text-3xl lg:text-6xl text-black self-start "> Submission Successful </span>
+                            <span className="font-bold text-md lg:text-2xl text-black"> Please <Link href="/Checkstatus" className="text-cusBlue"> check status </Link> after a few hours for any updates </span>
                         </div>
-                        <div className="flex flex-col border-2 border-black rounded-xl radius-md text-center mb-3 px-32 py-5 gap-6 w-full">
+
+                        <div className="flex flex-col border-2 border-black rounded-xl radius-md text-center mb-3 px-5 lg:px-32 py-5 gap-6 w-full">
                             <span className="text-2xl text-black font-bold"> Your Booking Reference Number is </span>
                             <span className="font-bold text-5xl text-black"> {trackingNumber} </span>
 
                         </div>
-                        <div className="flex flex-col border-2 border-black rounded-xl radius-md text-start mb-3 px-32 py-5 gap-6">
+                        <div className="flex flex-col border-2 border-black rounded-xl radius-md text-start mb-3 px-5 lg:px-32 py-5 gap-6 w-full">
                             <span className="text-3xl text-black font-bold text-start"> Reminders: </span>
-                            <span className="ml-8 font-semibold text-xl text-black"> Please note that your reservation will only be approved once the down payment of {((parseFloat(searchParams.mainprice)) + parseFloat((searchParams.additionalprice))) * .1} pesos is made. Kindly send proof of payment through any of our social media channels. </span>
+                            <span className="ml-2 lg:ml-8 font-semibold text-xl text-black"> Please note that your reservation will only be approved once the down payment of {((parseFloat(searchParams.mainprice)) + parseFloat((searchParams.additionalprice))) * .1} pesos is made. Kindly send proof of payment through any of our social media channels. </span>
                             <span>
-                                <div className="ml-8 font-semibold text-xl text-black">Instagram: @indigostudiosph</div>
-                                <div className="ml-8 font-semibold text-xl text-black">Facebook: facebook.com/indigostudiosph</div>
+                                <div className="ml-2 lg:ml-8 font-semibold text-xl text-black">Instagram: @indigostudiosph</div>
+                                <div className="ml-2 lg:ml-8 font-semibold text-xl text-black">Facebook: facebook.com/indigostudiosph</div>
                             </span>
                         </div>
                         <Link href="/">  
-                            <button className="bg-cusBlue btn hover:bg-indigo-900 rounded-3xl w-56 mt-8 h-20 text-xl text-white font-bold"> Back to Home </button>
+                            <button className="bg-cusBlue btn hover:bg-indigo-900 rounded-3xl w-40 mt-6 lg:w-56 lg:h-14 text-md lg:text-xl mb-6 text-white font-bold"> Back to Home </button>
                         </Link>
                     </div>
                 </div>
