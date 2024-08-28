@@ -23,7 +23,7 @@ export default function RootLayout({
         <main className="flex-grow bg-white">
           {children}
         </main>
-        <Navigation />
+        <Footer />
       </body>
     </html>
   );
