@@ -1,7 +1,7 @@
 import '../globals.css'
 import type { Metadata } from 'next'
 import { Rubik } from 'next/font/google' 
-import NavBar from '../components/navBar'
+import Navigation from '../components/NavBar'
 import Footer from '../components/Footer'
 
 const rubik = Rubik({ subsets: ['latin'] })
@@ -19,11 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`flex flex-col min-h-screen ${rubik.className}`}>
-        <NavBar />
+        <Navigation />
         <main className="flex-grow bg-white">
           {children}
         </main>
-        <Footer />
+        <Navigation />
       </body>
     </html>
   );

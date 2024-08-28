@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai'
 
-const navBar = () => {
+const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleDropdown = () => {
@@ -82,4 +82,4 @@ const navBar = () => {
   )
 }
 
-export default navBar
+export default NavBar
