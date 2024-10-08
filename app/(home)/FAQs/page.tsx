@@ -60,7 +60,7 @@ const FAQPage: React.FC = () => {
       </div>
             
             <div
-                className="bg-cover bg-center h-screen flex flex-col justify-end relative lg:max-h-[500px] pb-24 pl-12 mx-auto"
+                className="bg-cover bg-center h-screen flex flex-col justify-end relative lg:max-h-[650px] pb-24 pl-12 mx-auto"
                 style={{ backgroundImage: "url('/contact_bg.jpg')" }}
             >
                 <div className="flex flex-col ">
@@ -70,7 +70,7 @@ const FAQPage: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="flex pl-0 lg:pl-48 pb-2 pt-8">
+                <div className="flex pl-0 lg:pl-48 pb-2 pt-8">  
                     <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
                         <img className='w-[100px] h-[100px] object-fill rounded-[10px]' src="facebook.png" alt="facebook" />
                     </a>
@@ -86,6 +86,11 @@ const FAQPage: React.FC = () => {
                     <div>
                         <h1 className="hidden lg:block text-white text-2xl lg:text-4xl font-bold pt-6">indigostudiosph@gmail.com</h1>
                     </div>
+                </div>
+
+                <div className="flex flex-col">
+                    <h1 className="text-white text-4xl lg:text-5xl font-bold self-start mt-6">Or send us a ticket!</h1>
+                    <button className="bg-cusBlue p-4 max-w-sm ml-52 mt-8">Click Here</button>
                 </div>
             </div>
         </div>
