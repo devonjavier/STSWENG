@@ -1,3 +1,4 @@
+import Link from 'next/link'
 
 "use client";
 import { fetchFAQs } from '@/utils/supabase/data';
@@ -89,8 +90,8 @@ const FAQPage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col">
-                    <h1 className="text-white text-4xl lg:text-5xl font-bold self-start mt-6">Or send us a ticket!</h1>
-                    <button className="bg-cusBlue p-4 max-w-sm ml-52 mt-8">Click Here</button>
+                    <Link href={{pathname: '/Services'}} className="hover:text-gray-400 transition duration-300 ease-in-out delay-300 text-white text-4xl lg:text-5xl font-bold self-start mt-6">Or send us a ticket!</Link>
+                    
                 </div>
             </div>
         </div>
