@@ -60,7 +60,7 @@ const NavBar = () => {
         {/* Book a Session Button */}
         <div className="hidden md:flex items-center">
           <Link href="/Services" className="btn bg-cusBlue hover:bg-purple-900 px-3 md:px-4 py-1 md:py-2 rounded-[10px] text-white text-sm md:text-lg font-medium transition duration-300 ease-in-out delay-300">
-            Book a session
+            Book Now
           </Link>
         </div>
       </div>
