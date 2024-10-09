@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        araboto: ['Araboto', 'sans-serif'], 
+        atyp: ['Atyp', 'sans-serif'],
+      },
       colors: {
         'cusBlue': '#4A28A8',
       },
