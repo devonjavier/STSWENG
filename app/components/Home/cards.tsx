@@ -48,8 +48,8 @@ const CardSlider: React.FC<CardSliderProps> = ({ cards }) => {
             className="w-[365px] h-[250px] flex-shrink-0 p-4 bg-white border-2 border-cusBlue rounded-[10px] items-center justify-center text-center"
           >
             <img className="mx-auto w-[190px] h-[50px] object-cover mb-2" src={card.image} alt={`Card ${index}`} />
-            <p className="mx-auto text-cusBlue text-2xl font-medium italic">{card.text1}</p>
-            <p className="mx-auto px-5 text-black text-md font-light">{card.text2}</p>
+            <p className="mx-auto text-cusBlue text-2xl font-medium italic font-araboto">{card.text1}</p>
+            <p className="mx-auto px-5 text-black text-md font-light font-araboto">{card.text2}</p>
           </div>
         ))}
       </div>
