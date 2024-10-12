@@ -1,5 +1,6 @@
+'use client'
 
-"use client";
+import Link from 'next/link'
 import { fetchFAQs } from '@/utils/supabase/data';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -60,7 +61,7 @@ const FAQPage: React.FC = () => {
       </div>
             
             <div
-                className="bg-cover bg-center h-screen flex flex-col justify-end relative lg:max-h-[650px] pb-24 pl-12 mx-auto"
+                className="bg-cover bg-center h-screen flex flex-col justify-end relative lg:max-h-[620px] pb-24 pl-12 mx-auto"
                 style={{ backgroundImage: "url('/contact_bg.jpg')" }}
             >
                 <div className="flex flex-col ">
@@ -89,8 +90,10 @@ const FAQPage: React.FC = () => {
                 </div>
 
                 <div className="flex flex-col">
-                    <h1 className="text-white text-4xl lg:text-5xl font-bold self-start mt-6">Or send us a ticket!</h1>
-                    <button className="bg-cusBlue p-4 max-w-sm ml-52 mt-8">Click Here</button>
+                    <Link href='/FAQs/SubmitTicket' className="hover:text-gray-400 transition duration-300 ease-in-out delay-300 text-white text-4xl lg:text-5xl font-bold self-start mt-6">
+                    OR click here to send us a ticket!
+                    </Link>
+                    
                 </div>
             </div>
         </div>
