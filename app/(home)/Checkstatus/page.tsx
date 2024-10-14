@@ -355,7 +355,7 @@ export default function DisplayPage() {
                 
                 <div className="mb-6">
                     <label htmlFor="additional-comments" className="font-regular text-l mb-2 block text-[#4B27A8]">Additional Comments (if any)</label>
-                    <textarea id="additional-comments" className="bg-white form-textarea mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows="4"></textarea>
+                    <textarea id="additional-comments" className="bg-white form-textarea mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows={4}></textarea>
                 </div>
                 
                 <div className="flex justify-end mt-6">
