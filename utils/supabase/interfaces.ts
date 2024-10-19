@@ -89,3 +89,10 @@ export interface forTheErrors {
 }
 
 
+export interface forTheTicketErrors {
+  userName: string;
+  userEmail: string;
+  userServiceType: string;
+  userQuestion: string;
+}
+
