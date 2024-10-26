@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main, development ]
   schedule:
-    - cron: '0 4,16 * * *' # 12AM and 12PM Philipine Time
+    - cron: '0 4,16 * * *' # 12AM and 12PM Philippine Time
 
 jobs:
   build:
