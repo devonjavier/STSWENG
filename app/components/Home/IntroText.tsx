@@ -6,7 +6,7 @@ export const IntroText = () => {
     <div className='relative flex flex-col'>
       
       <div className='flex flex-col items-center justify-center text-center text-white text-4xl sm:text-6xl md:text-7xl mb-5 font-araboto font-light relative' style={{ top: '-150px', left:'-70px' }}>
-        Experience Sonic Perfection<br />with Parañaque's Top Music Studio
+        Experience Sonic Perfection<br />with Parañaque&apos;s Top Music Studio
       </div>
 
       {/*
