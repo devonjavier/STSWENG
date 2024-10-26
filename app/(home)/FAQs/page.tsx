@@ -1,5 +1,6 @@
+'use client'
 
-"use client";
+import Link from 'next/link'
 import { fetchFAQs } from '@/utils/supabase/data';
 import { useEffect, useState } from 'react';
 import React from 'react';
@@ -60,7 +61,7 @@ const FAQPage: React.FC = () => {
       </div>
             
             <div
-                className="bg-cover bg-center h-screen flex flex-col justify-end relative lg:max-h-[500px] pb-24 pl-12 mx-auto"
+                className="bg-cover bg-center h-screen flex flex-col justify-end relative lg:max-h-[620px] pb-24 pl-12 mx-auto"
                 style={{ backgroundImage: "url('/contact_bg.jpg')" }}
             >
                 <div className="flex flex-col ">
@@ -70,7 +71,7 @@ const FAQPage: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="flex pl-0 lg:pl-48 pb-2 pt-8">
+                <div className="flex pl-0 lg:pl-48 pb-2 pt-8">  
                     <a href="https://www.facebook.com/indigostudiosph" target="_blank" rel="noopener noreferrer">
                         <img className='w-[100px] h-[100px] object-fill rounded-[10px]' src="facebook.png" alt="facebook" />
                     </a>
@@ -86,6 +87,13 @@ const FAQPage: React.FC = () => {
                     <div>
                         <h1 className="hidden lg:block text-white text-2xl lg:text-4xl font-bold pt-6">indigostudiosph@gmail.com</h1>
                     </div>
+                </div>
+
+                <div className="flex flex-col">
+                    <Link href='/FAQs/SubmitTicket' className="hover:text-gray-400 transition duration-300 ease-in-out delay-300 text-white text-4xl lg:text-5xl font-bold self-start mt-6">
+                    OR click here to send us a ticket!
+                    </Link>
+                    
                 </div>
             </div>
         </div>

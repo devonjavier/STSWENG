@@ -13,11 +13,11 @@ const App: React.FC = () => {
 
   return (
     <div className="items-center text-center">
-        <div className="text-cusBlue text-4xl font-semibold">
+        <div className="text-cusBlue text-4xl font-bold font-araboto">
             The Testimonials
         </div>
-        <div className="text-black text-2xl font-semibold pb-5"> 
-            What they say about us
+        <div className="text-black text-2xl font-normal pb-5 font-araboto"> 
+            What they say about us...
         </div>
       <CardSlider cards={cards} />
     </div>
