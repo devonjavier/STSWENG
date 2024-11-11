@@ -20,7 +20,10 @@ export default function DisplayPage() {
     const [selectedAdditionalService, setSelectedAdditionalService] = useState("None selected");
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false); // for edit modal
+
     const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);  //for cancel modal
+    const [selectedReason, setSelectedReason] = useState("");
+    const [comments, setComments] = useState("");
 
     const [maincustomerfirstname, setmaincustomerfirstname] = useState(" "); // assume no customer
     const [maincustomermiddlename, setmaincustomermiddlename] = useState(" "); // assume no customer
@@ -50,6 +53,12 @@ export default function DisplayPage() {
     // Open/Close handlers for Cancel Modal
     const handleOpenCancelModal = () => setIsCancelModalOpen(true);
     const handleCloseCancelModal = () => setIsCancelModalOpen(false);
+
+    const handleSubmit = () => {
+        console.log('Selected reason:', selectedReason);
+        console.log('Additional comments:', comments);
+        handleCloseCancelModal();
+    };
     
     const fetchStatus = async () => {
     try {
@@ -326,28 +335,28 @@ export default function DisplayPage() {
                     <legend className="font-thin text-l mb-4 text-[#4B27A8]">What is your reason for cancelling your booking with Indigo Studios PH?</legend>
                     <div className="grid grid-cols-3 gap-6 mb-6">
                         <label className="flex items-center">
-                            <input type="radio" name="reason" className="form-radio text-indigo-600" />
+                            <input type="radio" name="reason" className="form-radio text-indigo-600" value="Change of Plans" onChange={(e) => setSelectedReason(e.target.value)} checked={selectedReason === 'Change of Plans'} />
                             <span className="ml-2 text-sm text-[#666666]">Change of Plans</span>
                         </label>
 
                         <label className="flex items-center">
-                            <input type="radio" name="reason" className="form-radio text-indigo-600" />
+                            <input type="radio" name="reason" className="form-radio text-indigo-600" value="Financial Reasons" onChange={(e) => setSelectedReason(e.target.value)} checked={selectedReason === 'Financial Reasons'} />
                             <span className="ml-2 text-sm text-[#666666]">Financial Reasons</span>
                         </label>
                         <label className="flex items-center">
-                            <input type="radio" name="reason" className="form-radio text-indigo-600" />
+                            <input type="radio" name="reason" className="form-radio text-indigo-600" value="Scheduling Conflicts" onChange={(e) => setSelectedReason(e.target.value)} checked={selectedReason === 'Scheduling Conflicts'} />
                             <span className="ml-2 text-sm text-[#666666]">Scheduling Conflicts</span>
                         </label>
                         <label className="flex items-center">
-                            <input type="radio" name="reason" className="form-radio text-indigo-600" />
+                            <input type="radio" name="reason" className="form-radio text-indigo-600" value="Found a Better Option" onChange={(e) => setSelectedReason(e.target.value)} checked={selectedReason === 'Found a Better Option'} />
                             <span className="ml-2 text-sm text-[#666666]">Found a Better Option</span>
                         </label>
                         <label className="flex items-center">
-                            <input type="radio" name="reason" className="form-radio text-indigo-600" />
+                            <input type="radio" name="reason" className="form-radio text-indigo-600" value="Personal Reasons" onChange={(e) => setSelectedReason(e.target.value)} checked={selectedReason === 'Personal Reasons'} />
                             <span className="ml-2 text-sm text-[#666666]">Personal Reasons</span>
                         </label>
                         <label className="flex items-center">
-                            <input type="radio" name="reason" className="form-radio text-indigo-600" />
+                            <input type="radio" name="reason" className="form-radio text-indigo-600" value="Other" onChange={(e) => setSelectedReason(e.target.value)} checked={selectedReason === 'Other'} />
                             <span className="ml-2 text-sm text-[#666666]">Other</span>
                         </label>
                     </div>
@@ -355,11 +364,11 @@ export default function DisplayPage() {
                 
                 <div className="mb-6">
                     <label htmlFor="additional-comments" className="font-regular text-l mb-2 block text-[#4B27A8]">Additional Comments (if any)</label>
-                    <textarea id="additional-comments" className="bg-white form-textarea mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows={4}></textarea>
+                    <textarea id="additional-comments" className="bg-white form-textarea mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" rows={4} value={comments} onChange={(e) => setComments(e.target.value)} ></textarea>
                 </div>
                 
                 <div className="flex justify-end mt-6">
-                    <button type="button" className="bg-red-600 hover:bg-red-700 text-white font-regular py-2 px-4 rounded-md items-right" style={{ backgroundColor: '#C00A0A'}} onClick={() => { handleCloseCancelModal();}}>Cancel Booking</button>
+                    <button type="button" className="bg-red-600 hover:bg-red-700 text-white font-regular py-2 px-4 rounded-md items-right" style={{ backgroundColor: '#C00A0A'}} onClick={() => { handleSubmit();}}>Cancel Booking</button>
                 </div>
             </form>
         </Modal>
