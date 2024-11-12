@@ -335,7 +335,7 @@ export async function fetchSelectedSchedule(appointmentid:number) {
 
 export async function fetchOneAppointment( id:number ) {
     const supabase = createClient();
-    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);;
+    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);
 
     if(error){
         return ["error", "error"]
@@ -403,6 +403,7 @@ export async function fetchOneService( id:number ) {
 
 export async function fetchServices(){
     const supabase = createClient();
+    console.log(supabase);
     const { data: services } = await supabase.from('Service').select();
     const { data: onetimeServices } = await supabase.from('OnetimeService').select();
     const { data: hourlyServices } = await supabase.from('HourlyService').select();
