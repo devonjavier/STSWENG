@@ -721,6 +721,19 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
     return 1
 }
 
+export async function deleteAppointment(trackingnumber:number) {
+    const supabase = createClient();
 
+    const { error } = await supabase
+      .from('Appointment')
+      .delete()
+      .eq('trackingnumber', trackingnumber)
+  
+      if (error)
+        return error
+    
+    return 1
+}
+  
 
 
