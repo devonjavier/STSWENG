@@ -96,3 +96,12 @@ export interface forTheTicketErrors {
   userQuestion: string;
 }
 
+export interface forTheBookEditErrors {
+  userFirstName: string;
+  userMiddleName: string;
+  userLastName: string;
+  userPhoneNum: string;
+  userEmail: string;
+  hours: number;
+  date: string;
+}
