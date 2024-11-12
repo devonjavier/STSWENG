@@ -32,7 +32,7 @@ const Page = () => {
                                 <option value="audi">Option 3</option>
                             </select>
                             <input type="text" placeholder="Question..." className="rounded-lg bg-gray-100 block p-5 w-full mb-10 text-xl text-gray-900 pb-20" value={question} onChange={(e) => setQuestion(e.target.value)} required/>
-                            <input type="submit" value="Submit" className="bg-cusBlue rounded-lg p-5 text-xl text-white hover:text-gray-400 hover:bg-purple-900"/>
+                            <input type="submit" value="Submit" className="bg-cusBlue rounded-lg p-5 text-xl text-white hover:text-gray-400 hover:bg-purple-900 transition ease-in-out"/>
                         </form>
                     </div>
                     <Link href='/FAQs' className="hover:text-violet-950 transition ease-in-out text-indigo-800 text-4xl lg:text-3xl font-bold text-center mt-10">Back to FAQs</Link>
