@@ -64,6 +64,7 @@ export default function DisplayPage() {
             console.error(error);
         }
         handleCloseCancelModal();
+        setIsContentVisible(false);
     };
     
     
