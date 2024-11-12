@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
+import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices, deleteAppointment} from '@/utils/supabase/data'
 import { useDebouncedCallback } from 'use-debounce';
 import { schedule } from '@/utils/supabase/interfaces';
 import Image from "next/image"
@@ -54,11 +54,18 @@ export default function DisplayPage() {
     const handleOpenCancelModal = () => setIsCancelModalOpen(true);
     const handleCloseCancelModal = () => setIsCancelModalOpen(false);
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         console.log('Selected reason:', selectedReason);
         console.log('Additional comments:', comments);
+
+        try {
+            await deleteAppointment(trackingNumber);
+        } catch (error) {
+            console.error(error);
+        }
         handleCloseCancelModal();
     };
+    
     
     const fetchStatus = async () => {
     try {
