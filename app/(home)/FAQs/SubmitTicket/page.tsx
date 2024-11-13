@@ -9,7 +9,7 @@ const Page = () => {
     const [serviceType, setServiceType] = useState("");
     const [question, setQuestion] = useState("");
 
-    const handleSubmission = async(e) => {
+    const handleSubmission = async(e :  React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try{
