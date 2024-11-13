@@ -326,7 +326,7 @@ export default function DisplayPage() {
                     </div>
                     
           {/* Buttons to trigger modals */}
-          <div className="flex items-start space-x-4 px-4 pb-4">  {/* Adjust buttons accordingly based on the details shown above these buttons */}
+          <div className="flex justify-center items-center space-x-4 px-4 pb-4">  {/* Adjust buttons accordingly based on the details shown above these buttons */}
             <button onClick={handleOpenEditModal} className="text-white px-4 py-2 rounded-md" style={{ backgroundColor: '#6A1B9A'}}> Edit Details</button>
             <button onClick={handleOpenCancelModal} className="bg-red-500 text-white px-4 py-2 rounded-md" style={{ backgroundColor: '#C00A0A'}}> Cancel Booking</button>
           </div>
