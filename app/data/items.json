@@ -29,5 +29,13 @@
         "imgUrl": "/midi.jpg",
         "description": "Akai Professional MPK Mini MK3 MIDI Keyboard Controller",
         "quantity": 0
+    },
+    {
+        "id": 5,
+        "name": "Pop Filter",
+        "price": 500,
+        "imgUrl": "/pop filter.png",
+        "description": "Akai Professional",
+        "quantity": 0
     }
 ]

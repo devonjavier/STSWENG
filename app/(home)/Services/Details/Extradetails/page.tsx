@@ -2,7 +2,6 @@
 import Link from 'next/link';
 import { useEffect, useState, useContext, createContext, ReactNode } from 'react';
 import GenerateDivs from '@/app/components/GenerateDivs';
-import { Row, Col, Button, Card, Stack } from 'react-bootstrap';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import storeItems from '@/app/data/items.json';
@@ -149,65 +148,68 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
     }
   };
 
-  // Store component code integrated here
+  // Store component 
   const Store = () => (
-    <div style={styles.storeContainer}>
-      <div style={styles.itemsContainer}>
-        <h1>Equipments</h1>
-        <Row md={2} xs={1} lg={3} className="g-3">
+    <div className="flex justify-between p-5">
+      <div className="flex-1 pr-5">
+        <h1 className="text-2xl font-bold mb-4 text-black">Equipments</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"> 
           {storeItems.map((item) => (
-            <Col key={item.id}>
-              <StoreItem {...item} />
-            </Col>
+            <StoreItem key={item.id} {...item} />
           ))}
-        </Row>
+        </div>
       </div>
-      <div style={styles.separator}></div>
-      <div style={styles.shoppingCart}>
+      <div className="w-px bg-gray-300 mx-5"></div>
+      <div className="w-1/3 p-5 bg-white shadow-md"> {/* Summary container */}
         <ShoppingCart />
       </div>
     </div>
   );
-
-  // StoreItem component code integrated here
+  
+  
   const StoreItem = ({ id, name, price, imgUrl, description, quantity }: StoreItemProps) => {
     const { increaseCartQuantity } = useShoppingCart();
     const storeItem = storeItems.find((item) => item.id === id);
     const isAvailable = storeItem && storeItem.quantity > 0;
-
+  
     return (
-      <Card className="h-100" style={{ maxWidth: "250px" }}>
-        <Card.Img variant="top" src={imgUrl} height="100px" style={{ objectFit: "cover"}} />
-        <Card.Body className="d-flex flex-column" style={{ backgroundColor: "#E5E5E5", padding: "10px" }}>
-          <Card.Title className="d-flex justify-content-between align-items-baseline mb-2">
-            <span style={{ fontSize: "1.25rem" }}>{name}</span>
-            <span className="ms-2 text-muted" style={{ fontSize: "0.9rem" }}>
-              {formatCurrency(price)}
-            </span>
-          </Card.Title>
-          <div className="text-muted mb-2" style={{ fontSize: "0.85rem" }}>{description}</div>
-          <div className="mt-auto">
-            {isAvailable ? (
-              <Button
-                className="w-100"
-                size="sm"
-                style={{ backgroundColor: "#4B27A8", borderColor: "#4B27A8", fontWeight: "bold", width: "100%", padding: "10px" }}
-                onClick={() => increaseCartQuantity(id)}
-              >
-                Available
-              </Button>
-            ) : (
-              <div className="d-flex align-items-center justify-content-center" style={{ gap: ".4rem" }}>
-                <span style={{ fontSize: "1rem", color: "#C00A0A" }}>Unavailable</span>
-              </div>
-            )}
-          </div>
-        </Card.Body>
-      </Card>
-    );
-  };
+      <div className="max-w-xs h-full bg-gray-100 shadow-md rounded-lg overflow-hidden flex flex-col"> {/* Card container */}
+        <img
+          src={imgUrl}
+          alt={name}
+          className="w-full h-36 object-cover border-gray" 
+        />
+        <div className="flex flex-col bg-gray-100 justify-between p-4 flex-grow"> {/* Card Body */}
+            <div className="text-black flex justify-between items-baseline mb-2"> {/* Card Title */}
+                <span className="text-md font-semibold">{name}</span>
+                <span className="text-gray-500 text-xs">
+                {formatCurrency(price)}
+                </span>
+            </div>
+            <div className="text-gray-500 mb-2 text-sm">
+                {description}
+            </div>
 
-    // CartItem component definition
+        <div className="mt-auto flex items-center justify-center">
+            {isAvailable ? (
+            <button
+              className="w-full bg-indigo-800 text-white font-bold py-2 rounded"
+              onClick={() => increaseCartQuantity(id)}
+            >
+              Available
+            </button>
+          ) : (
+            <div className="flex items-center justify-center gap-1">
+              <span className="text-red-600 text-lg">Unavailable</span>
+            </div>
+          )}
+          </div>
+        </div>
+      </div>
+    );
+  };  
+
+    // CartItem component 
     const CartItem = ({ id, quantity }: CartItemProps) => {
         const storeItem = storeItems.find((item) => item.id === id);
         const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } = useShoppingCart();
@@ -215,94 +217,68 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
         if (!storeItem) return null;
     
         return (
-            <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
-              <div className="me-auto"  style={{ paddingLeft: "15px", width: "100%" }}>
-                <div className="d-flex justify-content-between align-items-center">
-                  <span>
-                    {storeItem.name}{" "}
-                  </span>
-                  <div className="d-flex align-items-center" style={{ gap: ".5rem" }}>
-                    <div style={{ fontSize: ".85rem"}}>
+            <div className="flex items-center gap-2">
+              <div className="flex-grow pl-4 w-full"> 
+                <div className="flex justify-between items-center text-black">
+                  <span>{storeItem.name}</span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-sm">
                       {formatCurrency(storeItem.price * quantity)}
                     </div>
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
+                    <button
+                      className="text-red-600 border border-red-600 rounded px-2 py-1 text-sm hover:bg-red-600 hover:text-white"
                       onClick={() => removeFromCart(storeItem.id)}
                     >
                       &times;
-                    </Button>
+                    </button>
                   </div>
                 </div>
                 {quantity > 1 && (
-                      <span className="text-muted" style={{ fontSize: ".65rem" }}>
-                        Quantity: {quantity}
-                      </span>
-                    )}
-                <div className="text-muted" style={{ fontSize: ".75rem" }}>
+                  <span className="text-gray-500 text-xs">
+                    Quantity: {quantity}
+                  </span>
+                )}
+                <div className="text-gray-500 text-xs">
                   {formatCurrency(storeItem.price)}
                 </div>
               </div>
-            </Stack>
-
-          
-        );
+            </div>
+          );
       };
 
   const ShoppingCart = () => {
     const { cartItems } = useShoppingCart();
-    const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
-
     return (
-      <div style={styles.shoppingCart}>
-        <h2>Summary</h2>
-        <Stack gap={3}>
-          {safeCartItems.map((item) => {
-            const storeItem = storeItems.find(i => i.id === item.id);
-            const isAvailable = storeItem && storeItem.quantity > 0;
-
-            return (
-              <div key={item.id}>
-                <CartItem {...item} />
-                {!isAvailable && (
-                  <div style={{ color: "#C00A0A", fontSize: "0.9rem" }}>This item is unavailable</div>
-                )}
-              </div>
-            );
-          })}
-
-          <div className="fw-bold fs-5 text-start" style={{ color: "#545961" }}> Total: {" "}
-            {formatCurrency(
-              safeCartItems.reduce((total, cartItem) => {
-                const item = storeItems.find(i => i.id === cartItem.id);
-                if (!item || item.quantity === 0) return total;
-                return total + (item?.price || 0) * cartItem.quantity;
-              }, 0)
-            )}
+        <div className="p-0 w-full"> 
+          <h2 className="text-2xl font-semibold mb-4 text-black">Summary</h2>
+          <div className="flex flex-col gap-3">
+            {cartItems.map((item) => {
+              const storeItem = storeItems.find(i => i.id === item.id);
+              const isAvailable = storeItem && storeItem.quantity > 0;
+      
+              return (
+                <div key={item.id}>
+                  <CartItem {...item} />
+                  {!isAvailable && (
+                    <div className="text-red-600 text-sm">This item is unavailable</div>
+                  )}
+                </div>
+              );
+            })}
+      
+            <div className="font-bold text-lg text-gray-600 text-left">
+              Total:{" "}
+              {formatCurrency(
+                cartItems.reduce((total, cartItem) => {
+                  const item = storeItems.find((i) => i.id === cartItem.id);
+                  if (!item || item.quantity === 0) return total; // Skip unavailable items
+                  return total + (item?.price || 0) * cartItem.quantity;
+                }, 0)
+              )}
+            </div>
           </div>
-        </Stack>
-      </div>
-    );
-  };
-
-  const styles = {
-    storeContainer: {
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "20px",
-      },
-      itemsContainer: {
-        flex: 3,
-      },
-      separator: {
-        width: "2px",
-        backgroundColor: "#ddd",
-        margin: "0 20px",
-      },
-      shoppingCart: {
-        flex: 1,
-        padding: "20px",
-      },
+        </div>
+      );  
   };
 
   return (
@@ -349,6 +325,13 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
               submitted={submitted}
             />
 
+            <div className="my-8 border-t border-gray-300"></div>
+
+            {/* Equipments and Summary Section */}
+            <div className="mt-8">
+                <Store />
+            </div>
+
             <Link
               href={{
                 pathname: "/Services/Details/Extradetails/Datetime",
@@ -376,11 +359,6 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
               </button>
             </Link>
           </div>
-        </div>
-
-        {/* Equipments and Summary Section */}
-        <div className="mt-8">
-          <Store />
         </div>
       </div>
     </ShoppingCartProvider>
