@@ -31,21 +31,38 @@ import nodemailer from 'nodemailer';
       });
 
 
-    const mailData = {
+    const mailData1 = {
         from: process.env.EMAIL!,
         to: process.env.EMAIL!,
         subject: `Ticket Submission from ${name}`,
-        text: `We have received a new ticket submission. \n\nDetails:\n- Name: ${name}\n- Email: ${email}\n- Service Type: ${serviceType}\n\n\n-
-        Question:\n ${question}`,
-        html: `<p>You have received a new ticket submission.</p>
+        text: `We have received a new ticket submission. <br><br>Details:<br>- Name: ${name}<br>- Email: ${email}<br>- Service Type: ${serviceType}<br><br><br>-
+        Question:<br> ${question}`,
+        html: `<p>We have received a new ticket submission.</p>
                <p><strong>Name:</strong> ${name}</p>
                <p><strong>Email:</strong> ${email}</p>
                <p><strong>Service Type:</strong> ${serviceType}</p>
                <p><strong>Question:</strong> ${question}</p>`
     };
 
+    console.log('wait...');
+
+    const mailData2 = {
+      from: process.env.EMAIL!,
+      to: email!,
+      subject: `Ticket Submission Confirmation`,
+      text: `Dear ${name}, `,
+      html: `
+      <p> We have received your ticket submission. Thus, we would like to thank you in contributing to the betterment of our services. A response will be sent to this email soonest. Details for your ticket are written below: <br><br>Details:<br>- Name: ${name}<br>- Email: ${email}<br>- Service Type: ${serviceType}<br><br><br>-
+      Question:<br> ${question}<br><br> Thank you for your understanding. </p>
+             <p><strong>Name:</strong> ${name}</p>
+             <p><strong>Email:</strong> ${email}</p>
+             <p><strong>Service Type:</strong> ${serviceType}</p>
+             <p><strong>Question:</strong> ${question}</p>`
+    };
+
     try {
-        await transporter.sendMail(mailData);
+        await transporter.sendMail(mailData1);
+        await transporter.sendMail(mailData2);
         return new Response(JSON.stringify({ status: 'OK' }), {
           status: 200,
           headers: {
@@ -60,5 +77,7 @@ import nodemailer from 'nodemailer';
             'Content-Type': 'application/json',
           },
         });
-      }
+    }
+
+    
 }
