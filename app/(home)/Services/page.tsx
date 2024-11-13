@@ -59,7 +59,7 @@ export default function DisplayPage() {
                         Book an Appointment
                     </div>
                     <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
-                        <span className='text-cusBlue'>Services </span>&gt; Details &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Booking Status
+                        <span className='text-cusBlue'>Services </span>&gt; Details &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Password Confirmation &gt; Booking Status
                     </div>
                 </div>
                 

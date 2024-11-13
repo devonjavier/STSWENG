@@ -66,7 +66,7 @@ const Page = ({ searchParams }: {
                         Book an Appointment
                     </div>
                     <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
-                        Services&gt;  Details  &gt; ExtraDetails &gt; <span className='text-cusBlue'> Date & Time</span> &gt; Confirmation &gt; Booking Status
+                        Services&gt;  Details  &gt; ExtraDetails &gt; <span className='text-cusBlue'> Date & Time</span> &gt; Confirmation &gt; Password Confirmation &gt; Booking Status
                     </div>
                 </div>
                 <div>
