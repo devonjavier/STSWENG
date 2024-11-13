@@ -24,13 +24,6 @@ const Page = () => {
                 <div className='mt-5 max-w-96'>
                     <div className='text-2xl font-bold text-indigo-800 mb-5'>Price</div>
                     <input type="text" placeholder='Insert Current Price' className="rounded-lg bg-gray-100 block p-5 w-full mb-10 text-xl text-gray-900 mb-20 hover:bg-gray-300 hover:text-gray-400 transition ease-in-out"/>
-                    <div className='text-2xl font-bold text-indigo-800 mb-5'>Upload Item Image</div>
-                    <Link href=''>
-                        <div className='rounded-lg p-5 bg-gray-200 text-center hover:bg-gray-400 hover:text-gray-400 transition ease-in-out'>
-                            <span className='font-bold text-black text-xl'>Upload Image Here</span>
-                            <div className='text-gray-600'>Supports: JPG, PNG</div>
-                        </div>
-                    </Link>    
                 </div>
                 <div className='mt-5'>
                     <Link href='/Admin/edit-equipment' className='bg-gray-300 p-5 rounded-full text-black font-bold text-xl hover:text-gray-300 hover:bg-gray-400 transition ease-in-out'>Back</Link>
