@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
 import { useDebouncedCallback } from 'use-debounce';
 import { schedule } from '@/utils/supabase/interfaces';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Image from "next/image"
 import Modal from './modal';
 
@@ -13,6 +14,12 @@ const formatDate = (dateString : any) => {
 };
 
 export default function DisplayPage() {
+
+    const [password, setPassword] = useState(""); // Initialize the password state
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState(false); // Optionally track password validation
+    const [isCheckStatusClicked, setIsCheckStatusClicked] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [trackingNumber, setTrackingNumber] = useState<number>(12) 
     const [isChecked, setIsChecked] = useState(false); // assume its false
@@ -173,6 +180,30 @@ export default function DisplayPage() {
         return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
       };
 
+    const handlePasswordChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible((prev) => !prev);
+    };
+
+    const handleSubmit = () => {
+        const correctPassword = 'password'; //REPLACE WITH ACTUAL PASSWORD LOGIC
+
+        if(password === correctPassword) {
+            setIsPasswordCorrect(true); //Show booking status if password is correct
+            setLoading(true);
+            getStatus(); //Fetch booking status and show it
+        } else {
+            alert('Incorrect password. Please try again.');
+        }
+    };
+
+    const handleCheckStatus = () => {
+        setIsCheckStatusClicked(true);
+    };
+
     useEffect(() => {}, [trackingNumber]); 
 
     return (
@@ -185,9 +216,37 @@ export default function DisplayPage() {
                 className={`text-cusBlue text-center ml-3 text-md lg:text-2xl font-medium w-[280px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] 
                 border ${isError ? 'border-red-600' : 'border-indigo-800'} justify-between items-center inline-flex`} type="number" />
                 {isError && <span className="text-red-600 text-lg"></span>} 
-                <button className="bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
+                <button className="bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white font-bold" onClick={handleCheckStatus}> Check status </button>
+
+                <br></br>
+                {/*Password and confrimation fields */}
+                {isCheckStatusClicked && (
+                    <div className='relative flex flex-col gap-4'>
+                        <input
+                            type={isPasswordVisible ? "text" : "password"}
+                            value={password}
+                            onChange={handlePasswordChange}
+                            placeholder='Enter Password'
+                            className='text-center text-md lg:text-2xl font-medium w-[280px] lg:w=[480px] lg:h-[6className="text-center text-md lg:text-2xl font-medium w-[280px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 pr-10'
+                        />
+
+                        {/*Eye icon to toggle password visibility */}
+                        <span className='absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500' onClick={togglePasswordVisibility}>
+                        {isPasswordVisible ? <AiOutlineEyeInvisible size={24} /> : <AiOutlineEye size={24} />}
+                        </span>
+                    </div>
+                )}
+
+                 {/* Submit button for password */}
+                 {isCheckStatusClicked && (
+                    <button className='bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white  font-bold' onClick={handleSubmit}>
+                        Submit
+                    </button>
+                 )}
+
             </div>
 
+            {/* Display Booking Status if Password is Correct */}
             {loading ? (
                 <>
                     <div className="flex items-center justify-center min-h-screen">
