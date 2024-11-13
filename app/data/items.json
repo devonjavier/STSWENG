@@ -1,0 +1,33 @@
+[{
+        "id": 1,
+        "name": "Electric Guitar",
+        "price": 1000,
+        "imgUrl": "/guitar.png",
+        "description": "Fender Classic Series 70s Stratocaster Black",
+        "quantity": 5
+    },
+    {
+        "id": 2,
+        "name": "Studio Headphone",
+        "price": 1000,
+        "imgUrl": "/headphones.png",
+        "description": "Beyerdynamic DT 990 PRO",
+        "quantity": 3
+    },
+    {
+        "id": 3,
+        "name": "Microphone",
+        "price": 1000,
+        "imgUrl": "/mic condenser.jpg",
+        "description": "Neumann TLM 102 Condenser Microphone",
+        "quantity": 2
+    },
+    {
+        "id": 4,
+        "name": "Midi Controller",
+        "price": 1000,
+        "imgUrl": "/midi.jpg",
+        "description": "Akai Professional MPK Mini MK3 MIDI Keyboard Controller",
+        "quantity": 0
+    }
+]
