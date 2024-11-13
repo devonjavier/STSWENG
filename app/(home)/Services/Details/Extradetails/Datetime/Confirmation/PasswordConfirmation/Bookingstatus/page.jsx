@@ -146,7 +146,7 @@ const Page = ({ searchParams }) => {
                         Book an Appointment
                     </div>
                     <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
-                        Services &gt; Details &gt; ExtraDetails &gt; Date & Time &gt;  Confirmation &gt; Password Confirmation &gt; <span className='text-cusBlue'> Booking Status </span>
+                        Services &gt; Details &gt; ExtraDetails &gt; Date & Time &gt; Confirmation &gt; Password Confirmation &gt; <span className='text-cusBlue'> Booking Status </span>
                     </div>
                 </div>
 

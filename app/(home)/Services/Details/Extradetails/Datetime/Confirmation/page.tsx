@@ -195,7 +195,7 @@ const Page = ({ searchParams }: {
 
         <Link
             href={{
-                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
+                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/PasswordConfirmation",
                 query: {
                     schedules: JSON.stringify(listofschedules),
                     service: searchParams.service,
@@ -247,7 +247,7 @@ const Page = ({ searchParams }: {
     </div>
     <Link
             href={{
-                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
+                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/PasswordConfirmation",
                 query: {
                     schedules: JSON.stringify(listofschedules),
                     service: searchParams.service,
