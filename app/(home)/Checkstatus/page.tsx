@@ -205,7 +205,7 @@ export default function DisplayPage() {
         setIsPasswordVisible((prev) => !prev);
     };
 
-    const handleSubmit = () => {
+    const handlePasswordSubmit = () => {
         const correctPassword = 'password'; //REPLACE WITH ACTUAL PASSWORD LOGIC
 
         if(password === correctPassword) {
@@ -256,7 +256,7 @@ export default function DisplayPage() {
 
                  {/* Submit button for password */}
                  {isCheckStatusClicked && (
-                    <button className='bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white  font-bold' onClick={handleSubmit}>
+                    <button className='bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white  font-bold' onClick={handlePasswordSubmit}>
                         Submit
                     </button>
                  )}
