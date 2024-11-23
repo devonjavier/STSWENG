@@ -524,6 +524,7 @@ export async function addTimeSlots(date: string) {
 }
 
 
+
 // export async function handleSignup(formData : FormData){
 //   const supabase = createClient();
 

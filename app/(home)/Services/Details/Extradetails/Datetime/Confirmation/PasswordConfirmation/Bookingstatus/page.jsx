@@ -74,7 +74,8 @@ const Page = ({ searchParams }) => {
                     gettrackingnumber,
                     searchParams.additionalrequests,
                     JSON.parse(searchParams.additionalpackage),
-                    totalprice
+                    totalprice,
+                    searchParams.newpassword
                 );
 
                 appointentid = addtheAppointment;
