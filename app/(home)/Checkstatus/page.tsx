@@ -205,10 +205,9 @@ export default function DisplayPage() {
         setIsPasswordVisible((prev) => !prev);
     };
 
-    const handlePasswordSubmit = () => {
-        const correctPassword = 'password'; //REPLACE WITH ACTUAL PASSWORD LOGIC
+    const handlePasswordSubmit = async () => {
 
-        if(password === correctPassword) {
+        if(password === confirmPassword) {
             setIsPasswordCorrect(true); //Show booking status if password is correct
             setLoading(true);
             getStatus(); //Fetch booking status and show it
@@ -217,8 +216,21 @@ export default function DisplayPage() {
         }
     };
 
-    const handleCheckStatus = () => {
-        setIsCheckStatusClicked(true);
+    const handleCheckStatus = async () => {
+
+        const getThatAppointment = await fetchOneAppointment(trackingNumber);
+        
+        if (!getThatAppointment || !getThatAppointment.length) {
+            setIsError(true);  
+            return;
+        } else {
+            setConfirmPassword(getThatAppointment[0].appointment_password);
+            setTrackingNumber(trackingNumber);
+            setIsCheckStatusClicked(true);
+        }
+        
+
+
     };
 
     useEffect(() => {}, [trackingNumber]); 
