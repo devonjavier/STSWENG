@@ -2,8 +2,11 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
 import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices, deleteAppointment} from '@/utils/supabase/data'
+import { comparePassword }  from '@/app/lib/actions'
 import { useDebouncedCallback } from 'use-debounce';
+import bcrypt from 'bcrypt';
 import { schedule } from '@/utils/supabase/interfaces';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Image from "next/image"
 import Modal from './modal';
 
@@ -13,6 +16,12 @@ const formatDate = (dateString : any) => {
 };
 
 export default function DisplayPage() {
+
+    const [password, setPassword] = useState(""); // Initialize the password state
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isPasswordCorrect, setIsPasswordCorrect] = useState(false); // Optionally track password validation
+    const [isCheckStatusClicked, setIsCheckStatusClicked] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [trackingNumber, setTrackingNumber] = useState<number>(12) 
     const [isChecked, setIsChecked] = useState(false); // assume its false
@@ -55,22 +64,17 @@ export default function DisplayPage() {
     const handleCloseCancelModal = () => setIsCancelModalOpen(false);
 
     const handleSubmit = async () => {
-        console.log('Selected reason:', selectedReason);
-        console.log('Additional comments:', comments);
-
         try {
             await deleteAppointment(trackingNumber);
         } catch (error) {
             console.error(error);
         }
-        handleCloseCancelModal();
-        setIsContentVisible(false);
     };
-    
     
     const fetchStatus = async () => {
     try {
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
+        setConfirmPassword(getThatAppointment[0].appointment_password);
 
         if (!getThatAppointment || !getThatAppointment.length) {
             setIsError(true);  
@@ -190,6 +194,43 @@ export default function DisplayPage() {
         return `${adjustedHours}:${formattedMinutes} ${suffix}`; // end
       };
 
+    const handlePasswordChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+    };
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible((prev) => !prev);
+    };
+
+    const handlePasswordSubmit = async () => {
+        const match = await comparePassword(password, confirmPassword);
+
+        if(match) {
+            setIsPasswordCorrect(true); //Show booking status if password is correct
+            setLoading(true);
+            getStatus(); //Fetch booking status and show it
+        } else {
+            alert('Incorrect password. Please try again.');
+        }
+    };
+
+    const handleCheckStatus = async () => {
+
+        const getThatAppointment = await fetchOneAppointment(trackingNumber);
+        
+        if (!getThatAppointment || !getThatAppointment.length) {
+            setIsError(true);  
+            return;
+        } else {
+            setConfirmPassword(getThatAppointment[0].appointment_password);
+            setTrackingNumber(trackingNumber);
+            setIsCheckStatusClicked(true);
+        }
+        
+
+
+    };
+
     useEffect(() => {}, [trackingNumber]); 
 
     return (
@@ -202,9 +243,37 @@ export default function DisplayPage() {
                 className={`text-cusBlue text-center ml-3 text-md lg:text-2xl font-medium w-[280px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] 
                 border ${isError ? 'border-red-600' : 'border-indigo-800'} justify-between items-center inline-flex`} type="number" />
                 {isError && <span className="text-red-600 text-lg"></span>} 
-                <button className="bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white font-bold" onClick={() => getStatus()}> Check status </button>
+                <button className="bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white font-bold" onClick={handleCheckStatus}> Check status </button>
+
+                <br></br>
+                {/*Password and confrimation fields */}
+                {isCheckStatusClicked && (
+                    <div className='relative flex flex-col gap-4'>
+                        <input
+                            type={isPasswordVisible ? "text" : "password"}
+                            value={password}
+                            onChange={handlePasswordChange}
+                            placeholder='Enter Password'
+                            className='text-center text-md lg:text-2xl font-medium w-[280px] lg:w=[480px] lg:h-[6className="text-center text-md lg:text-2xl font-medium w-[280px] lg:w-[480px] lg:h-[68px] py-2.5 bg-white rounded-[20px] border border-indigo-800 pr-10'
+                        />
+
+                        {/*Eye icon to toggle password visibility */}
+                        <span className='absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500' onClick={togglePasswordVisibility}>
+                        {isPasswordVisible ? <AiOutlineEyeInvisible size={24} /> : <AiOutlineEye size={24} />}
+                        </span>
+                    </div>
+                )}
+
+                 {/* Submit button for password */}
+                 {isCheckStatusClicked && (
+                    <button className='bg-cusBlue rounded-3xl ml-3 w-48 h-9 lg:w-56 lg:h-11 mt-5 lg:mt-8 px-0 text-white  font-bold' onClick={handlePasswordSubmit}>
+                        Submit
+                    </button>
+                 )}
+
             </div>
 
+            {/* Display Booking Status if Password is Correct */}
             {loading ? (
                 <>
                     <div className="flex items-center justify-center min-h-screen">
@@ -284,7 +353,7 @@ export default function DisplayPage() {
                     </div>
                     
           {/* Buttons to trigger modals */}
-          <div className="flex items-start space-x-4 px-4 pb-4">  {/* Adjust buttons accordingly based on the details shown above these buttons */}
+          <div className="flex justify-center items-center space-x-4 px-4 pb-4">  {/* Adjust buttons accordingly based on the details shown above these buttons */}
             <button onClick={handleOpenEditModal} className="text-white px-4 py-2 rounded-md" style={{ backgroundColor: '#6A1B9A'}}> Edit Details</button>
             <button onClick={handleOpenCancelModal} className="bg-red-500 text-white px-4 py-2 rounded-md" style={{ backgroundColor: '#C00A0A'}}> Cancel Booking</button>
           </div>
@@ -376,7 +445,7 @@ export default function DisplayPage() {
                 </div>
                 
                 <div className="flex justify-end mt-6">
-                    <button type="button" className="bg-red-600 hover:bg-red-700 text-white font-regular py-2 px-4 rounded-md items-right" style={{ backgroundColor: '#C00A0A'}} onClick={() => { handleSubmit();}}>Cancel Booking</button>
+                    <button type="submit" className="bg-red-600 hover:bg-red-700 text-white font-regular py-2 px-4 rounded-md items-right" style={{ backgroundColor: '#C00A0A'}} onClick={() => { handleSubmit();}}>Cancel Booking</button>
                 </div>
             </form>
         </Modal>
