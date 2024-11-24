@@ -109,6 +109,7 @@ const Page = ({ searchParams }: { searchParams: any }) => {
                                 query: {
                                     ...searchParams,
                                     passwordConfirmed: isPasswordMatched ? 'true' : 'false',
+                                    newpassword : password
                                 },
                             }}
                         >

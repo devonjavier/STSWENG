@@ -33,7 +33,7 @@ async function handleLogin(account : accountData, supabase : any){
     { expiresIn: '7d' }
   );
 
-  cookies().set('token', token, {
+  (await cookies()).set('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, 
@@ -105,7 +105,10 @@ export async function findPerson(firstname : string, middlename : string, lastna
 }
 
 export async function handleLogout(){
-  cookies().delete('token');
+  (await cookies()).delete('token');
+
+
+
 }
 
 export async function findPendingReservations(){
@@ -385,7 +388,7 @@ export async function editFAQs(faqs : FAQ[]) {
 export async function checkCookie(){
   const cookieStore = cookies();
 
-  const hasCookie = await cookieStore.has('token')
+  const hasCookie = (await cookieStore).has('token')
   console.log(hasCookie);
 
   return hasCookie;
@@ -522,6 +525,16 @@ export async function addTimeSlots(date: string) {
     return { success: false, message: 'Unexpected error occurred' };
   }
 }
+
+export async function comparePassword(password : string, confirmPassword : string){
+
+  const match = await bcrypt.compare(password, confirmPassword);
+
+  if(match){
+    return true;
+  } else return false;
+}
+
 
 
 // export async function handleSignup(formData : FormData){

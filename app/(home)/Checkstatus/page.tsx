@@ -2,7 +2,9 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
 import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices, deleteAppointment} from '@/utils/supabase/data'
+import { comparePassword }  from '@/app/lib/actions'
 import { useDebouncedCallback } from 'use-debounce';
+import bcrypt from 'bcrypt';
 import { schedule } from '@/utils/supabase/interfaces';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import Image from "next/image"
@@ -74,10 +76,12 @@ export default function DisplayPage() {
         setIsContentVisible(false);
     };
     
+
     
     const fetchStatus = async () => {
     try {
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
+        setConfirmPassword(getThatAppointment[0].appointment_password);
 
         if (!getThatAppointment || !getThatAppointment.length) {
             setIsError(true);  
@@ -206,8 +210,9 @@ export default function DisplayPage() {
     };
 
     const handlePasswordSubmit = async () => {
+        const match = await comparePassword(password, confirmPassword);
 
-        if(password === confirmPassword) {
+        if(match) {
             setIsPasswordCorrect(true); //Show booking status if password is correct
             setLoading(true);
             getStatus(); //Fetch booking status and show it
