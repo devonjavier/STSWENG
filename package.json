@@ -24,6 +24,7 @@
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "devextreme-react": "^23.2.6",
+    "dotenv": "^16.4.5",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.3",
     "js-cookie": "^3.0.5",
