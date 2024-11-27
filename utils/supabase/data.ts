@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { allService, Service, OnetimeService, HourlyService } from '@/utils/supabase/interfaces'
+import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
@@ -335,7 +336,7 @@ export async function fetchSelectedSchedule(appointmentid:number) {
 
 export async function fetchOneAppointment( id:number ) {
     const supabase = createClient();
-    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);;
+    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);
 
     if(error){
         return ["error", "error"]
@@ -403,6 +404,7 @@ export async function fetchOneService( id:number ) {
 
 export async function fetchServices(){
     const supabase = createClient();
+    console.log(supabase);
     const { data: services } = await supabase.from('Service').select();
     const { data: onetimeServices } = await supabase.from('OnetimeService').select();
     const { data: hourlyServices } = await supabase.from('HourlyService').select();
@@ -602,6 +604,19 @@ export async function fetchtrackingnumber(){
 
 }
 
+async function encryptPassword(password : string){
+
+    const saltRounds = 10;
+    try {
+        const hashedPass = await bcrypt.hash(password, saltRounds);
+        console.log('Hashed Pass : ', hashedPass);
+        return hashedPass;
+    } catch (error) {
+        console.error("Error encrypting password:", error);
+        throw error
+    }
+}
+
 export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
@@ -609,9 +624,11 @@ export async function addOneAppointment(
     //status
     additionalrequest:string,
     additionalpackage:string,
-    totalprice:number
+    totalprice:number,
+    password:string
 ){
     const supabase = createClient();
+    const encryptedPass  = await encryptPassword(password);
 
     let additionalpack; // store here the service if for the additional package
 
@@ -649,7 +666,8 @@ export async function addOneAppointment(
         discount:15.0,
         additionalrequest:additionalrequest,
         additionalserviceid:additionalpack,
-        totalamountdue:totalprice
+        totalamountdue:totalprice,
+        appointment_password: encryptedPass
     }) 
     
     if(error)
@@ -720,6 +738,7 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
     
     return 1
 }
+
 
 export async function fetchItem(){
     const supabase = createClient();
