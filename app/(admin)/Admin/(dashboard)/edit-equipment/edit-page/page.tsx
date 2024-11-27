@@ -3,23 +3,12 @@
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useLocalStorage } from '@/app/hooks/useLocalStorage';
-import items from '@/app/data/items.json';
+import { fetchOneItem, updateItem } from '@/utils/supabase/data';
 import React from 'react';
-
-type EquipmentItem = {
-    id: number;
-    name: string;
-    price: number;
-    imgUrl: string;
-    description: string;
-    quantity: number;
-};
 
 const Page = () => {
     const searchParams = useSearchParams();
     const equipmentId = searchParams.get('id');
-    const [equipmentList, setEquipmentList] = useLocalStorage<EquipmentItem[]>('equipmentData', items);
     const [itemName, setItemName] = useState("");
     const [itemDetails, setItemDetails] = useState("");
     const [itemPrice, setItemPrice] = useState(0);
@@ -30,17 +19,24 @@ const Page = () => {
     const [showPopup, setShowPopup] = useState(false);
 
     useEffect(() => {
-        if (equipmentId) {
-            const equipment = equipmentList.find((item) => item.id === parseInt(equipmentId));
-            if (equipment) {
-                setItemName(equipment.name);
-                setItemDetails(equipment.description);
-                setItemPrice(equipment.price);
-                setItemQuantity(equipment.quantity);
-                setItemImage(equipment.imgUrl);
+        const loadItemDetails = async () => {
+            if (equipmentId) {
+                const data = await fetchOneItem(parseInt(equipmentId));
+                if (data && !data.error) {
+                    const item = data[0];
+                    setItemName(item.itemname);
+                    setItemDetails(item.description);
+                    setItemPrice(item.price);
+                    setItemQuantity(item.quantity);
+                    setItemImage(item.imageName);
+                } else {
+                    console.error(data.error);
+                }
             }
-        }
-    }, [equipmentId, equipmentList]);
+        };
+
+        loadItemDetails();
+    }, [equipmentId]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -55,27 +51,24 @@ const Page = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const updatedEquipmentList = equipmentList.map((item) =>
-            item.id === parseInt(equipmentId || '')
-                ? {
-                    ...item,
-                    name: itemName,
-                    description: itemDetails,
-                    price: itemPrice,
-                    quantity: itemQuantity,
-                    imgUrl: itemImage,
-                }
-            : item
-        );
-        
-        setEquipmentList(updatedEquipmentList);
-        setPopupMessage('Equipment updated successfully!');
-        setPopupColor('bg-green-500');
-        setShowPopup(true);
-        setTimeout(() => {
-            setShowPopup(false);
-            window.location.reload();
-        }, 1000);
+        if (equipmentId) {
+            await updateItem(
+                parseInt(equipmentId),
+                itemName,
+                itemPrice,
+                itemQuantity,
+                itemDetails,
+                itemImage
+            );
+            
+            setPopupMessage('Equipment updated successfully!');
+            setPopupColor('bg-green-500');
+            setShowPopup(true);
+            setTimeout(() => {
+                setShowPopup(false);
+                window.location.reload();
+            }, 1000);
+        }
     };
 
     return(
