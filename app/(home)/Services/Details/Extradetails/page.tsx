@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { useEffect, useState, useContext, createContext, ReactNode } from 'react';
 import GenerateDivs from '@/app/components/GenerateDivs';
 import { formatCurrency } from '@/utils/formatCurrency';
-import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import storeItems from '@/app/data/items.json';
+import { fetchItems } from '@/utils/supabase/data';
 
 type StoreItemProps = {
-  id: number;
-  name: string;
+  itemid: number;
+  itemname: string;
   price: number;
-  imgUrl: string;
+  imageName: string;
   description: string;
   quantity: number;
 };
@@ -41,7 +41,21 @@ function useShoppingCart() {
 
 // ShoppingCartProvider component
 const ShoppingCartProvider = ({ children }: ShoppingCartProviderProps) => {
-  const [cartItems, setCartItems] = useLocalStorage<CartItemProps[]>('shopping-cart', []);
+  const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
+
+  useEffect(() => {
+    const loadItems = async () => {
+      const items = await fetchItems();
+      if (items) {
+        const initializedItems = items.map((item: Omit<CartItemProps, 'quantity'>) => ({
+          ...item,
+          quantity: 0, // Initialize with zero quantity
+        }));
+        setCartItems(initializedItems);
+      }
+    };
+    loadItems();
+  }, []);
 
   const cartQuantity = cartItems.reduce((quantity: number, item: CartItemProps) => item.quantity + quantity, 0);
 
@@ -50,7 +64,7 @@ const ShoppingCartProvider = ({ children }: ShoppingCartProviderProps) => {
   }
 
   function increaseCartQuantity(id: number) {
-    const storeItem = storeItems.find(item => item.id === id);
+    const storeItem = storeItems.find(item => item.itemid === id);
     const availableQuantity = storeItem?.quantity || 0;
     const currentQuantityInCart = getItemQuantity(id);
 
@@ -155,7 +169,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
         <h1 className="text-2xl font-bold mb-4 text-black">Equipments</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"> 
           {storeItems.map((item) => (
-            <StoreItem key={item.id} {...item} />
+            <StoreItem key={item.itemid} {...item} />
           ))}
         </div>
       </div>
@@ -167,21 +181,21 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
   );
   
   
-  const StoreItem = ({ id, name, price, imgUrl, description, quantity }: StoreItemProps) => {
+  const StoreItem = ({ itemid, itemname, price, imageName, description, quantity }: StoreItemProps) => {
     const { increaseCartQuantity } = useShoppingCart();
-    const storeItem = storeItems.find((item) => item.id === id);
+    const storeItem = storeItems.find((item) => item.itemid === itemid);
     const isAvailable = storeItem && storeItem.quantity > 0;
   
     return (
       <div className="max-w-xs h-full bg-gray-100 shadow-md rounded-lg overflow-hidden flex flex-col"> {/* Card container */}
         <img
-          src={imgUrl}
-          alt={name}
+          src={imageName}
+          alt={itemname}
           className="w-full h-36 object-cover border-gray" 
         />
         <div className="flex flex-col bg-gray-100 justify-between p-4 flex-grow"> {/* Card Body */}
             <div className="text-black flex justify-between items-baseline mb-2"> {/* Card Title */}
-                <span className="text-md font-semibold">{name}</span>
+                <span className="text-md font-semibold">{itemname}</span>
                 <span className="text-gray-500 text-xs">
                 {formatCurrency(price)}
                 </span>
@@ -194,7 +208,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
             {isAvailable ? (
             <button
               className="w-full bg-indigo-800 text-white font-bold py-2 rounded"
-              onClick={() => increaseCartQuantity(id)}
+              onClick={() => increaseCartQuantity(itemid)}
             >
               Available
             </button>
@@ -211,7 +225,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
 
     // CartItem component 
     const CartItem = ({ id, quantity }: CartItemProps) => {
-        const storeItem = storeItems.find((item) => item.id === id);
+        const storeItem = storeItems.find((item) => item.itemid === id);
         const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } = useShoppingCart();
     
         if (!storeItem) return null;
@@ -220,14 +234,14 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
             <div className="flex items-center gap-2">
               <div className="flex-grow pl-4 w-full"> 
                 <div className="flex justify-between items-center text-black">
-                  <span>{storeItem.name}</span>
+                  <span>{storeItem.itemname}</span>
                   <div className="flex items-center gap-2">
                     <div className="text-sm">
                       {formatCurrency(storeItem.price * quantity)}
                     </div>
                     <button
                       className="text-red-600 border border-red-600 rounded px-2 py-1 text-sm hover:bg-red-600 hover:text-white"
-                      onClick={() => removeFromCart(storeItem.id)}
+                      onClick={() => removeFromCart(storeItem.itemid)}
                     >
                       &times;
                     </button>
@@ -253,7 +267,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
           <h2 className="text-2xl font-semibold mb-4 text-black">Summary</h2>
           <div className="flex flex-col gap-3">
             {cartItems.map((item) => {
-              const storeItem = storeItems.find(i => i.id === item.id);
+              const storeItem = storeItems.find(i => i.itemid === item.id);
               const isAvailable = storeItem && storeItem.quantity > 0;
       
               return (
@@ -270,7 +284,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
               Total:{" "}
               {formatCurrency(
                 cartItems.reduce((total, cartItem) => {
-                  const item = storeItems.find((i) => i.id === cartItem.id);
+                  const item = storeItems.find((i) => i.itemid === cartItem.id);
                   if (!item || item.quantity === 0) return total; // Skip unavailable items
                   return total + (item?.price || 0) * cartItem.quantity;
                 }, 0)

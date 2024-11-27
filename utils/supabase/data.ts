@@ -444,6 +444,18 @@ export async function fetchAdditionalServices(serviceid:number){
     // this will return the {additionalservices} which will have the service id of the service
 }
 
+
+export async function fetchItems(){
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from('Items')
+    if(!data){
+        console.log(error);
+    }
+
+    return data;
+}
+
 export async function fetchEditServices() {
     const supabase = createClient();
 
