@@ -2,13 +2,12 @@
 
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { fetchOneItem, updateItem } from '@/utils/supabase/data';
 import React from 'react';
 
-const Page = () => {
-    const searchParams = useSearchParams();
-    const equipmentId = searchParams.get('id');
+const Page = ({ searchParams } : {searchParams : {itemid : string, itemquantity : string}}) => {
+
+    const equipmentId = searchParams.itemid;
     const [itemName, setItemName] = useState("");
     const [itemDetails, setItemDetails] = useState("");
     const [itemPrice, setItemPrice] = useState(0);
