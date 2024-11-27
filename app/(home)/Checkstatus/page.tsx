@@ -64,20 +64,14 @@ export default function DisplayPage() {
     const handleCloseCancelModal = () => setIsCancelModalOpen(false);
 
     const handleSubmit = async () => {
-        console.log('Selected reason:', selectedReason);
-        console.log('Additional comments:', comments);
-
         try {
             await deleteAppointment(trackingNumber);
         } catch (error) {
             console.error(error);
         }
-        handleCloseCancelModal();
-        setIsContentVisible(false);
     };
     
-
-    
+  
     const fetchStatus = async () => {
     try {
         const getThatAppointment = await fetchOneAppointment(trackingNumber);
@@ -452,7 +446,7 @@ export default function DisplayPage() {
                 </div>
                 
                 <div className="flex justify-end mt-6">
-                    <button type="button" className="bg-red-600 hover:bg-red-700 text-white font-regular py-2 px-4 rounded-md items-right" style={{ backgroundColor: '#C00A0A'}} onClick={() => { handleSubmit();}}>Cancel Booking</button>
+                    <button type="submit" className="bg-red-600 hover:bg-red-700 text-white font-regular py-2 px-4 rounded-md items-right" style={{ backgroundColor: '#C00A0A'}} onClick={() => { handleSubmit();}}>Cancel Booking</button>
                 </div>
             </form>
         </Modal>

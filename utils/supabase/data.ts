@@ -751,16 +751,90 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
     return 1
 }
 
+
+export async function fetchItem(){
+    const supabase = createClient();
+
+    const {data, error } = await supabase.from('Items')
+        .select('*');
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function fetchOneItem(itemId:number){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .select()
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function updateItem(itemId:number, itemName:string, price:number, quantity:number, description:string, imageName:string){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .update({ itemname: itemName, price: price, quantity: quantity, description: description, imageName: imageName })
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
 export async function deleteAppointment(trackingnumber:number) {
     const supabase = createClient();
 
-    const { error } = await supabase
-      .from('Appointment')
-      .delete()
-      .eq('trackingnumber', trackingnumber)
-  
-      if (error)
-        return error
+    const { data: appointmentData } = await supabase
+        .from('Appointment')
+        .select('appointmentid')
+        .eq('trackingnumber', trackingnumber)
+        .single();
+
+    const appointmentid = appointmentData.appointmentid;
+
+    const { error: customerError } = await supabase
+        .from('Customers')
+        .delete()
+        .eq('appointmentid', appointmentid);
+
+    if (customerError) {
+        console.log(customerError);
+        console.log("Failed to delete customer");
+    } else {
+        console.log("Customer deleted");
+    }
+
+    const { error: scheduleError } = await supabase
+        .from('Schedule')
+        .delete()
+        .eq('appointmentid', appointmentid);
+
+    if (scheduleError) {
+        console.log(scheduleError);
+        console.log("Failed to delete schedule");
+    } else {
+        console.log("Schedule deleted");
+    }
+
+    const { error:appointmentError } = await supabase
+        .from('Appointment')
+        .delete()
+        .eq('trackingnumber', trackingnumber)
+
+    if (appointmentError) {
+        console.log(appointmentError);
+        console.log("Failed to delete appointment");
+    } else {
+        console.log("Appointment deleted");
+    }
     
     return 1
 }

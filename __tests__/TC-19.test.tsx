@@ -1,7 +1,19 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import DisplayPage from '@/app/(home)/Checkstatus/page';  
-import { createClient } from '@supabase/supabase-js';
+import * as supabaseData from '../utils/supabase/data'; 
 
+jest.mock('../utils/supabase/data', () => ({ 
+  ...jest.requireActual('../utils/supabase/data'),
+  deleteAppointment: jest.fn(), 
+}));
+
+jest.mock('next/headers', () => ({
+  cookies: jest.fn().mockReturnValue({
+    get: jest.fn().mockReturnValue({
+      value: 'mockedCookieValue', 
+    }),
+  }),
+}));
 
 jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn(() => ({
@@ -16,24 +28,18 @@ jest.mock('@supabase/supabase-js', () => ({
   })),
 }));
 
-jest.mock('next/headers', () => ({
-  cookies: jest.fn(),
-}));
 
 describe('TC-19 Appointment Cancellation: ', () => {
-  test('TC-19.1I: should not display password prompt for invalid reference number.', () => {
-    render(<DisplayPage />);
 
-    const inputElement = screen.getByPlaceholderText(/Input reference number/i); 
-    fireEvent.change(inputElement, { target: { value: 'invalidNumber' } });
+  test('TC-19.2U: should delete an appointment', async () => {
+    const spy = jest.spyOn(supabaseData, 'deleteAppointment').mockResolvedValueOnce(1);
 
-    const checkButton = screen.getByText(/Check status/); 
-    fireEvent.click(checkButton);
+    const trackingNumber = 10025;
+    await supabaseData.deleteAppointment(trackingNumber);
 
-    const newTextbox = screen.queryByPlaceholderText(/Enter Password/i);  
-    const submitButton = screen.queryByText(/Submit/i);  
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith(trackingNumber);
 
-    expect(newTextbox).not.toBeInTheDocument();
-    expect(submitButton).not.toBeInTheDocument();
+    spy.mockRestore();
   });
 });

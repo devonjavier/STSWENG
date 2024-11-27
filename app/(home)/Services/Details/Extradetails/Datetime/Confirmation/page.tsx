@@ -51,8 +51,12 @@ const Page = ({ searchParams }: {
 
         const getTotalPriceCart = async () => {
 
-            const cartItems  = JSON.parse(searchParams.cartItems);
+            let cartItems;
 
+            if(searchParams.cartItems != null){
+                cartItems  = JSON.parse(searchParams.cartItems);
+            }
+            
             if(!cartItems.length){
                 return;
             }   
