@@ -42,20 +42,24 @@ function useShoppingCart() {
 // ShoppingCartProvider component
 const ShoppingCartProvider = ({ children }: ShoppingCartProviderProps) => {
   const [cartItems, setCartItems] = useState<CartItemProps[]>([]);
+  const [storeItems, setStoreItems] = useState<StoreItemProps[]>([]);
 
   useEffect(() => {
     const loadItems = async () => {
       const items = await fetchItems();
+      
       if (items) {
         const initializedItems = items.map((item: Omit<CartItemProps, 'quantity'>) => ({
           ...item,
           quantity: 0, // Initialize with zero quantity
         }));
+        setStoreItems(items);
         setCartItems(initializedItems);
       }
     };
     loadItems();
   }, []);
+
 
   const cartQuantity = cartItems.reduce((quantity: number, item: CartItemProps) => item.quantity + quantity, 0);
 
@@ -183,7 +187,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
   
   const StoreItem = ({ itemid, itemname, price, imageName, description, quantity }: StoreItemProps) => {
     const { increaseCartQuantity } = useShoppingCart();
-    const storeItem = storeItems.find((item) => item.itemid === itemid);
+    const storeItem = storeItems.find((item: StoreItemProps) => item.itemid === itemid);
     const isAvailable = storeItem && storeItem.quantity > 0;
   
     return (
