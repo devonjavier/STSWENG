@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       },
     });
   }
-
+  console.log('change');
   const reqBody = await request.json();
   const { searchParams, trackingNumber, status } = reqBody;
 

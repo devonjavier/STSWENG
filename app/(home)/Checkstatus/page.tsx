@@ -71,6 +71,7 @@ export default function DisplayPage() {
         }
     };
     
+  
     const fetchStatus = async () => {
     try {
         const getThatAppointment = await fetchOneAppointment(trackingNumber);

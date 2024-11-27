@@ -150,7 +150,7 @@ const Page = ({ searchParams }: {
                         Book an Appointment
                     </div>
                     <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
-                        Services&gt;  Details  &gt; ExtraDetails &gt; Date & Time &gt; <span className='text-cusBlue'> Confirmation</span> &gt; Booking Status
+                        Services&gt;  Details  &gt; ExtraDetails &gt; Date & Time &gt; <span className='text-cusBlue'> Confirmation</span> &gt; Password Confirmation &gt; Booking Status
                     </div>
                 </div>
 
@@ -195,7 +195,7 @@ const Page = ({ searchParams }: {
 
         <Link
             href={{
-                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
+                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/PasswordConfirmation",
                 query: {
                     schedules: JSON.stringify(listofschedules),
                     service: searchParams.service,
@@ -247,7 +247,7 @@ const Page = ({ searchParams }: {
     </div>
     <Link
             href={{
-                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
+                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/PasswordConfirmation",
                 query: {
                     schedules: JSON.stringify(listofschedules),
                     service: searchParams.service,
