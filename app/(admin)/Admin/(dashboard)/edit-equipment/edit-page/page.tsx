@@ -107,8 +107,15 @@ const Page = () => {
                             const value = Math.max(0, Number(e.target.value));
                             setItemQuantity(value);
                         }} required/>
-                    <div className='text-2xl font-bold text-indigo-800 mb-5'>Upload Item Image <span className="text-red-500 text-sm ml-1">*</span></div>
-                    <input type="file" className="rounded-lg bg-gray-100 block p-5 w-full mb-10 text-xl" accept="image/*" onChange={handleImageUpload} required/>
+                    <div className='text-2xl font-bold text-indigo-800 mb-5'>Upload Item Image</div>
+                    <div className='mt-5'>
+                        {itemImage ? (
+                            <img src={itemImage} className="w-1/2 h-32 object-contain mb-5" />
+                        ) : (
+                            <span className="text-gray-400">No image uploaded</span>
+                        )}
+                    </div>
+                    <input type="file" className="rounded-lg bg-gray-100 block p-5 w-full mb-10 text-xl" accept="image/*" onChange={handleImageUpload}/>
                 </div>
                 <div className='mt-5'>
                     <Link href='/Admin/edit-equipment' className='bg-gray-300 p-5 rounded-full text-black font-bold text-xl hover:text-gray-300 hover:bg-gray-400 transition ease-in-out'>Back</Link>
