@@ -7,10 +7,12 @@ import {
     addCustomer,
     updateSchedule,
     fetchOneAdditionalServiceWithTitle,
-    fetchtrackingnumber
+    fetchtrackingnumber,
+    addCart
 } from '@/utils/supabase/data'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+
 
 const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -27,7 +29,7 @@ const Page = ({ searchParams }) => {
     const router = useRouter();
     const theService = JSON.parse(searchParams.service);
     const [trackingNumber, setTrackingNumber] = useState(10000);
-    let appointentid;
+    let appointmentid;
     const [isProcessed, setIsProcessed] = useState(false);
     const [status, setStatus] = useState("pending");
     const [loading, setLoading] = useState(true);
@@ -78,11 +80,18 @@ const Page = ({ searchParams }) => {
                     searchParams.newpassword
                 );
 
-                appointentid = addtheAppointment;
+            
+                appointmentid = addtheAppointment;
+
+                // add items to cart
+                const cartItems = JSON.parse(searchParams.cartItems);
+                for(const item of cartItems){
+                    await addCart(appointmentid, item.id, item.quantity);
+                }
 
                 const selectedschedules = JSON.parse(searchParams.schedules);
                 await Promise.all(selectedschedules.map(selectedsched =>
-                    updateSchedule(appointentid, selectedsched.scheduleid)
+                    updateSchedule(appointmentid, selectedsched.scheduleid)
                 ));
 
                 await addCustomer(

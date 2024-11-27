@@ -781,4 +781,35 @@ export async function fetchItemPrice(itemid : number){
 
 }
 
+export async function addCart(appointmentid : number, itemid : number, quantity : number){
+
+    const supabase = createClient();
+
+    let largestidnumber = 3000;
+    
+    const { data: reserves } = await supabase.from('ItemReserves').select('reserveid').order('reserveid', {ascending:false});
+    const reservesArr = Object.keys(reserves);
+    
+    const targetReserve = reserves[reservesArr[0]] // just filter out the first one
+    console.log("Reserves" + reserves)
+
+    Object.values(targetReserve).forEach((key)=>{
+        if (typeof key === 'number')
+            largestidnumber = key
+    })
+
+    largestidnumber = largestidnumber + 1
+
+    const { error } = await supabase.from('ItemReserves').insert({
+        reservesid : largestidnumber,
+        appointmentid : appointmentid,
+        itemid : itemid,
+        quantity : quantity
+    });
+
+    if(error){
+        console.log(error);
+    }
+}
+
 
