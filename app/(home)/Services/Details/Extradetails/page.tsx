@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { useEffect, useState, useContext, createContext, ReactNode } from 'react';
 import GenerateDivs from '@/app/components/GenerateDivs';
 import { formatCurrency } from '@/utils/formatCurrency';
-import storeItems from '@/app/data/items.json';
 import { fetchItems } from '@/utils/supabase/data';
 
 type StoreItemProps = {
@@ -34,6 +33,7 @@ type ShoppingCartContext = {
 };
 
 const ShoppingCartContext = createContext({} as ShoppingCartContext);
+
 
 function useShoppingCart() {
   return useContext(ShoppingCartContext);
@@ -123,13 +123,24 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
   useEffect(() => {
     console.log(searchParams.hours);
   });
-
+  const { cartItems } = useShoppingCart();
+  const [storeItems, setStoreItems] = useState<StoreItemProps[]>([]);
   const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);
   const [additionalCustomersMiddlename, setadditionalCustomersMiddlename] = useState<string[]>([]);
   const [additionalCustomersLastname, setadditionalCustomersLastname] = useState<string[]>([]);
   const [countAdditionalCustomers, setcountAdditionalCustomers] = useState(0);
   const [errors, setErrors] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const loadItems = async () => {
+      const items = await fetchItems();
+      console.log("Fetched items:", items); // Debug log
+      setStoreItems(items || []); // Default to empty array if items is undefined
+    };
+    loadItems();
+  }, []);
+
 
   const validateAdditionalCustomerNames = () => {
     let tempErrors: string[] = [];
@@ -159,6 +170,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
   };
 
   const handleNextClick = (e: any) => {
+
     setSubmitted(true);
 
     if (!validateAdditionalCustomerNames()) {
@@ -368,7 +380,8 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
                   additionalCustomersmiddlenames: JSON.stringify(additionalCustomersMiddlename),
                   additionalCustomerslastnames: JSON.stringify(additionalCustomersLastname),
                   hours: searchParams.hours,
-                  additionalpackage: searchParams.additionalpackage
+                  additionalpackage: searchParams.additionalpackage,
+                  cartItems: JSON.stringify(cartItems)
                 }
               }}
             >

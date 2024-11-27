@@ -448,7 +448,7 @@ export async function fetchAdditionalServices(serviceid:number){
 export async function fetchItems(){
     const supabase = createClient();
 
-    const { data, error } = await supabase.from('Items')
+    const { data, error } = await supabase.from('Items').select('*');
     if(!data){
         console.log(error);
     }
@@ -764,6 +764,21 @@ export async function deleteAppointment(trackingnumber:number) {
     
     return 1
 }
-  
+
+export async function fetchItemPrice(itemid : number){
+
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+    .from('Items')
+    .select('price')
+    .eq('itemid', itemid)
+
+    if(error)
+        return error
+
+    return data[0].price;
+
+}
 
 

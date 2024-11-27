@@ -66,7 +66,7 @@ const Page = ({ searchParams }) => {
                 setTrackingNumber(gettrackingnumber);
 
                 const dotheyneedparking = searchParams.needsparking === 'true';
-                const totalprice = parseFloat(searchParams.mainprice) + parseFloat(searchParams.additionalprice);
+                const totalprice = parseFloat(searchParams.mainprice) + parseFloat(searchParams.additionalprice) + parseFloat(searchParams.priceOfCart);
 
                 const addtheAppointment = await addOneAppointment(
                     theService.serviceid,

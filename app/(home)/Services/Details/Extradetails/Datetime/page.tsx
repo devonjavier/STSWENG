@@ -21,7 +21,8 @@ const Page = ({ searchParams }: {
         additionalCustomersmiddlenames: string,
         additionalCustomerslastnames: string,
         hours: number,
-        additionalpackage: string
+        additionalpackage: string,
+        cartItems : string
     }
 }) => {
     const [schedules, setSchedules] = useState<[]>([]);
@@ -101,7 +102,8 @@ const Page = ({ searchParams }: {
                                     additionalCustomerslastnames: searchParams.additionalCustomerslastnames,
                                     schedules: JSON.stringify(selectedSchedules),
                                     hours: searchParams.hours,
-                                    additionalpackage: searchParams.additionalpackage
+                                    additionalpackage: searchParams.additionalpackage,
+                                    cartItems : searchParams.cartItems
                                 }
                             }}>
                                 <button disabled={ablebutton} className={`hidden lg:block rounded-3xl w-56 h-11 mt-8 px-0 text-white font-bold ${ablebutton ? 'bg-gray-400' : 'bg-cusBlue'}`}>
