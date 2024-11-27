@@ -751,6 +751,32 @@ export async function fetchItem(){
     return data;
 }
 
+export async function fetchOneItem(itemId:number){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .select()
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function updateItem(itemId:number, itemName:string, price:number, quantity:number, description:string, imageName:string){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .update({ itemname: itemName, price: price, quantity: quantity, description: description, imageName: imageName })
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
 export async function deleteAppointment(trackingnumber:number) {
     const supabase = createClient();
 
