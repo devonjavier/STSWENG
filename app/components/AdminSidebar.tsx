@@ -29,6 +29,8 @@ const Sidebar: React.FC = () => {
         <Link href="/Admin/pending-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Calendar Reservations</Link>
         <Link href="/Admin/all-reservations" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">View all Reservations</Link>
         <Link href="/Admin/edit-calendar" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Edit Calendar</Link>
+        <Link href="/Admin/edit-equipment" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Edit Equipment</Link>
+        <Link href="/Admin/add-equipment" className="mb-4 text-lg hover:text-purple-300 transition duration-300 ease-in-out pb-8">Add Equipment</Link>
 
         <div className="relative">
           <button 

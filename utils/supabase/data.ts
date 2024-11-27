@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { allService, Service, OnetimeService, HourlyService } from '@/utils/supabase/interfaces'
+import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { findPerson } from '@/app/lib/actions'
 import { permission } from 'process'
@@ -335,7 +336,7 @@ export async function fetchSelectedSchedule(appointmentid:number) {
 
 export async function fetchOneAppointment( id:number ) {
     const supabase = createClient();
-    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);;
+    const { data, error} = await supabase.from('Appointment').select().eq('trackingnumber', id);
 
     if(error){
         return ["error", "error"]
@@ -403,6 +404,7 @@ export async function fetchOneService( id:number ) {
 
 export async function fetchServices(){
     const supabase = createClient();
+    console.log(supabase);
     const { data: services } = await supabase.from('Service').select();
     const { data: onetimeServices } = await supabase.from('OnetimeService').select();
     const { data: hourlyServices } = await supabase.from('HourlyService').select();
@@ -440,6 +442,18 @@ export async function fetchAdditionalServices(serviceid:number){
 
     return data
     // this will return the {additionalservices} which will have the service id of the service
+}
+
+
+export async function fetchItems(){
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from('Items').select('*');
+    if(!data){
+        console.log(error);
+    }
+
+    return data;
 }
 
 export async function fetchEditServices() {
@@ -602,6 +616,19 @@ export async function fetchtrackingnumber(){
 
 }
 
+async function encryptPassword(password : string){
+
+    const saltRounds = 10;
+    try {
+        const hashedPass = await bcrypt.hash(password, saltRounds);
+        console.log('Hashed Pass : ', hashedPass);
+        return hashedPass;
+    } catch (error) {
+        console.error("Error encrypting password:", error);
+        throw error
+    }
+}
+
 export async function addOneAppointment(
     serviceid:string,
     isparkingspotneeded:boolean,
@@ -609,9 +636,11 @@ export async function addOneAppointment(
     //status
     additionalrequest:string,
     additionalpackage:string,
-    totalprice:number
+    totalprice:number,
+    password:string
 ){
     const supabase = createClient();
+    const encryptedPass  = await encryptPassword(password);
 
     let additionalpack; // store here the service if for the additional package
 
@@ -649,7 +678,8 @@ export async function addOneAppointment(
         discount:15.0,
         additionalrequest:additionalrequest,
         additionalserviceid:additionalpack,
-        totalamountdue:totalprice
+        totalamountdue:totalprice,
+        appointment_password: encryptedPass
     }) 
     
     if(error)
@@ -722,5 +752,138 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
 }
 
 
+export async function fetchItem(){
+    const supabase = createClient();
+
+    const {data, error } = await supabase.from('Items')
+        .select('*');
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function fetchOneItem(itemId:number){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .select()
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function updateItem(itemId:number, itemName:string, price:number, quantity:number, description:string, imageName:string){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .update({ itemname: itemName, price: price, quantity: quantity, description: description, imageName: imageName })
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function deleteAppointment(trackingnumber:number) {
+    const supabase = createClient();
+
+    const { data: appointmentData } = await supabase
+        .from('Appointment')
+        .select('appointmentid')
+        .eq('trackingnumber', trackingnumber)
+        .single();
+
+    const appointmentid = appointmentData.appointmentid;
+
+    const { error: customerError } = await supabase
+        .from('Customers')
+        .delete()
+        .eq('appointmentid', appointmentid);
+
+    if (customerError) {
+        console.log(customerError);
+        console.log("Failed to delete customer");
+    } else {
+        console.log("Customer deleted");
+    }
+
+    const { error: scheduleError } = await supabase
+        .from('Schedule')
+        .delete()
+        .eq('appointmentid', appointmentid);
+
+    if (scheduleError) {
+        console.log(scheduleError);
+        console.log("Failed to delete schedule");
+    } else {
+        console.log("Schedule deleted");
+    }
+
+    const { error:appointmentError } = await supabase
+        .from('Appointment')
+        .delete()
+        .eq('trackingnumber', trackingnumber)
+
+    if (appointmentError) {
+        console.log(appointmentError);
+        console.log("Failed to delete appointment");
+    } else {
+        console.log("Appointment deleted");
+    }
+    
+    return 1
+}
+
+export async function fetchItemPrice(itemid : number){
+
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+    .from('Items')
+    .select('price')
+    .eq('itemid', itemid)
+
+    if(error)
+        return error
+
+    return data[0].price;
+
+}
+
+export async function addCart(appointmentid : number, itemid : number, quantity : number){
+
+    const supabase = createClient();
+
+    let largestidnumber = 3000;
+    
+    const { data: reserves } = await supabase.from('ItemReserves').select('reserveid').order('reserveid', {ascending:false});
+    const reservesArr = Object.keys(reserves);
+    
+    const targetReserve = reserves[reservesArr[0]] // just filter out the first one
+    console.log("Reserves" + reserves)
+
+    Object.values(targetReserve).forEach((key)=>{
+        if (typeof key === 'number')
+            largestidnumber = key
+    })
+
+    largestidnumber = largestidnumber + 1
+
+    const { error } = await supabase.from('ItemReserves').insert({
+        reservesid : largestidnumber,
+        appointmentid : appointmentid,
+        itemid : itemid,
+        quantity : quantity
+    });
+
+    if(error){
+        console.log(error);
+    }
+}
 
 

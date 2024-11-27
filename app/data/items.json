@@ -1,0 +1,41 @@
+// [{
+//         "itemid": 1,
+//         "itemname": "Electric Guitar",
+//         "price": 1000,
+//         "imageName": "/guitar.png",
+//         "description": "Fender Classic Series 70s Stratocaster Black",
+//         "quantity": 5
+//     },
+//     {
+//         "itemid": 2,
+//         "itemname": "Studio Headphone",
+//         "price": 1000,
+//         "imageName": "/headphones.png",
+//         "description": "Beyerdynamic DT 990 PRO",
+//         "quantity": 3
+//     },
+//     {
+//         "itemid": 3,
+//         "itemname": "Microphone",
+//         "price": 1000,
+//         "imageName": "/mic condenser.jpg",
+//         "description": "Neumann TLM 102 Condenser Microphone",
+//         "quantity": 2
+//     },
+//     {
+//         "itemid": 4,
+//         "itemname": "Mitemidi Controller",
+//         "price": 1000,
+//         "imageName": "/mitemidi.jpg",
+//         "description": "Akai Professional MPK Mini MK3 MitemidI Keyboard Controller",
+//         "quantity": 0
+//     },
+//     {
+//         "itemid": 5,
+//         "itemname": "Pop Filter",
+//         "price": 500,
+//         "imageName": "/pop filter.png",
+//         "description": "Akai Professional",
+//         "quantity": 0
+//     }
+// ]

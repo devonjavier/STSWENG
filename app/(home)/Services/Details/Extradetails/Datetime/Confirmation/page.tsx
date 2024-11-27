@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Link from "next/link";
-import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetime, fetchOneService, fetchSelectedSchedules } from '@/utils/supabase/data'
+import { fetchOneAdditionalServiceWithTitle, fetchOneMainServiceHourlyPrice, fetchOneMainServiceOnetime, fetchOneService, fetchSelectedSchedules, fetchItemPrice } from '@/utils/supabase/data'
 import Schedules from '@/app/components/Schedules';
 
 
@@ -31,7 +31,9 @@ const Page = ({ searchParams }: {
         additionalCustomersmiddlenames: string, // JSON
         additionalCustomerslastnames: string, // JSON
         hours:number,
-        additionalpackage:string
+        additionalpackage:string,
+
+        cartItems:string
     }
 }) => {
 
@@ -42,9 +44,40 @@ const Page = ({ searchParams }: {
 
     const [priceAdditionalService, setPriceAdditionalService] = useState(0);
     const [priceMainService, setPriceMainService] = useState(0);
+    const [priceCart, setPriceCart] = useState(0);
 
     useEffect(() => {
         const theService = JSON.parse(searchParams.service);
+
+        const getTotalPriceCart = async () => {
+
+            let cartItems;
+
+            if(searchParams.cartItems != null){
+                cartItems  = JSON.parse(searchParams.cartItems);
+            }
+            
+            if(!cartItems.length){
+                return;
+            }   
+
+            let total = 0;
+
+            for(const item of cartItems){
+                try {
+                    const itemPrice = await fetchItemPrice(item.itemid)
+
+                    if(itemPrice){
+                        total += itemPrice;
+                    }
+
+                } catch(error){ 
+                    console.log(error);
+                }
+            }
+
+            setPriceCart(total);
+        }
 
         if(JSON.parse(searchParams.serviceType) === 'onetime'){
             const getPriceAdditional= async () =>{
@@ -105,6 +138,8 @@ const Page = ({ searchParams }: {
             };
             setLoading(false);
         }
+
+        getTotalPriceCart();
         getService();
         getSelectedSchedules();
         getPriceAdditional();
@@ -150,7 +185,7 @@ const Page = ({ searchParams }: {
                         Book an Appointment
                     </div>
                     <div className='text-sm pt-2 lg:pt-0 lg:text-xl'>
-                        Services&gt;  Details  &gt; ExtraDetails &gt; Date & Time &gt; <span className='text-cusBlue'> Confirmation</span> &gt; Booking Status
+                        Services&gt;  Details  &gt; ExtraDetails &gt; Date & Time &gt; <span className='text-cusBlue'> Confirmation</span> &gt; Password Confirmation &gt; Booking Status
                     </div>
                 </div>
 
@@ -195,7 +230,7 @@ const Page = ({ searchParams }: {
 
         <Link
             href={{
-                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
+                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/PasswordConfirmation",
                 query: {
                     schedules: JSON.stringify(listofschedules),
                     service: searchParams.service,
@@ -232,7 +267,7 @@ const Page = ({ searchParams }: {
             <span className='text-black mb-9 text-sm lg:text-xl'> <span className='font-bold'> Additional Package Selected: </span> {JSON.parse(searchParams.additionalpackage)} - <span className='italic'>₱{priceAdditionalService} </span> </span>
         )}
         
-        <span className='text-black mb-7 text-lg lg:text-xl'> <span className='font-bold'> Total Amount Due: </span> ₱{priceMainService + priceAdditionalService} pesos </span>
+        <span className='text-black mb-7 text-lg lg:text-xl'> <span className='font-bold'> Total Amount Due: </span> ₱{priceMainService + priceAdditionalService + priceCart} pesos </span>
 
         <span className='text-black font-bold mb-2 text-lg lg:text-xl'> Appointment schedules: </span>
         <div className='flex flex-col'>
@@ -247,7 +282,7 @@ const Page = ({ searchParams }: {
     </div>
     <Link
             href={{
-                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/Bookingstatus",
+                pathname: "/Services/Details/Extradetails/Datetime/Confirmation/PasswordConfirmation",
                 query: {
                     schedules: JSON.stringify(listofschedules),
                     service: searchParams.service,
@@ -267,7 +302,9 @@ const Page = ({ searchParams }: {
                     additionalpackage: searchParams.additionalpackage,
                     selectedServicetitle: selectedService,
                     mainprice: priceMainService,
-                    additionalprice: priceAdditionalService
+                    additionalprice: priceAdditionalService,
+                    priceOfCart : priceCart,
+                    cartItems : searchParams.cartItems
                 }
             }}>
             <button className="lg:hidden bg-cusBlue rounded-3xl my-5 w-full lg:w-56 h-11 mt-8 px-0 text-white font-bold"> Confirm Details </button>

@@ -33,7 +33,7 @@ async function handleLogin(account : accountData, supabase : any){
     { expiresIn: '7d' }
   );
 
-  cookies().set('token', token, {
+  (await cookies()).set('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7, 
@@ -105,7 +105,10 @@ export async function findPerson(firstname : string, middlename : string, lastna
 }
 
 export async function handleLogout(){
-  cookies().delete('token');
+  (await cookies()).delete('token');
+
+
+
 }
 
 export async function findPendingReservations(){
@@ -385,7 +388,7 @@ export async function editFAQs(faqs : FAQ[]) {
 export async function checkCookie(){
   const cookieStore = cookies();
 
-  const hasCookie = await cookieStore.has('token')
+  const hasCookie = (await cookieStore).has('token')
   console.log(hasCookie);
 
   return hasCookie;
@@ -517,6 +520,72 @@ export async function addTimeSlots(date: string) {
     console.log('Time slots added:', results);
 
     return { success: true, message: 'All time slots added successfully' };
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return { success: false, message: 'Unexpected error occurred' };
+  }
+}
+
+export async function comparePassword(password : string, confirmPassword : string){
+
+  const match = await bcrypt.compare(password, confirmPassword);
+
+  if(match){
+    return true;
+  } else return false;
+}
+
+
+
+export async function addItem(item: { itemid : Number, itemname: String, description: String, price: Number, imageName: String, quantity: Number }) {
+  const supabase = createClient();
+
+  try {    
+    // Function to check if equipment already exists
+    const equipmentExists = async () => {
+      const { data, error } = await supabase
+        .from('Items')
+        .select('itemid')
+        .eq('itemname', item.itemname)
+        .eq('description', item.description)
+        .eq('price', item.price)
+        .eq('imageName', item.imageName)
+        .eq('quantity', item.quantity)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error equipment already exists:', error);
+        return false;
+      }
+
+      return data ? true : false;
+    };
+
+    // Insert equipment into database
+      const exists = await equipmentExists();
+
+      if (exists) {
+        console.log(`The equipment entry already exists`);
+        return { success: false, message: `Error inserting equipment, the equipment already exists` };
+      }
+
+      const { data, error } = await supabase
+        .from('Items')
+        .insert({
+          itemid: item.itemid,
+          itemname: item.itemname,
+          description: item.description,
+          price: item.price,
+          imageName: item.imageName,
+          quantity: item.quantity
+        });
+
+      if (error) {
+        console.error('Error inserting equipment:', error);
+        return { success: false, message: 'Error inserting equipment' };
+      }
+
+      return { success: true, message: 'Equipment added successfully' };
   } catch (error) {
     console.error('Unexpected error:', error);
     return { success: false, message: 'Unexpected error occurred' };
