@@ -1,20 +1,36 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { useLocalStorage } from '@/app/hooks/useLocalStorage';
+import { useState, useEffect } from 'react';
+import { addItem } from '@/app/lib/actions';
+import { fetchItem } from '@/utils/supabase/data';
 import items from '@/app/data/items.json';
 import { useRouter } from 'next/navigation';
+import { Items } from '@/utils/supabase/interfaces';
 
 const Page = () => {
   // Use items.json as the initial value for equipment data
-  const [equipmentList, setEquipmentList] = useLocalStorage('equipmentData', items);
-  const [name, setName] = useState('');
+  const [equipmentList, setEquipmentList] = useState<Items[]>([]);
+  const [itemname, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [quantity, setQuantity] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    const getItem = async () => {
+      try {
+        const data = await fetchItem();
+        setEquipmentList(data);
+        console.log(data);
+      } catch (error) {
+        console.error('Error fetching equipment:', error);
+      }
+    };
+
+    getItem();
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -26,19 +42,19 @@ const Page = () => {
     e.preventDefault();
 
     // Assuming you might want to store the file locally or upload it to a server. For now, we'll use a placeholder image URL.
-    const imgUrl = imgFile ? URL.createObjectURL(imgFile) : '/placeholder.png';
+    const imageName = imgFile ? URL.createObjectURL(imgFile) : '/placeholder.png';
 
-    const newEquipment = {
-      id: equipmentList.length + 1,
-      name,
+    const newItem = {
+      itemid: equipmentList.length + 1,
+      itemname,
       description,
       price: parseFloat(price),
-      imgUrl,
+      imageName,
       quantity: parseInt(quantity.toString(), 10) || 0,
     };
 
-    // Add new equipment to the list and update local storage
-    setEquipmentList([...equipmentList, newEquipment]);
+    // Add new equipment to the database
+    addItem(newItem);
 
     // Redirect to the edit page after saving
     router.push('/Admin/edit-equipment');
@@ -54,7 +70,7 @@ const Page = () => {
           <input
             type="text"
             placeholder="Name"
-            value={name}
+            value={itemname}
             onChange={(e) => setName(e.target.value)}
             className="rounded-lg bg-gray-100 block p-5 w-full mb-10 text-xl"
             required

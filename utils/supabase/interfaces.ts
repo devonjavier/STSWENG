@@ -96,3 +96,11 @@ export interface forTheTicketErrors {
   userQuestion: string;
 }
 
+export interface Items { 
+  itemid : Number; 
+  itemname: String; 
+  description: String;
+  price: Number; 
+  imageName: String; 
+  quantity: Number;
+}

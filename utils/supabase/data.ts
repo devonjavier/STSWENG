@@ -739,6 +739,18 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
     return 1
 }
 
+
+export async function fetchItem(){
+    const supabase = createClient();
+
+    const {data, error } = await supabase.from('Items')
+        .select('*');
+    if (error) {
+        return error
+    }
+    return data;
+}
+
 export async function deleteAppointment(trackingnumber:number) {
     const supabase = createClient();
 
@@ -788,6 +800,3 @@ export async function deleteAppointment(trackingnumber:number) {
     
     return 1
 }
-  
-
-
