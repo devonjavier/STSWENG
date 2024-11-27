@@ -54,7 +54,7 @@ const Page = () => {
               <div className="text-sm text-gray-500">Quantity: {item.quantity.valueOf()}</div>
               <div className="mt-auto flex items-center justify-center">
               <Link href={{
-                pathname: `/Admin/edit-equipment/edit-page?id=${item.itemid}`,
+                pathname: `/Admin/edit-equipment/edit-page`,
                 query : { itemid : JSON.stringify(item.quantity),
                           itemquantity : JSON.stringify(item.quantity)
                 }
