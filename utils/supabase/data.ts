@@ -742,13 +742,49 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
 export async function deleteAppointment(trackingnumber:number) {
     const supabase = createClient();
 
-    const { error } = await supabase
-      .from('Appointment')
-      .delete()
-      .eq('trackingnumber', trackingnumber)
-  
-      if (error)
-        return error
+    const { data: appointmentData } = await supabase
+        .from('Appointment')
+        .select('appointmentid')
+        .eq('trackingnumber', trackingnumber)
+        .single();
+
+    const appointmentid = appointmentData.appointmentid;
+
+    const { error: customerError } = await supabase
+        .from('Customers')
+        .delete()
+        .eq('appointmentid', appointmentid);
+
+    if (customerError) {
+        console.log(customerError);
+        console.log("Failed to delete customer");
+    } else {
+        console.log("Customer deleted");
+    }
+
+    const { error: scheduleError } = await supabase
+        .from('Schedule')
+        .delete()
+        .eq('appointmentid', appointmentid);
+
+    if (scheduleError) {
+        console.log(scheduleError);
+        console.log("Failed to delete schedule");
+    } else {
+        console.log("Schedule deleted");
+    }
+
+    const { error:appointmentError } = await supabase
+        .from('Appointment')
+        .delete()
+        .eq('trackingnumber', trackingnumber)
+
+    if (appointmentError) {
+        console.log(appointmentError);
+        console.log("Failed to delete appointment");
+    } else {
+        console.log("Appointment deleted");
+    }
     
     return 1
 }
