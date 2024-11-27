@@ -721,6 +721,15 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
     return 1
 }
 
+export async function fetchItem(){
+    const supabase = createClient();
 
+    const {data, error } = await supabase.from('Items')
+        .select('*');
+    if (error) {
+        return error
+    }
+    return data;
+}
 
 
