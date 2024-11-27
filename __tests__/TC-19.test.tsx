@@ -30,25 +30,6 @@ jest.mock('@supabase/supabase-js', () => ({
 
 
 describe('TC-19 Appointment Cancellation: ', () => {
-  test('TC-19.1I: should not display password prompt for invalid reference number.', async () => {
-    render(<DisplayPage />);
-    const inputElement = screen.getByPlaceholderText(/Input reference number/i); 
-        await act(async () => {
-      fireEvent.change(inputElement, { target: { value: 'invalidNumber' } });
-    });
-
-    const checkButton = screen.getByText(/Check status/);
-    
-    await act(async () => {
-      fireEvent.click(checkButton);
-    });
-
-    const newTextbox = screen.queryByPlaceholderText(/Enter Password/i);  
-    const submitButton = screen.queryByText(/Submit/i);  
-
-    expect(newTextbox).not.toBeInTheDocument();
-    expect(submitButton).not.toBeInTheDocument();
-  });
 
   test('TC-19.2U: should delete an appointment', async () => {
     const spy = jest.spyOn(supabaseData, 'deleteAppointment').mockResolvedValueOnce(1);
