@@ -1,0 +1,7 @@
+First, make sure you have installed 'selenium-webdriver' and 'mocha'
+
+If not, install them using
+npm i selenium-webdriver mocha
+
+Run the test with
+npx mocha <filename>.spec.js

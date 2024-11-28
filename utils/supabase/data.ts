@@ -444,6 +444,18 @@ export async function fetchAdditionalServices(serviceid:number){
     // this will return the {additionalservices} which will have the service id of the service
 }
 
+
+export async function fetchItems(){
+    const supabase = createClient();
+
+    const { data, error } = await supabase.from('Items').select('*');
+    if(!data){
+        console.log(error);
+    }
+
+    return data;
+}
+
 export async function fetchEditServices() {
     const supabase = createClient();
 
@@ -751,6 +763,32 @@ export async function fetchItem(){
     return data;
 }
 
+export async function fetchOneItem(itemId:number){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .select()
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
+export async function updateItem(itemId:number, itemName:string, price:number, quantity:number, description:string, imageName:string){
+    const supabase = createClient();
+
+    const {data, error } = await supabase
+        .from('Items')
+        .update({ itemname: itemName, price: price, quantity: quantity, description: description, imageName: imageName })
+        .eq('itemid', itemId);
+    if (error) {
+        return error
+    }
+    return data;
+}
+
 export async function deleteAppointment(trackingnumber:number) {
     const supabase = createClient();
 
@@ -800,3 +838,52 @@ export async function deleteAppointment(trackingnumber:number) {
     
     return 1
 }
+
+export async function fetchItemPrice(itemid : number){
+
+    const supabase = createClient();
+
+    const { data, error } = await supabase
+    .from('Items')
+    .select('price')
+    .eq('itemid', itemid)
+
+    if(error)
+        return error
+
+    return data[0].price;
+
+}
+
+export async function addCart(appointmentid : number, itemid : number, quantity : number){
+
+    const supabase = createClient();
+
+    let largestidnumber = 3000;
+    
+    const { data: reserves } = await supabase.from('ItemReserves').select('reserveid').order('reserveid', {ascending:false});
+    const reservesArr = Object.keys(reserves);
+    
+    const targetReserve = reserves[reservesArr[0]] // just filter out the first one
+    console.log("Reserves" + reserves)
+
+    Object.values(targetReserve).forEach((key)=>{
+        if (typeof key === 'number')
+            largestidnumber = key
+    })
+
+    largestidnumber = largestidnumber + 1
+
+    const { error } = await supabase.from('ItemReserves').insert({
+        reservesid : largestidnumber,
+        appointmentid : appointmentid,
+        itemid : itemid,
+        quantity : quantity
+    });
+
+    if(error){
+        console.log(error);
+    }
+}
+
+
