@@ -250,7 +250,9 @@ const Page = ({ searchParams }: {
                     additionalpackage: searchParams.additionalpackage,
                     selectedServicetitle: selectedService,
                     mainprice: priceMainService,
-                    additionalprice: priceAdditionalService
+                    additionalprice: priceAdditionalService,
+                    priceOfCart : priceCart,
+                    cartItems : searchParams.cartItems
                 }
             }}>
             <button className="hidden lg:block bg-cusBlue rounded-3xl w-full lg:w-56 h-11 mt-8 px-0 text-white font-bold"> Confirm Details </button>
