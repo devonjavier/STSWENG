@@ -54,12 +54,6 @@ type ShoppingCartContext = {
       };
       loadItems();
     }, []);
-
-    useEffect(() => {
-      if (cartItems && cartItems.length === 0) {
-        setCartItems([]);
-      }
-    }, [cartItems]);
   
     const cartQuantity = cartItems.reduce((quantity: number, item: CartItemProps) => item.quantity + quantity, 0);
   

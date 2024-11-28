@@ -84,7 +84,7 @@ const Page = ({ searchParams }) => {
                 appointmentid = addtheAppointment;
 
                 // add items to cart
-                if (searchParams.cartItems) {
+                if (searchParams.cartItems != "") {
                     const cartItems = JSON.parse(searchParams.cartItems);
                     if (Array.isArray(cartItems) && cartItems.length > 0) {
                         for (const item of cartItems) {
