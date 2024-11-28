@@ -26,21 +26,3 @@ jobs:
 
     - name: Run tests
       run: npm test
-
-    - name: Run adminLogin
-      run: npx mocha adminLogin.spec.js --timeout 60000
-    
-    - name: Run checkStatusInvalid
-      run: npx mocha checkStatusInvalid.spec.js --timeout 60000
-
-    - name: Run checkStatusValid
-      run: npx mocha checkStatusValid.spec.js --timeout 60000
-
-    - name: Run enterPersonalDetails
-      run: npx mocha enterPersonalDetails.spec.js --timeout 60000
-
-    - name: Run clientNavigation
-      run: npx mocha clientNavigation.spec.js --timeout 60000
-
-    - name: Run adminMenuNavigation
-      run: npx mocha adminMenuNavigation.spec.js --timeout 60000
