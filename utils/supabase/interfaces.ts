@@ -102,6 +102,6 @@ export interface forTheBookEditErrors {
   userLastName: string;
   userPhoneNum: string;
   userEmail: string;
-  hours: number;
+  hours: string;
   date: string;
 }

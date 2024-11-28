@@ -721,6 +721,16 @@ export async function updateSchedule(appointmentid:number, scheduleid:number){
     return 1
 }
 
+export async function updateBooking(
+    userFirstName: string,
+    userMiddleName: string,
+    userLastName: string,
+    userPhoneNum: string,
+    userEmail: string,
+    hours: number,
+    date: Date
+){
 
+}
 
 

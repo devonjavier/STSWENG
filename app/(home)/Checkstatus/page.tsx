@@ -1,11 +1,13 @@
 'use client'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react';
-import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices } from '@/utils/supabase/data'
+import { fetchMultiplePerson, fetchOneAppointment, fetchOneCustomer, fetchOnePerson, fetchOneService, fetchSelectedSchedule, fetchSelectedSchedules, fetchServices, updateBooking } from '@/utils/supabase/data'
 import { useDebouncedCallback } from 'use-debounce';
 import { schedule } from '@/utils/supabase/interfaces';
 import Image from "next/image"
 import Modal from './modal';
+import validateForm from './inputVal';
+import { forTheBookEditErrors } from '@/utils/supabase/interfaces';
 
 const formatDate = (dateString : any) => {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -43,6 +45,16 @@ export default function DisplayPage() {
         setTrackingNumber(term);
     });
 
+    const [errors, setErrors] = useState<forTheBookEditErrors>({
+        userFirstName: '',
+        userMiddleName: '',
+        userLastName: '',
+        userPhoneNum: '',
+        userEmail: '',
+        hours: '',
+        date: ''
+    });
+
     // Open/Close handlers for Edit Modal
     const handleOpenEditModal = () => setIsEditModalOpen(true);
     const handleCloseEditModal = () => setIsEditModalOpen(false);
@@ -50,6 +62,8 @@ export default function DisplayPage() {
     // Open/Close handlers for Cancel Modal
     const handleOpenCancelModal = () => setIsCancelModalOpen(true);
     const handleCloseCancelModal = () => setIsCancelModalOpen(false);
+
+    const [submitted, setSubmitted] = useState(false); // Track if form was submitted 
     
     const fetchStatus = async () => {
     try {
@@ -152,6 +166,7 @@ export default function DisplayPage() {
             fetchStatus();
         }
     }
+
     const parseTimeString = (timeString: string): Date => {  // helper function
         const [hours, minutes, seconds] = timeString.split(":").map(Number);
         const date = new Date();
@@ -163,6 +178,11 @@ export default function DisplayPage() {
 
     
     const formatTimeString = (timeString: string): string => {
+
+        if (!timeString) {  //return null if stirng was null
+            return "";
+        }
+
         const date = parseTimeString(timeString);
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -174,6 +194,38 @@ export default function DisplayPage() {
       };
 
     useEffect(() => {}, [trackingNumber]); 
+
+    const handleSaveChanges = (event: React.FormEvent<HTMLFormElement>) => {    //onSubmit event
+        console.log("in save changes");
+        event.preventDefault();
+        // Extract data from the form
+        const formData = new FormData(event.currentTarget);
+    
+        var firstDate = formData.get('dateTime')?.toString() || "";
+
+        const data = {
+            firstName: formData.get('firstName')?.toString() || "",
+            middleName: formData.get('middleName')?.toString() || "",
+            lastName: formData.get('lastName')?.toString() || "",
+            phoneNumber: formData.get('phoneNumber')?.toString() || "",
+            email: formData.get('email')?.toString() || "",
+            hours: Number(formData.get('hours')?.toString()) || 0,
+            additionalRequests: formData.get('additionalRequests')?.toString() || "",
+            dateTime: formatTimeString(firstDate),
+            parking: formData.get('parking') === 'on',
+        };
+    
+        console.log("Form data submitted:", data);
+        setErrors(validateForm(data.firstName, data.middleName, data.lastName, data.phoneNumber, data.email, data.hours, data.dateTime));
+
+        data.dateTime = formatTimeString(data.dateTime);
+
+        console.log("Errors are: \n" + errors);
+
+        if (Object.values(errors).every(value => value === "")) { //if no errors run update db
+            updateBooking(data.firstName, data.middleName, data.lastName, data.phoneNumber, data.email, data.hours, data.dateTime);
+        }
+    };
 
     return (
         <>
@@ -276,32 +328,32 @@ export default function DisplayPage() {
         <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal}>
             <h2 className="text-l font-medium text-left mb-2 text-[#6A1B9A]">EDIT BOOKING</h2>
             <hr className="border-t border-gray-300 mb-2" />
-            <form className="space-y-8">
+            <form className="space-y-8" onSubmit={handleSaveChanges}>   {/*This is the function call to validate input and save changes*/}
                 <div className="grid grid-cols-2 gap-6">
                     
                     <div>
                         <label className="block text-sm font-medium text-[#4B27A8] mt-4">Main Customer</label>
-                        <input type="text" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="First name"/>
-                        <input type="text" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Middle name"/>
-                        <input type="text" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Last name"/>
+                        <input type="text" name="firstName" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="First name"/>
+                        <input type="text" name="middleName" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Middle name"/>
+                        <input type="text" name="lastName" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Last name"/>
                         <label className="block text-sm font-medium text-[#4B27A8] mt-4">Phone Number</label>
-                        <input type="text" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Phone number"/>
+                        <input type="text" name="phoneNumber" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Phone number"/>
                         <label className="block text-sm font-medium text-[#4B27A8] mt-4">Email Address</label>
-                        <input type="email" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Email address"/>
+                        <input type="email" name="email" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="Email address"/>
                         </div>
                         
                     <div>
                         <label className="block text-sm font-medium text-[#4B27A8] mt-4">Additional Request/s</label>
-                        <input type="text" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="N/A"/>
+                        <input type="text" name="additionalRequests" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" placeholder="N/A"/>
                         <label className="block text-sm font-medium text-[#4B27A8] mt-4">How many hours?</label>
-                        <input type="number" className="bg-white mt-1 block w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" defaultValue={4}/>
+                        <input type="number" name="hours" className="bg-white mt-1 block w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2" defaultValue={4}/>
                             
                         <div className="flex items-center mt-4">
                         <label className="block text-sm font-medium text-[#4B27A8] mr-2">Do you need parking?</label>
-                        <input type="checkbox" className="bg-white rounded text-indigo-600"/>
+                        <input type="checkbox" name="parking" className="bg-white rounded text-indigo-600"/>
                     </div>
                     <label className="block text-sm font-medium text-[#4B27A8] mt-4">Scheduled Date & Time</label>
-                    <input type="datetime-local" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2"/>
+                    <input type="datetime-local" name="dateTime" className="bg-white mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-2"/>
                     
                     </div>
                     </div>
@@ -319,7 +371,7 @@ export default function DisplayPage() {
             <hr className="border-t border-gray-300" />
             <p className="text-left font-bold text-xl text-[#4B27A8] mt-2">Sorry you had to cancel!</p>
             <p className="text-left font-light text-sm mb-2"> We hope to see you again soon. Feel free to book with us in the future.</p>
-            <hr className="border-t border-gray-300 mb-6" />
+            <hr className="border-t border-gray-300 mb-6"  />
             
             <form>
                 <fieldset>
