@@ -3,7 +3,6 @@ const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
 describe('AdminLogin', function() {
-  this.timeout(30000)
   let driver
   let vars
   beforeEach(async function() {
@@ -11,7 +10,9 @@ describe('AdminLogin', function() {
     vars = {}
   })
   afterEach(async function() {
-    await driver.quit();
+    if (driver){
+      await driver.quit();
+    }
   })
   it('AdminLogin', async function() {
     await driver.get("https://stsweng-eight.vercel.app/")

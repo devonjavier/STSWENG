@@ -10,7 +10,9 @@ describe('EnterPersonalDetails', function() {
     vars = {}
   })
   afterEach(async function() {
-    await driver.quit();
+    if (driver){
+      await driver.quit();
+    }
   })
   it('EnterPersonalDetails', async function() {
     await driver.get("https://stsweng-eight.vercel.app/")

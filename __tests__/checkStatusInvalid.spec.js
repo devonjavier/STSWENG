@@ -10,7 +10,9 @@ describe('CheckStatusInvalid', function() {
     vars = {}
   })
   afterEach(async function() {
-    await driver.quit();
+    if (driver){
+      await driver.quit();
+    }
   })
   it('CheckStatusInvalid', async function() {
     await driver.get("https://stsweng-eight.vercel.app/")

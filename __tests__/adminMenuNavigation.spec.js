@@ -10,7 +10,9 @@ describe('AdminMenuNavigation', function() {
     vars = {}
   })
   afterEach(async function() {
-    await driver.quit();
+    if (driver){
+      await driver.quit();
+    }
   })
   it('AdminMenuNavigation', async function() {
     await driver.get("https://stsweng-eight.vercel.app/Admin/Login")
