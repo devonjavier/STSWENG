@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import items from '@/app/data/items.json';
 import { formatCurrency } from '@/utils/formatCurrency';
 import { useState, useEffect } from 'react';
 import { Items } from '@/utils/supabase/interfaces';
@@ -53,12 +52,7 @@ const Page = () => {
               </div>
               <div className="text-sm text-gray-500">Quantity: {item.quantity.valueOf()}</div>
               <div className="mt-auto flex items-center justify-center">
-              <Link href={{
-                pathname: `/Admin/edit-equipment/edit-page?id=${item.itemid}`,
-                query : { itemid : JSON.stringify(item.quantity),
-                          itemquantity : JSON.stringify(item.quantity)
-                }
-                }} className="bg-indigo-800 p-4 mt-4 rounded-lg text-white font-bold hover:bg-indigo-600 transition w-full text-center">Edit Equipment</Link>
+              <Link href={`/Admin/edit-equipment/edit-page?id=${item.itemid}`} className="bg-indigo-800 p-4 mt-4 rounded-lg text-white font-bold hover:bg-indigo-600 transition w-full text-center">Edit Equipment</Link>
               </div>
             </div>
           </div>
