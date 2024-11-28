@@ -117,20 +117,25 @@ const Page = ({ searchParams }: {
 
             const newSchedules: any[] = [];
 
-            for (const selectedsched of selectedschedules) {
-
-                try {
-                    const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
-                    
-                    getData.forEach((one: any) => {
-                        setlistofschedules(listofschedules => [...listofschedules,one]);
-                    });
-                } catch (error) {
-                    console.error('Error fetching services:', error);
-                }finally{
-                    setLoading(false);
+            const getSelectedSchedules = async () => {
+                const newSchedules: any[] = []; // Temporary array to store schedules
+            
+                for (const selectedsched of selectedschedules) {
+                    try {
+                        const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
+                        
+                        // Add fetched schedules to the temporary array
+                        newSchedules.push(...getData);
+                    } catch (error) {
+                        console.error('Error fetching services:', error);
+                    }
                 }
-                
+            
+                // Update state once after the loop
+                setlistofschedules((prevSchedules) => [...prevSchedules, ...newSchedules]);
+            
+                // Loading is only set to false after all schedules are processed
+                setLoading(false);
             };
             setLoading(false);
         }
