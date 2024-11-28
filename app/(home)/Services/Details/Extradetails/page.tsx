@@ -54,6 +54,12 @@ type ShoppingCartContext = {
       };
       loadItems();
     }, []);
+
+    useEffect(() => {
+      if (cartItems && cartItems.length === 0) {
+        setCartItems([]);
+      }
+    }, [cartItems]);
   
     const cartQuantity = cartItems.reduce((quantity: number, item: CartItemProps) => item.quantity + quantity, 0);
   
@@ -154,6 +160,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
   useEffect(() => {
     console.log(searchParams.hours);
   });
+
   const { cartItems } = useShoppingCart();
   const [storeItems, setStoreItems] = useState<StoreItemProps[]>([]);
   const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);
@@ -171,6 +178,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
     };
     loadItems();
   }, []);
+
 
 
   const validateAdditionalCustomerNames = () => {

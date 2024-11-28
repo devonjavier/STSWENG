@@ -84,10 +84,16 @@ const Page = ({ searchParams }) => {
                 appointmentid = addtheAppointment;
 
                 // add items to cart
-                const cartItems = JSON.parse(searchParams.cartItems);
-                for(const item of cartItems){
-                    await addCart(appointmentid, item.id, item.quantity);
+
+                if (searchParams.cartItems) {
+                    const cartItems = JSON.parse(searchParams.cartItems);
+                    if (Array.isArray(cartItems) && cartItems.length > 0) {
+                        for (const item of cartItems) {
+                            await addCart(appointmentid, item.id, item.quantity);
+                        }
+                    }
                 }
+                
 
                 const selectedschedules = JSON.parse(searchParams.schedules);
                 await Promise.all(selectedschedules.map(selectedsched =>
