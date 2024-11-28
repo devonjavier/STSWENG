@@ -3,7 +3,6 @@ const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
 describe('CheckStatusValid', function() {
-  this.timeout(30000)
   let driver
   let vars
   beforeEach(async function() {
@@ -14,7 +13,8 @@ describe('CheckStatusValid', function() {
     await driver.quit();
   })
   it('CheckStatusValid', async function() {
-    await driver.get("http://localhost:3000/")
+    await driver.get("https://stsweng-eight.vercel.app/")
+    await driver.manage().window().maximize()
     await driver.sleep(2000)
     await driver.findElement(By.linkText("Check Status")).click()
     await driver.sleep(2000)

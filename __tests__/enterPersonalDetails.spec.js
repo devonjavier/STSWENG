@@ -3,7 +3,6 @@ const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
 describe('EnterPersonalDetails', function() {
-  this.timeout(30000)
   let driver
   let vars
   beforeEach(async function() {
@@ -14,11 +13,11 @@ describe('EnterPersonalDetails', function() {
     await driver.quit();
   })
   it('EnterPersonalDetails', async function() {
-    await driver.get("http://localhost:3000/")
-    await driver.manage().window().setRect({ width: 1936, height: 1048 })
+    await driver.get("https://stsweng-eight.vercel.app/")
+    await driver.manage().window().maximize()
     await driver.sleep(1000)
     await driver.findElement(By.linkText("Book Now")).click()
-    await driver.sleep(5000)
+    await driver.sleep(6000)
     await driver.findElement(By.css("a:nth-child(2) > div > .w-full")).click()
     await driver.sleep(1000)
     await driver.findElement(By.id("customerfirstname")).click()

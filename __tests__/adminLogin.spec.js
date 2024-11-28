@@ -14,8 +14,8 @@ describe('AdminLogin', function() {
     await driver.quit();
   })
   it('AdminLogin', async function() {
-    await driver.get("http://localhost:3000/Admin/Login")
-
+    await driver.get("https://stsweng-eight.vercel.app/")
+    await driver.manage().window().maximize()
     await driver.wait(until.elementLocated(By.id("username")), 10000);
     await driver.findElement(By.id("username")).click()
     await driver.sleep(500)
