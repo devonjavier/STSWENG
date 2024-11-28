@@ -55,7 +55,7 @@ const Page = () => {
               <div className="mt-auto flex items-center justify-center">
               <Link href={{
                 pathname: `/Admin/edit-equipment/edit-page`,
-                query : { itemid : JSON.stringify(item.quantity),
+                query : { itemid : JSON.stringify(item.itemid),
                           itemquantity : JSON.stringify(item.quantity)
                 }
                 }} className="bg-indigo-800 p-4 mt-4 rounded-lg text-white font-bold hover:bg-indigo-600 transition w-full text-center">Edit Equipment</Link>
