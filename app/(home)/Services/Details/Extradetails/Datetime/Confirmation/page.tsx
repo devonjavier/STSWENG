@@ -53,13 +53,9 @@ const Page = ({ searchParams }: {
 
             let cartItems;
 
-            if(searchParams.cartItems != null){
+            if(searchParams.cartItems !== ""){
                 cartItems  = JSON.parse(searchParams.cartItems);
-            }
-            
-            if(!cartItems.length){
-                return;
-            }   
+            } else return;
 
             let total = 0;
 
