@@ -53,13 +53,9 @@ const Page = ({ searchParams }: {
 
             let cartItems;
 
-            if(searchParams.cartItems != null){
+            if(searchParams.cartItems !== ""){
                 cartItems  = JSON.parse(searchParams.cartItems);
-            }
-            
-            if(!cartItems.length){
-                return;
-            }   
+            } else return;
 
             let total = 0;
 
@@ -121,20 +117,25 @@ const Page = ({ searchParams }: {
 
             const newSchedules: any[] = [];
 
-            for (const selectedsched of selectedschedules) {
-
-                try {
-                    const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
-                    
-                    getData.forEach((one: any) => {
-                        setlistofschedules(listofschedules => [...listofschedules,one]);
-                    });
-                } catch (error) {
-                    console.error('Error fetching services:', error);
-                }finally{
-                    setLoading(false);
+            const getSelectedSchedules = async () => {
+                const newSchedules: any[] = []; // Temporary array to store schedules
+            
+                for (const selectedsched of selectedschedules) {
+                    try {
+                        const getData = await fetchSelectedSchedules(selectedsched.date, selectedsched.selectedtime1, selectedsched.selectedtime2);
+                        
+                        // Add fetched schedules to the temporary array
+                        newSchedules.push(...getData);
+                    } catch (error) {
+                        console.error('Error fetching services:', error);
+                    }
                 }
-                
+            
+                // Update state once after the loop
+                setlistofschedules((prevSchedules) => [...prevSchedules, ...newSchedules]);
+            
+                // Loading is only set to false after all schedules are processed
+                setLoading(false);
             };
             setLoading(false);
         }
@@ -250,7 +251,9 @@ const Page = ({ searchParams }: {
                     additionalpackage: searchParams.additionalpackage,
                     selectedServicetitle: selectedService,
                     mainprice: priceMainService,
-                    additionalprice: priceAdditionalService
+                    additionalprice: priceAdditionalService,
+                    priceOfCart : priceCart,
+                    cartItems : searchParams.cartItems
                 }
             }}>
             <button className="hidden lg:block bg-cusBlue rounded-3xl w-full lg:w-56 h-11 mt-8 px-0 text-white font-bold"> Confirm Details </button>

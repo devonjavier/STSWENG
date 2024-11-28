@@ -3,7 +3,6 @@ const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
 describe('CheckStatusInvalid', function() {
-  this.timeout(30000)
   let driver
   let vars
   beforeEach(async function() {
@@ -11,16 +10,18 @@ describe('CheckStatusInvalid', function() {
     vars = {}
   })
   afterEach(async function() {
-    await driver.quit();
+    if (driver){
+      await driver.quit();
+    }
   })
   it('CheckStatusInvalid', async function() {
-    await driver.get("http://localhost:3000/")
-    await driver.manage().window().setRect({ width: 1936, height: 1048 })
+    await driver.get("https://stsweng-eight.vercel.app/")
+    await driver.manage().window().maximize()
     await driver.sleep(2000)
     await driver.findElement(By.linkText("Check Status")).click()
     await driver.sleep(2000)
     await driver.findElement(By.css(".text-center")).click()
-    await driver.sleep(2000)
+    await driver.sleep(500)
     await driver.findElement(By.css(".text-center")).sendKeys("10028")
     await driver.sleep(2000)
     await driver.findElement(By.css(".rounded-3xl")).click()
@@ -30,7 +31,11 @@ describe('CheckStatusInvalid', function() {
     await driver.findElement(By.css(".lg\\3Aw\\=\\[480px\\]")).sendKeys("1234")
     await driver.findElement(By.css(".bg-cusBlue:nth-child(8)")).click()
     await driver.sleep(2000)
-    assert(await driver.switchTo().alert().getText() == "Incorrect password. Please try again.")
-    await driver.sleep(2000)
+    const alert = await driver.switchTo().alert();
+    const alertText = await alert.getText();
+    assert(alertText === "Incorrect password. Please try again."); // Ensure this matches exactly
+    await driver.sleep(2000);
+    await alert.accept();
+
   }) 
 })
