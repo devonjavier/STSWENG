@@ -154,6 +154,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
   useEffect(() => {
     console.log(searchParams.hours);
   });
+
   const { cartItems } = useShoppingCart();
   const [storeItems, setStoreItems] = useState<StoreItemProps[]>([]);
   const [additionalCustomersFirstname, setadditionalCustomersFirstname] = useState<string[]>([]);
@@ -171,6 +172,7 @@ const Page = ({ searchParams }: { searchParams: { service: string, serviceType: 
     };
     loadItems();
   }, []);
+
 
 
   const validateAdditionalCustomerNames = () => {
